@@ -1,0 +1,78 @@
+<?php
+
+namespace App\Models;
+
+use App\CameraTypes\CameraType;
+use App\Enums\CameraStatus;
+use App\Enums\RecordingMode;
+use App\Support\Recording;
+use Illuminate\Database\Eloquent\Casts\AsCollection;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\File;
+use Symfony\Component\Finder\SplFileInfo;
+
+class Camera extends Model
+{
+    protected $casts = [
+        'sent_to_mothersip_at' => 'datetime',
+        'status' => CameraStatus::class,
+        'credentials' => AsCollection::class,
+        'recording_mode' => RecordingMode::class,
+    ];
+
+    public function getHumanReadableTypeAttribute()
+    {
+        return $this->getType()->getName();
+    }
+
+    public function getStatus($refresh = true)
+    {
+        if($refresh) {
+            $this->update([
+                'status' => $this->getType()->getStatus($this),
+            ]);
+        }
+
+        return $this->status;
+    }
+
+    public function isRecording()
+    {
+        return $this->getType()->isRecording($this);
+    }
+
+    public function startRecording()
+    {
+        if(!File::exists($this->storagePath())) {
+            File::makeDirectory($this->storagePath(), recursive: true);
+        };
+
+        return $this->getType()->startRecording($this);
+    }
+
+    public function stopRecording()
+    {
+        return $this->getType()->stopRecording($this);
+    }
+
+    public function getType() : CameraType
+    {
+        return (new $this->type);
+    }
+
+    public function getRecordings()
+    {
+        return collect(File::files($this->storagePath()))
+            ->map(fn(SplFileInfo $file) => Recording::fromFile($file));
+    }
+
+    public function storagePath()
+    {
+        return storage_path("app/cameras/{$this->id}/recordings");
+    }
+
+    public function getRecording($name)
+    {
+        return $this->storagePath() . '/' . $name;
+    }
+}
