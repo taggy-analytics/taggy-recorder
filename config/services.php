@@ -31,10 +31,6 @@ return [
         'region' => env('AWS_DEFAULT_REGION', 'us-east-1'),
     ],
 
-    'cli' => [
-        'arp' => env('ARP_PATH'),
-    ],
-
     'dnsmasq' => [
         'leases' => [
             'path' => env('DNSMASQ_LEASES_PATH'),
