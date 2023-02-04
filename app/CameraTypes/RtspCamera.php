@@ -6,23 +6,14 @@ use App\Models\Camera;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Storage;
-use Symfony\Component\Process\Process;
 
 abstract class RtspCamera extends CameraType
 {
     public function startRecording(Camera $camera)
     {
         info('Starting recording for camera #' . $camera->id . ': ' . $this->getRtspUrl($camera));
-        info('nohup ffmpeg -i "' . $this->getRtspUrl($camera) . '" -codec copy "' . $camera->storagePath() . '/' . str_replace(':', '-', now()->toDateTimeLocalString()) . '.ts" 2> /dev/null > /dev/null &');
 
-        exec('nohup ffmpeg -i "' . $this->getRtspUrl($camera) . '" -codec copy "' . $camera->storagePath() . '/' . str_replace(':', '-', now()->toDateTimeLocalString()) . '.ts" 2> /dev/null > /dev/null &');
-
-        $process = new Process(['nohup', 'ffmpeg', '-i', $this->getRtspUrl($camera), '-codec', 'copy', $camera->storagePath() . '/' . str_replace(':', '-', now()->toDateTimeLocalString()) . '.ts']);
-        $process->start();
-
-        sleep(4);
-
-        dump($process->getOutput());
+        exec('nohup sudo -u taggy ffmpeg -i "' . $this->getRtspUrl($camera) . '" -codec copy "' . $camera->storagePath() . '/' . str_replace(':', '-', now()->toDateTimeLocalString()) . '.ts" 2> /dev/null > /dev/null &');
     }
 
     public function stopRecording(Camera $camera)
