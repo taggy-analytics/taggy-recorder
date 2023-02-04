@@ -31,4 +31,23 @@ return [
         'region' => env('AWS_DEFAULT_REGION', 'us-east-1'),
     ],
 
+    'cli' => [
+        'arp' => env('ARP_PATH'),
+    ],
+
+    'dnsmasq' => [
+        'leases' => [
+            'path' => env('DNSMASQ_LEASES_PATH'),
+        ],
+    ],
+
+    'mothership' => [
+        'endpoint' => env('MOTHERSHIP_ENDPOINT'),
+    ],
+
+    'reolink' => [
+        'endpoint' => env('REOLINK_ENDPOINT'),
+        'username' => env('REOLINK_USERNAME', 'admin'),
+        'password' => env('REOLINK_PASSWORD', ''),
+    ],
 ];
