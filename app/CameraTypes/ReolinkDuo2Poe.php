@@ -71,6 +71,7 @@ class ReolinkDuo2Poe extends RtspCamera
         }
 
         return match(true) {
+            Str::contains($output, 'No route to host') => CameraStatus::OFFLINE,
             Str::contains($output, '401 Unauthorized') => CameraStatus::AUTHENTICATION_FAILED,
             Str::contains($output, '404 Stream Not Found') => CameraStatus::STREAM_NOT_FOUND,
             Str::contains($output, 'Connection refused') => CameraStatus::CONNECTION_REFUSED,

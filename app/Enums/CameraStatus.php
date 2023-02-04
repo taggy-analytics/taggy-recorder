@@ -12,4 +12,5 @@ enum CameraStatus: string
     case STREAM_NOT_FOUND = 'stream-not-found';
     case CONNECTION_REFUSED = 'connection-refused';
     case UNKNOWN_ERROR = 'unknown-error';
+    case OFFLINE = 'offline';
 }
