@@ -15,6 +15,7 @@ abstract class RtspCamera extends CameraType
 
         $outputDirectory = $camera->storagePath() . '/' . str_replace(':', '-', now()->toDateTimeLocalString());
         $outputFile = $outputDirectory . '/playlist.m3u8';
+        File::makeDirectory($outputDirectory);
         $this->runFFmpegCommand($this->getRtspUrl($camera), $outputFile, '-codec copy -start_number 0 -hls_time ' . config('taggy-recorder.video-conversion.segment-duration') . ' -hls_list_size 0 -f hls');
     }
 
