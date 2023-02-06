@@ -112,4 +112,11 @@ abstract class CameraType
             ])
             ->filter(fn($process) => !in_array($process['input'], [null, 'ps']));
     }
+
+    public function runFFmpegCommand($inputFile, $outputFile, $command)
+    {
+        $command = "nohup sudo -u taggy ffmpeg -i $inputFile $command $outputFile 2> /dev/null > /dev/null &";
+        info($command);
+        exec($command);
+    }
 }

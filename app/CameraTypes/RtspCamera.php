@@ -13,7 +13,8 @@ abstract class RtspCamera extends CameraType
     {
         info('Starting recording for camera #' . $camera->id . ': ' . $this->getRtspUrl($camera));
 
-        exec('nohup sudo -u taggy ffmpeg -i "' . $this->getRtspUrl($camera) . '" -codec copy "' . $camera->storagePath() . '/' . str_replace(':', '-', now()->toDateTimeLocalString()) . '.ts" 2> /dev/null > /dev/null &');
+        $outputFile = $camera->storagePath() . '/' . str_replace(':', '-', now()->toDateTimeLocalString() . '.ts');
+        $this->runFFmpegCommand($this->getRtspUrl($camera), $outputFile, '-codec copy');
     }
 
     public function stopRecording(Camera $camera)
