@@ -4,6 +4,7 @@ namespace App\Console;
 
 use App\Console\Commands\CheckAndStartRecording;
 use App\Console\Commands\DiscoverCameras;
+use App\Console\Commands\HandleRecordings;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 
@@ -19,6 +20,7 @@ class Kernel extends ConsoleKernel
     {
         $schedule->command(CheckAndStartRecording::class)->everyMinute();
         $schedule->command(DiscoverCameras::class)->everyMinute();
+        $schedule->command(HandleRecordings::class)->everyMinute();
 
         // Disable for now
         // $schedule->command(HandleRecordingsWithMothership::class)->everyMinute();

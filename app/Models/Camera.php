@@ -18,6 +18,11 @@ class Camera extends Model
         'recording_mode' => RecordingMode::class,
     ];
 
+    public function recordings()
+    {
+        return $this->hasMany(Recording::class);
+    }
+
     public function getHumanReadableTypeAttribute()
     {
         return $this->getType()->getName();
