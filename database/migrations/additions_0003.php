@@ -13,7 +13,7 @@ return new class extends Migration
         Schema::create('recordings', function (Blueprint $table) {
             $table->id();
             $table->string('name')->index();
-            $table->string('status')->index()->default(RecordingStatus::default());
+            $table->string('status')->index()->default(RecordingStatus::default()->value);
             $table->unsignedInteger('camera_id')->index();
             $table->timestamps();
         });
@@ -22,7 +22,7 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('recording_id')->index();
             $table->string('name');
-            $table->string('status')->index()->default(RecordingFileStatus::default());
+            $table->string('status')->index()->default(RecordingFileStatus::default()->value);
             $table->string('path');
             $table->timestamps();
         });
