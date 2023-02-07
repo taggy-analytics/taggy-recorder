@@ -24,7 +24,6 @@ class WatchRecordedFiles
                     $recording = $this->getRecording($path);
                     $recording->files()->create([
                         'name' => $this->getPathInfo($path)['fileName'],
-                        'path' => Str::replaceFirst($basePath, '', $path),
                         'type' => Str::endsWith($path, '.m3u8') ? RecordingFileType::PLAYLIST : RecordingFileType::VIDEO_TS,
                     ]);
                 }

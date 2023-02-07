@@ -35,7 +35,6 @@ return new class extends Migration
             $table->string('name');
             $table->string('type')->index();
             $table->string('status')->index()->default(\App\Enums\RecordingFileStatus::default()->value);
-            $table->string('path');
             $table->timestamps();
         });
     }
