@@ -60,6 +60,7 @@ class Camera extends Model
         return (new $this->type);
     }
 
+    /*
     public function getRecordings()
     {
         return collect(File::files($this->storagePath()))
@@ -75,4 +76,5 @@ class Camera extends Model
     {
         return $this->storagePath() . '/' . $name;
     }
+    */
 }

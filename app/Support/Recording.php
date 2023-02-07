@@ -6,6 +6,7 @@ use SplFileInfo;
 
 class Recording
 {
+    /**
     public function __construct(
         private SplFileInfo $fileInfo,
     ) {}
@@ -19,4 +20,5 @@ class Recording
     {
         return $this->fileInfo->getFilename();
     }
+     */
 }
