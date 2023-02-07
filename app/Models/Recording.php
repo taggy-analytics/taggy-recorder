@@ -28,4 +28,9 @@ class Recording extends Model
             'status' => $status,
         ]);
     }
+
+    public function getPath()
+    {
+        return 'cameras/' . $this->camera->id . '/recordings/' . $this->name . '/';
+    }
 }

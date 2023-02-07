@@ -12,4 +12,14 @@ class RecordingFile extends Model
         'status' => RecordingFileStatus::class,
         'type' => RecordingFileType::class,
     ];
+
+    public function recording()
+    {
+        return $this->belongsTo(Recording::class);
+    }
+
+    public function getPath()
+    {
+        return $this->recording->getPath() . '/' . $this->name;
+    }
 }
