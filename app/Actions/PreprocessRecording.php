@@ -18,7 +18,7 @@ class PreprocessRecording
 
         $recording->files->nth(config('app.recording.preprocess.nth'))
             ->each(function (RecordingFile $file) use ($recording) {
-                FFMpeg::open('local')
+                FFMpeg::open($file->path)
                     ->getFrameFromSeconds(0)
                     ->export()
                     ->toDisk('local')

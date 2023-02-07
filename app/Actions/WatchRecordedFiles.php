@@ -16,13 +16,15 @@ class WatchRecordedFiles
 {
     public function execute()
     {
-        Watch::path(storage_path("app/cameras"))
-            ->onAnyChange(function (string $type, string $path) {
+        $basePath = storage_path("app/cameras");
+
+        Watch::path($basePath)
+            ->onAnyChange(function (string $type, string $path) use ($basePath) {
                 if ($type === Watch::EVENT_TYPE_FILE_CREATED) {
                     $recording = $this->getRecording($path);
                     $recording->files()->create([
                         'name' => $this->getPathInfo($path)['fileName'],
-                        'path' => $path,
+                        'path' => Str::replaceFirst($basePath, '', $path),
                         'type' => Str::endsWith($path, '.m3u8') ? RecordingFileType::PLAYLIST : RecordingFileType::VIDEO_TS,
                     ]);
                 }
