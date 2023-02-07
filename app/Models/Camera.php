@@ -67,14 +67,14 @@ class Camera extends Model
             ->map(fn(SplFileInfo $file) => Recording::fromFile($file));
     }
 
-    public function storagePath()
-    {
-        return storage_path("app/cameras/{$this->id}/recordings");
-    }
-
     public function getRecording($name)
     {
         return $this->storagePath() . '/' . $name;
     }
+
     */
+    public function storagePath()
+    {
+        return storage_path("app/cameras/{$this->id}/recordings");
+    }
 }
