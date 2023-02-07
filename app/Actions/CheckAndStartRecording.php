@@ -11,7 +11,7 @@ class CheckAndStartRecording
     public function execute()
     {
         $cameras = Camera::where('status', CameraStatus::READY)
-            ->where('mode', RecordingMode::AUTOMATIC)
+            ->where('recording_mode', RecordingMode::AUTOMATIC)
             ->get();
 
         foreach($cameras as $camera) {
