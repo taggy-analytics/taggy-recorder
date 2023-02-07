@@ -27,7 +27,7 @@ class UploadRecordings extends Command
      */
     public function handle()
     {
-        app(\App\Actions\WatchRecordedFiles::class)
+        app(\App\Actions\UploadRecordings::class)
             ->execute();
 
         return 0;
