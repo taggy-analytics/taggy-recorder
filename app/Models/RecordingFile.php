@@ -18,8 +18,8 @@ class RecordingFile extends Model
         return $this->belongsTo(Recording::class);
     }
 
-    public function getPath()
+    public function getPath($type)
     {
-        return $this->recording->getPath() . '/' . $this->name;
+        return $this->recording->getPath() . '/' . $type . '/' . $this->name;
     }
 }

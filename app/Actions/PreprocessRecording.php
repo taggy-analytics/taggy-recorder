@@ -19,11 +19,11 @@ class PreprocessRecording
         $recording->files->nth(config('taggy-recorder.video-conversion.thumbnails.nth'))
             ->load('recording.camera')
             ->each(function (RecordingFile $file) use ($recording) {
-                FFMpeg::open($file->getPath())
+                FFMpeg::open($file->getPath('video'))
                     ->getFrameFromSeconds(0)
                     ->export()
                     ->toDisk('local')
-                    ->save("cameras/{$recording->camera->id}/recordings/{$recording->id}/thumbnails/{$file->id}-{$file->created_at}.jpg");
+                    ->save("{$file->getPath('thumbnails')}_{$file->id}_{$file->created_at}.jpg");
             });
 
         $recording->setStatus(RecordingStatus::PREPROCESSED);
