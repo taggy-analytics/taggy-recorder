@@ -23,7 +23,7 @@ class PreprocessRecording
                     ->getFrameFromSeconds(0)
                     ->export()
                     ->toDisk('local')
-                    ->save("{$file->getPath('thumbnails')}_{$file->id}_{$file->created_at}.jpg");
+                    ->save("recordings/{$recording->id}/thumbnails/{$file->id}-{$file->created_at}.jpg");
             });
 
         $recording->setStatus(RecordingStatus::PREPROCESSED);
