@@ -37,7 +37,7 @@ class PreprocessRecording
                     ->getFrameFromSeconds(0)
                     ->export()
                     ->toDisk('local')
-                    ->save("{$basePath}/{$file->id}-{$file->created_at}.jpg");
+                    ->save("{$basePath}/{$file->id}-{$file->created_at->toDateTimeLocalString()}.jpg");
             });
     }
 
@@ -55,10 +55,10 @@ class PreprocessRecording
     private function createZipArchive($basePath)
     {
         $zip = new ZipArchive();
-        $zip->open(storage_path("{$basePath}/thumbnails.zip"), ZipArchive::CREATE | ZipArchive::OVERWRITE);
+        $zip->open(storage_path("app/{$basePath}/thumbnails.zip"), ZipArchive::CREATE | ZipArchive::OVERWRITE);
 
         foreach(Storage::files($basePath) as $file) {
-            $zip->addFile(Storage::disk('local')->path($file), $file);
+            $zip->addFile(Storage::disk('local')->path($file), pathinfo($file, PATHINFO_BASENAME));
         }
 
         $zip->close();
