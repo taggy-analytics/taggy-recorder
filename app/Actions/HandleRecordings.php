@@ -20,7 +20,7 @@ class HandleRecordings
         return;
 
         foreach(Recording::where('status', RecordingStatus::CREATED)->get() as $recording) {
-            if(!$recording->isRecording()) {
+            if(Camera::noCameraIsRecording()) {
                 app(PreprocessRecording::class)
                     ->onQueue()
                     ->execute($recording);

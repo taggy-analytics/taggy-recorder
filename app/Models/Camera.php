@@ -80,4 +80,14 @@ class Camera extends Model
     {
         return storage_path("app/cameras/{$this->id}/recordings");
     }
+
+    public static function noCameraIsRecording()
+    {
+        foreach (Camera::all() as $camera) {
+            if ($camera->isRecording()) {
+                return false;
+            }
+        }
+        return true;
+    }
 }
