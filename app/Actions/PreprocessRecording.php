@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Storage;
 use ProtoneMedia\LaravelFFMpeg\Support\FFMpeg;
 use Spatie\Image\Image;
 use Spatie\QueueableAction\QueueableAction;
+use ZipArchive;
 
 class PreprocessRecording
 {
@@ -20,6 +21,15 @@ class PreprocessRecording
         $recording->setStatus(RecordingStatus::PREPROCESSING);
         $basePath = "recordings/{$recording->id}/thumbnails";
 
+        $this->createThumbnails($recording, $basePath);
+        $this->optimizeThumbnails($basePath);
+        $this->createZipArchive($basePath);
+
+        $recording->setStatus(RecordingStatus::PREPROCESSED);
+    }
+
+    private function createThumbnails(Recording $recording, $basePath)
+    {
         $recording->files->nth(config('taggy-recorder.video-conversion.thumbnails.nth'))
             ->load('recording.camera')
             ->each(function (RecordingFile $file) use ($recording, $basePath) {
@@ -29,20 +39,28 @@ class PreprocessRecording
                     ->toDisk('local')
                     ->save("{$basePath}/{$file->id}-{$file->created_at}.jpg");
             });
-
-        foreach(Storage::files($basePath) as $file) {
-            $this->optimizeThumbnail(Storage::disk('local')->path($file));
-        }
-
-        $recording->setStatus(RecordingStatus::PREPROCESSED);
     }
 
-    private function optimizeThumbnail($thumbnail)
+    private function optimizeThumbnails($basePath)
     {
-        Image::load($thumbnail)
-            ->optimize()
-            ->height(320)
-            ->quality(50)
-            ->save();
+        foreach(Storage::files($basePath) as $file) {
+            Image::load(Storage::disk('local')->path($file))
+                ->optimize()
+                ->height(320)
+                ->quality(50)
+                ->save();
+        }
+    }
+
+    private function createZipArchive($basePath)
+    {
+        $zip = new ZipArchive();
+        $zip->open(storage_path("{$basePath}/thumbnails.zip"), ZipArchive::CREATE | ZipArchive::OVERWRITE);
+
+        foreach(Storage::files($basePath) as $file) {
+            $zip->addFile(Storage::disk('local')->path($file), $file);
+        }
+
+        $zip->close();
     }
 }
