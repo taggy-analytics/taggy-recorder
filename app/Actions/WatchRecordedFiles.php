@@ -46,7 +46,7 @@ class WatchRecordedFiles
         return [
             'cameraId' => $info[9],
             'recordingName' => $info[11],
-            'fileName' => $info[12],
+            'fileName' => $info[13],
         ];
     }
 }

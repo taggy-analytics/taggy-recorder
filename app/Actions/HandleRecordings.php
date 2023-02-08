@@ -17,6 +17,8 @@ class HandleRecordings
 {
     public function execute()
     {
+        return;
+        
         foreach(Recording::where('status', RecordingStatus::CREATED)->get() as $recording) {
             if(!$recording->isRecording()) {
                 app(PreprocessRecording::class)

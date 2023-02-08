@@ -27,7 +27,7 @@ class HandleRecordings extends Command
      */
     public function handle()
     {
-        app(\App\Actions\WatchRecordedFiles::class)
+        app(\App\Actions\HandleRecordings::class)
             ->execute();
 
         return 0;
