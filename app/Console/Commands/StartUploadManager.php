@@ -4,21 +4,21 @@ namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
 
-class UploadRecordings extends Command
+class StartUploadManager extends Command
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'taggy:upload-recordings';
+    protected $signature = 'taggy:start-upload-manager';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Upload recordings';
+    protected $description = 'Start the upload manager.';
 
     /**
      * Execute the console command.
@@ -27,7 +27,7 @@ class UploadRecordings extends Command
      */
     public function handle()
     {
-        app(\App\Actions\UploadRecordings::class)
+        app(\App\Actions\ManageUploads::class)
             ->execute();
 
         return 0;

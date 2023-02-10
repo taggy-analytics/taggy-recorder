@@ -5,6 +5,9 @@ namespace App\Support;
 use App\Exceptions\MothershipException;
 use App\Http\Resources\CameraResource;
 use App\Models\Camera;
+use App\Models\Recording;
+use Exception;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Storage;
 use Spatie\Crypto\Rsa\PrivateKey;
@@ -76,11 +79,35 @@ class Mothership
         }
     }
 
+    public function sendRecordingThumbnails(Recording $recording)
+    {
+        try {
+            $this->post('cameras/' . $recording->camera->identifier . '/recordings', [
+                'thumbnails' => Storage::get("recordings/{$recording->id}/thumbnails/thumbnails-zip"),
+            ]);
+
+            return true;
+        }
+        catch(Exception $e) {
+            return false;
+        }
+    }
+
+    public function isOnline()
+    {
+        return $this->checkStatus() == 200;
+    }
+
     public function checkStatus()
     {
         return $this->client
             ->timeout(3)
             ->get('check-reachability');
+    }
+
+    public function uploadFile($file, Camera $camera)
+    {
+
     }
 
     private function get($url)
