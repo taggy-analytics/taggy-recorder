@@ -4,21 +4,21 @@ namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
 
-class CheckAndStartRecording extends Command
+class HandleCameras extends Command
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'taggy:check-cameras';
+    protected $signature = 'taggy:discover-cameras';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Check cameras';
+    protected $description = 'Discover cameras';
 
     /**
      * Execute the console command.
@@ -27,7 +27,8 @@ class CheckAndStartRecording extends Command
      */
     public function handle()
     {
-        app(\App\Actions\CheckAndStartRecording::class)->execute();
+        app(\App\Actions\HandleCameras::class)
+            ->execute();
 
         return 0;
     }

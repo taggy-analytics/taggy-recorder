@@ -7,7 +7,7 @@ use App\Actions\Mothership\SendDiscoveredCamerasToMothership;
 use App\CameraTypes\CameraType;
 use App\Models\Camera;
 
-class DiscoverCameras
+class HandleCameras
 {
     public function execute()
     {
@@ -17,6 +17,8 @@ class DiscoverCameras
             $camera->getStatus();
         }
 
+        app(StopAbandonedRecordings::class)->execute();
+        app(CheckAndStartRecording::class)->execute();
         app(SendDiscoveredCamerasToMothership::class)->execute();
         app(GetCredentialsForUnauthenticatedCameras::class)->execute();
     }

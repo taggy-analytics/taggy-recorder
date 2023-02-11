@@ -83,19 +83,21 @@ class Mothership
     {
         try {
             $this->post('cameras/' . $recording->camera->identifier . '/recordings', [
-                'thumbnails' => Storage::get("recordings/{$recording->id}/thumbnails/thumbnails-zip"),
+                'recorder' => Recorder::make()->getMachineId(),
+                'thumbnails' => base64_encode(Storage::get("recordings/{$recording->id}/thumbnails/thumbnails.zip")),
             ]);
 
             return true;
         }
         catch(Exception $e) {
+            throw $e;
             return false;
         }
     }
 
     public function isOnline()
     {
-        return $this->checkStatus() == 200;
+        return $this->checkStatus()->status() == 200;
     }
 
     public function checkStatus()

@@ -26,9 +26,6 @@ class ManageUploads
                 if($mothership->isOnline()) {
                     $mothership->sendRecordingThumbnails($recording);
                 }
-                app(UploadRecording::class)
-                    ->onQueue()
-                    ->execute($recording);
             }
             elseif(true) {
 
