@@ -97,7 +97,12 @@ class Mothership
 
     public function isOnline()
     {
-        return $this->checkStatus()->status() == 200;
+        try {
+            return $this->checkStatus()->status() == 200;
+        }
+        catch(\Throwable $exception) {
+            return false;
+        }
     }
 
     public function checkStatus()

@@ -7,7 +7,7 @@ use App\Models\Camera;
 
 class GetCredentialsForUnauthenticatedCameras
 {
-    protected function execute()
+    public function execute()
     {
         foreach(Camera::where('status', CameraStatus::AUTHENTICATION_FAILED)->get() as $camera) {
             app(GetCredentialsForUnauthenticatedCamera::class)->execute($camera);
