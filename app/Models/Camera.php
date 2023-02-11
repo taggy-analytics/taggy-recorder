@@ -36,7 +36,7 @@ class Camera extends Model
             ]);
         }
 
-        info('Camera #' . $this->id . ' status: ' . $this->status);
+        info('Camera #' . $this->id . ' status: ' . $this->status->value);
 
         return $this->status;
     }
