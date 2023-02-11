@@ -5,7 +5,7 @@ namespace App\Console\Commands;
 use Hammerstone\PseudoDaemon\IsPseudoDaemon;
 use Illuminate\Console\Command;
 
-class StartUploadManager extends Command
+class HandleUploads extends Command
 {
     use IsPseudoDaemon;
     /**
@@ -13,14 +13,14 @@ class StartUploadManager extends Command
      *
      * @var string
      */
-    protected $signature = 'taggy:start-upload-manager';
+    protected $signature = 'taggy:handle-uploads';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Start the upload manager.';
+    protected $description = 'Handle uploads';
 
     /**
      * Execute the console command.
@@ -34,7 +34,7 @@ class StartUploadManager extends Command
 
     public function process()
     {
-        app(\App\Actions\ManageUploads::class)
+        app(\App\Actions\HandleUploads::class)
             ->execute();
     }
 

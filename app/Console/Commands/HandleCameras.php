@@ -14,14 +14,14 @@ class HandleCameras extends Command
      *
      * @var string
      */
-    protected $signature = 'taggy:discover-cameras';
+    protected $signature = 'taggy:handle-cameras';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Discover cameras';
+    protected $description = 'Handle cameras';
 
     /**
      * Execute the console command.
@@ -37,5 +37,10 @@ class HandleCameras extends Command
     {
         app(\App\Actions\HandleCameras::class)
             ->execute();
+    }
+
+    public function pseudoDaemonSleepSeconds()
+    {
+        return 5;
     }
 }

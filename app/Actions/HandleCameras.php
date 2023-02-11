@@ -24,9 +24,4 @@ class HandleCameras
         app(SendDiscoveredCamerasToMothership::class)->execute();
         app(GetCredentialsForUnauthenticatedCameras::class)->execute();
     }
-
-    public function pseudoDaemonSleepSeconds()
-    {
-        return 5;
-    }
 }

@@ -14,7 +14,7 @@ use App\Support\Uploader;
 use Illuminate\Support\Str;
 use Spatie\Watcher\Watch;
 
-class ManageUploads
+class HandleUploads
 {
     public function execute()
     {
