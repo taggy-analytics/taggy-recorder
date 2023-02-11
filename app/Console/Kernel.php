@@ -18,8 +18,15 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        $schedule->command(HandleCameras::class)->everyMinute();
-        $schedule->command(HandleRecordings::class)->everyMinute();
+        $schedule->command(HandleCameras::class)
+            ->runInBackground()
+            ->withoutOverlapping()
+            ->everyMinute();
+
+        $schedule->command(HandleRecordings::class)
+            ->runInBackground()
+            ->withoutOverlapping()
+            ->everyMinute();
 
         // Disable for now
         // $schedule->command(HandleRecordingsWithMothership::class)->everyMinute();
