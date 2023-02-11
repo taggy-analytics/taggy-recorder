@@ -15,6 +15,7 @@ class StopAbandonedRecordings
 
         foreach($cameras as $camera) {
             if($camera->isRecording()) {
+                info('Stopping recording for camera #' . $camera->id);
                 $camera->stopRecording();
             }
         }
