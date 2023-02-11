@@ -11,6 +11,8 @@ class HandleCameras
 {
     public function execute()
     {
+        info('Handle cameras');
+
         CameraType::discoverCameras();
 
         foreach(Camera::all() as $camera) {
@@ -21,5 +23,10 @@ class HandleCameras
         app(CheckAndStartRecording::class)->execute();
         app(SendDiscoveredCamerasToMothership::class)->execute();
         app(GetCredentialsForUnauthenticatedCameras::class)->execute();
+    }
+
+    public function pseudoDaemonSleepSeconds()
+    {
+        return 5;
     }
 }

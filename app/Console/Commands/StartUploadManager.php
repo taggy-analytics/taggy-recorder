@@ -2,10 +2,12 @@
 
 namespace App\Console\Commands;
 
+use Hammerstone\PseudoDaemon\IsPseudoDaemon;
 use Illuminate\Console\Command;
 
 class StartUploadManager extends Command
 {
+    use IsPseudoDaemon;
     /**
      * The name and signature of the console command.
      *
@@ -27,9 +29,17 @@ class StartUploadManager extends Command
      */
     public function handle()
     {
+        $this->runAsPseudoDaemon();
+    }
+
+    public function process()
+    {
         app(\App\Actions\ManageUploads::class)
             ->execute();
+    }
 
-        return 0;
+    public function pseudoDaemonSleepSeconds()
+    {
+        return 20;
     }
 }

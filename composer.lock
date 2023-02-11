@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "ba007363aef07e20d0d098a5d7d5da4c",
+    "content-hash": "9ce509575dc958910134b901f2714263",
     "packages": [
         {
             "name": "brick/math",
@@ -943,6 +943,59 @@
                 }
             ],
             "time": "2022-10-26T14:07:24+00:00"
+        },
+        {
+            "name": "hammerstone/laravel-pseudo-daemon",
+            "version": "v1.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/hammerstonedev/laravel-pseudo-daemon.git",
+                "reference": "0bffae40b5b735c5e9bd14c3db6c2a6c23fdf0ae"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/hammerstonedev/laravel-pseudo-daemon/zipball/0bffae40b5b735c5e9bd14c3db6c2a6c23fdf0ae",
+                "reference": "0bffae40b5b735c5e9bd14c3db6c2a6c23fdf0ae",
+                "shasum": ""
+            },
+            "require": {
+                "illuminate/support": "^7.0|^8.0|^9.0"
+            },
+            "require-dev": {
+                "mockery/mockery": "^1.3.3",
+                "orchestra/testbench": "^5.0|^6.0|^7.0",
+                "phpunit/phpunit": "^8.5.23|^9.5"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Hammerstone\\PseudoDaemon\\PseudoDaemonServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Hammerstone\\PseudoDaemon\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Aaron Francis",
+                    "email": "aaron@hammerstone.dev",
+                    "homepage": "https://hammerstone.dev"
+                }
+            ],
+            "description": "A Laravel package to mimic daemons via scheduled commands without having to change server configuration.",
+            "support": {
+                "issues": "https://github.com/hammerstonedev/laravel-pseudo-daemon/issues",
+                "source": "https://github.com/hammerstonedev/laravel-pseudo-daemon/tree/v1.0.0"
+            },
+            "time": "2022-03-31T18:35:25+00:00"
         },
         {
             "name": "intervention/image",
@@ -9699,7 +9752,8 @@
     "prefer-stable": true,
     "prefer-lowest": false,
     "platform": {
-        "php": "^8.1"
+        "php": "^8.1",
+        "ext-zip": "*"
     },
     "platform-dev": [],
     "plugin-api-version": "2.3.0"

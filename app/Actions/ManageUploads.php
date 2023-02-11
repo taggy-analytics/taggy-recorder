@@ -16,23 +16,19 @@ use Spatie\Watcher\Watch;
 
 class ManageUploads
 {
-    private $interval = 20;
     public function execute()
     {
         $mothership = Mothership::make();
 
-        while (true) {
-            if($recording = Recording::where('status', RecordingStatus::PREPROCESSED)->first()) {
-                if($mothership->isOnline()) {
-                    $mothership->sendRecordingThumbnails($recording);
-                }
-            }
-            elseif(true) {
+        info('Manage uploads');
 
+        if($recording = Recording::where('status', RecordingStatus::PREPROCESSED)->first()) {
+            if($mothership->isOnline()) {
+                $mothership->sendRecordingThumbnails($recording);
             }
-            else {
-                sleep($this->interval);
-            }
+        }
+        elseif(true) {
+
         }
     }
 }

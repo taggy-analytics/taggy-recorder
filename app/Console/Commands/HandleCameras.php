@@ -2,10 +2,13 @@
 
 namespace App\Console\Commands;
 
+use Hammerstone\PseudoDaemon\IsPseudoDaemon;
 use Illuminate\Console\Command;
 
 class HandleCameras extends Command
 {
+    use IsPseudoDaemon;
+
     /**
      * The name and signature of the console command.
      *
@@ -27,9 +30,12 @@ class HandleCameras extends Command
      */
     public function handle()
     {
+        $this->runAsPseudoDaemon();
+    }
+
+    public function process()
+    {
         app(\App\Actions\HandleCameras::class)
             ->execute();
-
-        return 0;
     }
 }
