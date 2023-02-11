@@ -13,7 +13,7 @@ abstract class MothershipAction
 
     abstract protected function executeAction();
 
-    public function execute()
+    public function execute(...$attributes)
     {
         if(!Storage::exists(Mothership::MOTHERSHIP_TOKEN_FILENAME)) {
             return;
@@ -34,6 +34,6 @@ abstract class MothershipAction
             return;
         }
 
-        return $this->executeAction();
+        return $this->executeAction(...$attributes);
     }
 }

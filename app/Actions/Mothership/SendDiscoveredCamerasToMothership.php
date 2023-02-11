@@ -4,13 +4,12 @@ namespace App\Actions\Mothership;
 
 use App\Models\Camera;
 
-class SendDiscoveredCamerasToMothership extends MothershipAction
+class SendDiscoveredCamerasToMothership
 {
-    protected function executeAction()
+    protected function execute()
     {
         foreach(Camera::whereNull('sent_to_mothership_at')->get() as $camera) {
-            $this->mothership->reportDiscoveredCamera($camera);
-            $camera->update(['sent_to_mothership_at' => now()]);
+            app(SendDiscoveredCameraToMothership::class)->execute($camera);
         }
     }
 }

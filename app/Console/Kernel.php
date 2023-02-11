@@ -2,7 +2,6 @@
 
 namespace App\Console;
 
-use App\Console\Commands\CheckAndStartRecording;
 use App\Console\Commands\HandleCameras;
 use App\Console\Commands\HandleRecordings;
 use App\Console\Commands\HandleUploads;

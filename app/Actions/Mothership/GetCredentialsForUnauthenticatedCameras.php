@@ -5,16 +5,12 @@ namespace App\Actions\Mothership;
 use App\Enums\CameraStatus;
 use App\Models\Camera;
 
-class GetCredentialsForUnauthenticatedCameras extends MothershipAction
+class GetCredentialsForUnauthenticatedCameras
 {
-    protected function executeAction()
+    protected function execute()
     {
         foreach(Camera::where('status', CameraStatus::AUTHENTICATION_FAILED)->get() as $camera) {
-            $credentials = $this->mothership->getCameraCredentials($camera);
-            $camera->update(['credentials' => $credentials]);
-            if($camera->getStatus() == CameraStatus::READY) {
-                $this->mothership->reportDiscoveredCamera($camera);
-            }
+            app(GetCredentialsForUnauthenticatedCamera::class)->execute($camera);
         }
     }
 }
