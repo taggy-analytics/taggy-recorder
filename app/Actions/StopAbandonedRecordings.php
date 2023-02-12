@@ -10,7 +10,7 @@ class StopAbandonedRecordings
 {
     public function execute()
     {
-        $cameras = Camera::where('status', CameraStatus::OFFLINE)
+        $cameras = Camera::whereNot('status', CameraStatus::READY)
             ->get();
 
         foreach($cameras as $camera) {
