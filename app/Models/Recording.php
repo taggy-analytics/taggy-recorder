@@ -31,6 +31,6 @@ class Recording extends Model
 
     public function getPath()
     {
-        return 'cameras/' . $this->camera->id . '/recordings/' . $this->name . '/';
+        return 'cameras/' . $this->camera->id . '/recordings/' . $this->id . '/';
     }
 }

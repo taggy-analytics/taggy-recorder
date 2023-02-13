@@ -11,9 +11,13 @@ abstract class RtspCamera extends CameraType
 {
     public function startRecording(Camera $camera)
     {
-        info('Starting recording for camera #' . $camera->id . ': ' . $this->getRtspUrl($camera));
+        $recording = $camera->recordings()->create([
+            'name' => now()->toDateTimeLocalString(),
+        ]);
 
-        $outputDirectory = $camera->storagePath() . '/' . str_replace(':', '-', now()->toDateTimeLocalString()) . '/video';
+        info('Starting recording # ' . $recording->id . ' for camera #' . $camera->id . ': ' . $this->getRtspUrl($camera));
+
+        $outputDirectory = $camera->storagePath() . '/' . $recording->id . '/video';
         $outputFile = $outputDirectory . '/video.m3u8';
         File::makeDirectory($outputDirectory, recursive: true);
         $this->runFFmpegCommand($this->getRtspUrl($camera), $outputFile, '-codec copy -start_number 0 -hls_time ' . config('taggy-recorder.video-conversion.segment-duration') . ' -hls_list_size 0 -f hls');

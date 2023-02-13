@@ -21,8 +21,7 @@ class WatchRecordedFiles
         Watch::path($basePath)
             ->onAnyChange(function (string $type, string $path) use ($basePath) {
                 if ($type === Watch::EVENT_TYPE_FILE_CREATED) {
-                    $recording = $this->getRecording($path);
-                    $recording->files()->create([
+                    $this->getRecording($path)->files()->create([
                         'name' => $this->getPathInfo($path)['fileName'],
                         'type' => Str::endsWith($path, '.m3u8') ? RecordingFileType::PLAYLIST : RecordingFileType::VIDEO_TS,
                     ]);
@@ -33,10 +32,7 @@ class WatchRecordedFiles
 
     private function getRecording($path)
     {
-        return Recording::firstOrCreate([
-            'camera_id' => $this->getPathInfo($path)['cameraId'],
-            'name' => $this->getPathInfo($path)['recordingName'],
-        ]);
+        return Recording::find($this->getPathInfo($path)['recordingId']);
     }
 
     private function getPathInfo($path)
@@ -45,7 +41,7 @@ class WatchRecordedFiles
 
         return [
             'cameraId' => $info[9],
-            'recordingName' => $info[11],
+            'recordingId' => $info[11],
             'fileName' => $info[13],
         ];
     }
