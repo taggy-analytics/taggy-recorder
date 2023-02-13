@@ -68,7 +68,6 @@ class HandleRecordings
     {
         if(Camera::noCameraIsRecording()) {
             foreach(Recording::withStatus(RecordingStatus::THUMBNAILS_CREATED) as $recording) {
-
                 $zip = new ZipArchive();
                 $zip->open(storage_path("app/{$recording->thumbnailPath()}/thumbnails.zip"), ZipArchive::CREATE | ZipArchive::OVERWRITE);
 

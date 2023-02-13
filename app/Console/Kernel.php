@@ -28,10 +28,10 @@ class Kernel extends ConsoleKernel
             ->withoutOverlapping()
             ->everyMinute();
 
-        $schedule->command(HandleRecordings::class)->everyMinute();
-
-        // Disable for now
-        // $schedule->command(HandleRecordingsWithMothership::class)->everyMinute();
+        $schedule->command(HandleRecordings::class)
+            ->runInBackground()
+            ->withoutOverlapping()
+            ->everyMinute();
     }
 
     /**
