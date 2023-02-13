@@ -22,9 +22,10 @@ class HandleUploads
 
         info('Manage uploads');
 
-        if($recording = Recording::where('status', RecordingStatus::PREPROCESSED)->first()) {
+        if($recording = Recording::where('status', RecordingStatus::ZIP_FILE_CREATED)->first()) {
             if($mothership->isOnline()) {
                 $mothership->sendRecordingThumbnails($recording);
+                $recording->setStatus(RecordingStatus::ZIP_FILE_UPLOADED);
             }
         }
         elseif(true) {

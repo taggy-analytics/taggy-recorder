@@ -2,11 +2,12 @@
 
 namespace App\Models;
 
-use App\Enums\RecordingStatus;
+use App\Models\Traits\HasStatus;
 use Illuminate\Database\Eloquent\Model;
 
 class Recording extends Model
 {
+    use HasStatus;
     public function files()
     {
         return $this->hasMany(RecordingFile::class);
@@ -22,15 +23,13 @@ class Recording extends Model
         return !$this->camera->isRecording() || $this->camera->recordings()->latest()->first()->id !== $this->id;
     }
 
-    public function setStatus(RecordingStatus $status)
-    {
-        $this->update([
-            'status' => $status,
-        ]);
-    }
-
     public function getPath()
     {
         return 'cameras/' . $this->camera->id . '/recordings/' . $this->id . '/';
+    }
+
+    public function thumbnailPath()
+    {
+        return "recordings/{$this->id}/thumbnails";
     }
 }
