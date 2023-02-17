@@ -19,7 +19,8 @@ class HandleRecordings
         $this->chooseRecordingFilesToBeUsedInThumbnails();
         $this->createThumbnailsForRecordingFiles();
         $this->checkIfThumbnailCreationWasFinishedForRecording();
-        $this->createZipFileWithThumbnails();
+        // $this->createZipFileWithThumbnails();
+        $this->createMovieWithThumbnails();
     }
 
     private function setPreprocessingStatusForFinishedRecordings()
@@ -78,6 +79,19 @@ class HandleRecordings
                 $zip->close();
 
                 $recording->setStatus(RecordingStatus::ZIP_FILE_CREATED);
+            }
+        }
+    }
+
+    private function createMovieWithThumbnails()
+    {
+        if(Camera::noCameraIsRecording()) {
+            foreach(Recording::withStatus(RecordingStatus::THUMBNAILS_CREATED) as $recording) {
+                $command = 'nohup sudo -u taggy ffmpeg -i ffmpeg -f image2 -r 2 -pattern_type glob -i "' . $recording->thumbnailPath() . '/*.jpg" -c:v libx264 -pix_fmt yuv420p -vf "pad=ceil(iw/2)*2:ceil(ih/2)*2" ' . storage_path("app/{$recording->rootPath()}/thumbnails.mp4") . ' 2> /dev/null > /dev/null &';
+                info($command);
+                exec($command);
+
+                $recording->setStatus(RecordingStatus::CREATING_MOVIE);
             }
         }
     }
