@@ -28,6 +28,12 @@ class HandleUploads
                 $recording->setStatus(RecordingStatus::ZIP_FILE_UPLOADED);
             }
         }
+        elseif($recording = Recording::where('status', RecordingStatus::MOVIE_CREATED)->first()) {
+            if($mothership->isOnline()) {
+                $mothership->sendRecordingThumbnailsMovie($recording);
+                $recording->setStatus(RecordingStatus::MOVIE_UPLOADED);
+            }
+        }
         elseif(true) {
 
         }

@@ -8,6 +8,7 @@ use App\Enums\RecordingStatus;
 use App\Models\Camera;
 use App\Models\Recording;
 use App\Models\RecordingFile;
+use App\Support\Recorder;
 use Illuminate\Support\Facades\Storage;
 use ZipArchive;
 
@@ -21,6 +22,8 @@ class HandleRecordings
         $this->checkIfThumbnailCreationWasFinishedForRecording();
         // $this->createZipFileWithThumbnails();
         $this->createMovieWithThumbnails();
+        $this->checkIfMovieCreationWasFinishedForRecording();
+
     }
 
     private function setPreprocessingStatusForFinishedRecordings()
@@ -92,6 +95,15 @@ class HandleRecordings
                 exec($command);
 
                 $recording->setStatus(RecordingStatus::CREATING_MOVIE);
+            }
+        }
+    }
+
+    private function checkIfMovieCreationWasFinishedForRecording()
+    {
+        if(Recorder::make()->getRunningFfmpegProcesses()->count() == 0) {
+            foreach(Recording::withStatus(RecordingStatus::CREATING_MOVIE) as $recording) {
+                $recording->setStatus(RecordingStatus::MOVIE_CREATED);
             }
         }
     }

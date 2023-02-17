@@ -97,6 +97,24 @@ class Mothership
         }
     }
 
+    public function sendRecordingThumbnailsMovie(Recording $recording)
+    {
+        $this->client->timeout(600);
+
+        try {
+            $this->post('cameras/' . $recording->camera->identifier . '/recordings/thumbnails-movie', [
+                'recorder' => Recorder::make()->getMachineId(),
+                'movie' => base64_encode(Storage::get("recordings/{$recording->id}/thumbnails.mp4")),
+            ]);
+
+            return true;
+        }
+        catch(Exception $e) {
+            throw $e;
+            return false;
+        }
+    }
+
     public function isOnline()
     {
         try {

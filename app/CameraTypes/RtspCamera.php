@@ -3,6 +3,7 @@
 namespace App\CameraTypes;
 
 use App\Models\Camera;
+use App\Support\Recorder;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Storage;
@@ -40,7 +41,7 @@ abstract class RtspCamera extends CameraType
 
     private function getProcess(Camera $camera)
     {
-        return $this->getRunningFfmpegProcesses()
+        return Recorder::make()->getRunningFfmpegProcesses()
             ->filter(fn($process) => $process['input'] == $this->getRtspUrl($camera))
             ->first();
     }

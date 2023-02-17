@@ -100,19 +100,6 @@ abstract class CameraType
             ->values();
     }
 
-    protected function getRunningFfmpegProcesses()
-    {
-        exec('ps ahxwwo pid:1,command:1 |grep "ffmpeg"', $processes);
-
-        return collect($processes)
-            ->map(fn($process) => preg_split('/\s+/', trim($process)))
-            ->map(fn($process) => [
-                'processId' => Arr::get($process, 0),
-                'input' => Arr::get($process, 3),
-            ])
-            ->filter(fn($process) => !in_array($process['input'], [null, 'ps']));
-    }
-
     public function runFFmpegCommand($inputFile, $outputFile, $command)
     {
         $command = "nohup sudo -u taggy ffmpeg -i $inputFile $command $outputFile 2> /dev/null > /dev/null &";
