@@ -81,10 +81,12 @@ class Mothership
 
     public function sendRecordingThumbnails(Recording $recording)
     {
+        $this->client->timeout(600);
+
         try {
             $this->post('cameras/' . $recording->camera->identifier . '/recordings', [
                 'recorder' => Recorder::make()->getMachineId(),
-                'thumbnails' => base64_encode(Storage::get("recordings/{$recording->id}/thumbnails/thumbnails.zip")),
+                'thumbnails' => base64_encode(Storage::get("recordings/{$recording->id}/thumbnails.zip")),
             ]);
 
             return true;

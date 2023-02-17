@@ -32,4 +32,9 @@ class Recording extends Model
     {
         return "recordings/{$this->id}/thumbnails";
     }
+
+    public function rootPath()
+    {
+        return "recordings/{$this->id}";
+    }
 }
