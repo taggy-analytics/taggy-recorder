@@ -104,6 +104,7 @@ class Mothership
         try {
             $this->post('cameras/' . $recording->camera->identifier . '/recordings/thumbnails-movie', [
                 'recorder' => Recorder::make()->getMachineId(),
+                'recording_id' => $recording->id,
                 'movie' => base64_encode(Storage::get("recordings/{$recording->id}/thumbnails.mp4")),
             ]);
 

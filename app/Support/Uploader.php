@@ -19,4 +19,10 @@ class Uploader
             cache()->forever('files-to-upload-stack', $filesStack);
         });
     }
+
+    public function uploadNext()
+    {
+        Mothership::make()
+            ->
+    }
 }

@@ -13,9 +13,11 @@ class HandleRecordingsWithMothership extends MothershipAction
 {
     protected function executeAction()
     {
+        /*
         $this->reportFinishedRecordings();
         $this->checkRecordingsToUpload();
         $this->checkRecordingsToDelete();
+        */
     }
 
     private function checkRecordingsToUpload()
