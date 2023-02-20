@@ -67,9 +67,9 @@ class Mothership
         }
     }
 
-    public function confirmRecordingUploadRequest($videoId, $totalFiles)
+    public function confirmRecordingUploadRequest($videoId, $totalSegments)
     {
-        return $this->post('videos/' . $videoId . '/confirm-recording-upload-request', compact('totalFiles'));
+        return $this->post('videos/' . $videoId . '/confirm-recording-upload-request', compact('totalSegments'));
     }
 
     public function getDeleteRecordingRequests()
@@ -161,6 +161,8 @@ class Mothership
     {
         $response = $this->client
             ->{$method}($url, $data);
+
+        dump($data);
 
         if($response->status() >= 400) {
             throw new MothershipException($response, $method, $url);
