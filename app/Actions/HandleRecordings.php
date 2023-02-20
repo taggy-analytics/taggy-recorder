@@ -2,6 +2,7 @@
 
 namespace App\Actions;
 
+use Alchemy\BinaryDriver\Exception\ExecutionFailureException;
 use App\Actions\Preprocessing\CreateThumbnailForRecordingFile;
 use App\Enums\RecordingFileStatus;
 use App\Enums\RecordingStatus;
@@ -51,8 +52,14 @@ class HandleRecordings
     {
         if(Camera::noCameraIsRecording()) {
             foreach(RecordingFile::withStatus(RecordingFileStatus::TO_BE_THUMBNAILED)->load('recording') as $file) {
-                app(CreateThumbnailForRecordingFile::class)
-                    ->execute($file);
+                try {
+                    app(CreateThumbnailForRecordingFile::class)
+                        ->execute($file);
+                }
+                catch(ExecutionFailureException $exception)
+                {
+                    
+                }
             }
         }
     }
