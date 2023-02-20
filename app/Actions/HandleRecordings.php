@@ -2,7 +2,6 @@
 
 namespace App\Actions;
 
-use Alchemy\BinaryDriver\Exception\ExecutionFailureException;
 use App\Actions\Preprocessing\CreateThumbnailForRecordingFile;
 use App\Enums\RecordingFileStatus;
 use App\Enums\RecordingStatus;
@@ -10,6 +9,7 @@ use App\Models\Camera;
 use App\Models\Recording;
 use App\Models\RecordingFile;
 use App\Support\Recorder;
+use FFMpeg\Exception\RuntimeException;
 use Illuminate\Support\Facades\Storage;
 use ZipArchive;
 
@@ -52,14 +52,8 @@ class HandleRecordings
     {
         if(Camera::noCameraIsRecording()) {
             foreach(RecordingFile::withStatus(RecordingFileStatus::TO_BE_THUMBNAILED)->load('recording') as $file) {
-                try {
-                    app(CreateThumbnailForRecordingFile::class)
-                        ->execute($file);
-                }
-                catch(ExecutionFailureException $exception)
-                {
-                    
-                }
+                app(CreateThumbnailForRecordingFile::class)
+                    ->execute($file);
             }
         }
     }
