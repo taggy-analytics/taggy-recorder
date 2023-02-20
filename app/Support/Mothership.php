@@ -7,7 +7,6 @@ use App\Http\Resources\CameraResource;
 use App\Models\Camera;
 use App\Models\Recording;
 use Exception;
-use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Storage;
 use Spatie\Crypto\Rsa\PrivateKey;
@@ -66,6 +65,11 @@ class Mothership
             // mothership returns 404
             return [];
         }
+    }
+
+    public function confirmRecordingUploadRequest($videoId, $totalFiles)
+    {
+        return $this->post('videos/' . $videoId . '/confirm-recording-upload-request', compact('totalFiles'));
     }
 
     public function getDeleteRecordingRequests()

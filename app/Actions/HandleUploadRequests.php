@@ -14,16 +14,20 @@ class HandleUploadRequests
         $mothership = Mothership::make();
 
         foreach($mothership->getUploadRecordingRequests() as $uploadRecordingRequest) {
+            dump($uploadRecordingRequest);
+
             $recording = Recording::find($uploadRecordingRequest['recording']['remote_id']);
             $start = floor($uploadRecordingRequest['range'][0] * $recording->files->count());
             $end = ceil($uploadRecordingRequest['range'][1] * $recording->files->count());
 
             $fileIdsToUpload = $recording->files->slice($start, $end - $start)->pluck('id');
 
-            RecordingFile::query()
+            $numberOfFilesToUpload = RecordingFile::query()
                 ->whereIn('id', $fileIdsToUpload)
                 ->whereNot('status', RecordingFileStatus::UPLOADED)
                 ->update(['status' => RecordingFileStatus::TO_BE_UPLOADED]);
+
+            $mothership->confirmRecordingUploadRequest($uploadRecordingRequest['video_id'], $numberOfFilesToUpload);
         }
     }
 }
