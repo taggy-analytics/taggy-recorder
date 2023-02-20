@@ -34,6 +34,7 @@ return new class extends Migration
             $table->unsignedBigInteger('recording_id')->index();
             $table->string('name');
             $table->string('type')->index();
+            $table->unsignedBigInteger('video_id')->index()->nullable();
             $table->string('status')->index()->default(\App\Enums\RecordingFileStatus::default()->value);
             $table->timestamps();
         });

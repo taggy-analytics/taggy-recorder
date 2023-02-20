@@ -25,7 +25,10 @@ class HandleUploadRequests
             $numberOfFilesToUpload = RecordingFile::query()
                 ->whereIn('id', $fileIdsToUpload)
                 ->whereNot('status', RecordingFileStatus::UPLOADED)
-                ->update(['status' => RecordingFileStatus::TO_BE_UPLOADED]);
+                ->update([
+                    'status' => RecordingFileStatus::TO_BE_UPLOADED,
+                    'video_id' => $uploadRecordingRequest['video_id'],
+                ]);
 
             $mothership->confirmRecordingUploadRequest($uploadRecordingRequest['video_id'], $numberOfFilesToUpload);
         }

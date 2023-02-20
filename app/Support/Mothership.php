@@ -6,6 +6,7 @@ use App\Exceptions\MothershipException;
 use App\Http\Resources\CameraResource;
 use App\Models\Camera;
 use App\Models\Recording;
+use App\Models\RecordingFile;
 use Exception;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Storage;
@@ -120,6 +121,13 @@ class Mothership
         }
     }
 
+    public function sendRecordingFile(RecordingFile $file)
+    {
+        $this->client->timeout(600);
+
+        // ToDo
+    }
+
     public function isOnline()
     {
         try {
@@ -161,8 +169,6 @@ class Mothership
     {
         $response = $this->client
             ->{$method}($url, $data);
-
-        dump($data);
 
         if($response->status() >= 400) {
             throw new MothershipException($response, $method, $url);
