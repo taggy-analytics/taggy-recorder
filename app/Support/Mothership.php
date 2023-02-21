@@ -68,9 +68,12 @@ class Mothership
         }
     }
 
-    public function confirmRecordingUploadRequest($videoId, $totalSegments)
+    public function confirmRecordingUploadRequest($videoId, $totalSegments, $thumbnail)
     {
-        return $this->post('videos/' . $videoId . '/confirm-recording-upload-request', compact('totalSegments'));
+        return $this->post('videos/' . $videoId . '/confirm-recording-upload-request', [
+            'totalSegments' => $totalSegments,
+            'thumbnail' => base64_encode(Storage::get($thumbnail)),
+        ]);
     }
 
     public function getDeleteRecordingRequests()
@@ -125,9 +128,7 @@ class Mothership
     {
         $this->client->timeout(600);
 
-        dd($file->getPath());
-
-        $this->post('videos/' . $file->video_id . '/segment', [
+        $this->post('videos/' . $file->video_id . '/segments', [
             'name' => $file->name,
             'segment' => base64_encode(Storage::get($file->getPath())),
         ]);

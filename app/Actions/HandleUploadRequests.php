@@ -6,6 +6,8 @@ use App\Enums\RecordingFileStatus;
 use App\Models\Recording;
 use App\Models\RecordingFile;
 use App\Support\Mothership;
+use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\Storage;
 
 class HandleUploadRequests
 {
@@ -14,8 +16,6 @@ class HandleUploadRequests
         $mothership = Mothership::make();
 
         foreach($mothership->getUploadRecordingRequests() as $uploadRecordingRequest) {
-            dump($uploadRecordingRequest);
-
             $recording = Recording::find($uploadRecordingRequest['recording']['remote_id']);
             $start = floor($uploadRecordingRequest['range'][0] * $recording->files->count());
             $end = ceil($uploadRecordingRequest['range'][1] * $recording->files->count());
@@ -30,7 +30,9 @@ class HandleUploadRequests
                     'video_id' => $uploadRecordingRequest['video_id'],
                 ]);
 
-            $mothership->confirmRecordingUploadRequest($uploadRecordingRequest['video_id'], $numberOfFilesToUpload);
+            $thumbnail = Arr::first(Storage::files($recording->thumbnailPath()));
+
+            $mothership->confirmRecordingUploadRequest($uploadRecordingRequest['video_id'], $numberOfFilesToUpload, $thumbnail);
         }
     }
 }
