@@ -114,6 +114,7 @@ class Mothership
                 'recorder' => Recorder::make()->getMachineId(),
                 'recording_id' => $recording->id,
                 'movie' => base64_encode(Storage::get("recordings/{$recording->id}/thumbnails.mp4")),
+                'playlist' => base64_encode(Storage::get("cameras/{$recording->camera->id }/recordings/{$recording->id}/video/video.m3u8")),
             ]);
 
             return true;
