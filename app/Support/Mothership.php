@@ -125,7 +125,12 @@ class Mothership
     {
         $this->client->timeout(600);
 
-        // ToDo
+        dd($file->getPath());
+
+        $this->post('videos/' . $file->video_id . '/segment', [
+            'name' => $file->name,
+            'segment' => base64_encode(Storage::get($file->getPath())),
+        ]);
     }
 
     public function isOnline()

@@ -21,7 +21,7 @@ class RecordingFile extends Model
         return $this->belongsTo(Recording::class);
     }
 
-    public function getPath($type)
+    public function getPath($type = 'video')
     {
         return $this->recording->getPath() . '/' . $type . '/' . $this->name;
     }
