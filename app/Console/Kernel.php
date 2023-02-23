@@ -19,7 +19,6 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        /*
         $schedule->command(HandleCameras::class)
             ->runInBackground()
             ->withoutOverlapping()
@@ -38,7 +37,6 @@ class Kernel extends ConsoleKernel
         $schedule->command(HandleUploadRequests::class)
             ->withoutOverlapping()
             ->everyMinute();
-        */
     }
 
     /**
