@@ -38,6 +38,10 @@ abstract class RtspCamera extends CameraType
 
     public function isRecording(Camera $camera)
     {
+        if($camera->process_id && !file_exists( "/proc/{$camera->process_id}")) {
+            $camera->update(['process_id' => null]);
+        }
+
         return filled($camera->process_id);
     }
 
