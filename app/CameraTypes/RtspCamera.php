@@ -21,7 +21,7 @@ abstract class RtspCamera extends CameraType
         $outputDirectory = $camera->storagePath() . '/' . $recording->id . '/video';
         $outputFile = $outputDirectory . '/video.m3u8';
         File::makeDirectory($outputDirectory, recursive: true);
-        $this->runFFmpegCommand($this->getRtspUrl($camera), $outputFile, '-codec copy -start_number 0 -hls_time ' . config('taggy-recorder.video-conversion.segment-duration') . ' -hls_list_size 0 -f hls');
+        $this->runFFmpegCommand($this->getRtspUrl($camera), $outputFile, '-force_key_frames expr:gte(t,n_forced*1) -codec copy -start_number 0 -hls_time ' . config('taggy-recorder.video-conversion.segment-duration') . ' -hls_list_size 0 -f hls');
     }
 
     public function stopRecording(Camera $camera)
