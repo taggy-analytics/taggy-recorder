@@ -100,7 +100,9 @@ abstract class CameraType
 
     public function runFFmpegCommand($inputFile, $outputFile, $command)
     {
-        $process = Process::start("ffmpeg -i $inputFile $command $outputFile");
+        $command = "ffmpeg -i $inputFile $command $outputFile";
+        info($command);
+        $process = Process::start($command);
         return $process->id();
         //$command = "nohup sudo -u taggy ffmpeg -i $inputFile $command $outputFile 2> /dev/null > /dev/null &";
         //info($command);
