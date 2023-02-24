@@ -27,7 +27,9 @@
         "spatie/file-system-watcher": "^1.1",
         "spatie/image": "^2.2",
         "spatie/laravel-queueable-action": "^2.14",
-        "spatie/laravel-ray": "^1.32"
+        "spatie/laravel-ray": "^1.32",
+        "ext-posix": "*",
+        "ext-pcntl": "*"
     },
     "require-dev": {
         "fakerphp/faker": "^1.9.1",

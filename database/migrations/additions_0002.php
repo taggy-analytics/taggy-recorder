@@ -16,6 +16,7 @@ return new class extends Migration
             $table->string('status')->index();
             $table->string('ip_address')->nullable();
             $table->string('recording_mode')->index()->default(\App\Enums\RecordingMode::default()->value);
+            $table->unsignedBigInteger('process_id')->nullable();
             $table->dateTime('sent_to_mothership_at')->nullable();
             $table->json('credentials')->nullable();
             $table->timestamps();

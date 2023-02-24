@@ -6,6 +6,7 @@ use App\Models\Camera;
 use App\Support\Recorder;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Process;
 use Illuminate\Support\Facades\Storage;
 
 abstract class RtspCamera extends CameraType
@@ -21,12 +22,13 @@ abstract class RtspCamera extends CameraType
         $outputDirectory = $camera->storagePath() . '/' . $recording->id . '/video';
         $outputFile = $outputDirectory . '/video-%05d.mp4';
         File::makeDirectory($outputDirectory, recursive: true);
-        $this->runFFmpegCommand($this->getRtspUrl($camera), $outputFile, '-c:v copy -c:a copy -f segment -segment_time ' . config('taggy-recorder.video-conversion.segment-duration'));
+        $processId = $this->runFFmpegCommand($this->getRtspUrl($camera), $outputFile, '-c:v copy -c:a copy -f segment -segment_time ' . config('taggy-recorder.video-conversion.segment-duration'));
+        $camera->update(['process_id' => $processId]);
     }
 
     public function stopRecording(Camera $camera)
     {
-        exec('kill -9 ' . Arr::get($this->getProcess($camera), 'processId'));
+        posix_kill($camera->process_id, SIGINT);
     }
 
     private function getRtspUrl(Camera $camera)
@@ -36,13 +38,15 @@ abstract class RtspCamera extends CameraType
 
     public function isRecording(Camera $camera)
     {
-        return filled($this->getProcess($camera));
+        return filled($camera->process_id);
     }
 
+    /*
     private function getProcess(Camera $camera)
     {
         return Recorder::make()->getRunningFfmpegProcesses()
             ->filter(fn($process) => $process['input'] == $this->getRtspUrl($camera))
             ->first();
     }
+    */
 }

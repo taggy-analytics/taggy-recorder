@@ -73,9 +73,9 @@ abstract class CameraType
                 ]);
         }
         else {
-            $result = Process::run([config('services.cli.arp'), '-a']);
+            $process = Process::run([config('services.cli.arp'), '-a']);
 
-            return collect(explode(PHP_EOL, $result->output()))
+            return collect(explode(PHP_EOL, $process->output()))
                 ->map(fn($line) => explode(' ', $line))
                 ->filter(fn($line) => count($line) > 5)
                 ->map(fn($line) => [
@@ -100,7 +100,8 @@ abstract class CameraType
 
     public function runFFmpegCommand($inputFile, $outputFile, $command)
     {
-        Process::start("nohup sudo -u taggy ffmpeg -i $inputFile $command $outputFile");
+        $process = Process::start("nohup sudo -u taggy ffmpeg -i $inputFile $command $outputFile");
+        return $process->id();
         //$command = "nohup sudo -u taggy ffmpeg -i $inputFile $command $outputFile 2> /dev/null > /dev/null &";
         //info($command);
         //exec($command);
