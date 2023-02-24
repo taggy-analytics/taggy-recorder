@@ -4,10 +4,9 @@ namespace App\CameraTypes;
 
 use App\Enums\CameraStatus;
 use App\Models\Camera;
-use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Process;
 use Illuminate\Support\Str;
-use Symfony\Component\Process\Process;
 
 abstract class CameraType
 {
@@ -74,10 +73,9 @@ abstract class CameraType
                 ]);
         }
         else {
-            $process = new Process([config('services.cli.arp'), '-a']);
-            $process->run();
+            $result = Process::run([config('services.cli.arp'), '-a']);
 
-            return collect(explode(PHP_EOL, $process->getOutput()))
+            return collect(explode(PHP_EOL, $result->output()))
                 ->map(fn($line) => explode(' ', $line))
                 ->filter(fn($line) => count($line) > 5)
                 ->map(fn($line) => [
@@ -102,8 +100,9 @@ abstract class CameraType
 
     public function runFFmpegCommand($inputFile, $outputFile, $command)
     {
-        $command = "nohup sudo -u taggy ffmpeg -i $inputFile $command $outputFile 2> /dev/null > /dev/null &";
-        info($command);
-        exec($command);
+        Process::start("nohup sudo -u taggy ffmpeg -i $inputFile $command $outputFile");
+        //$command = "nohup sudo -u taggy ffmpeg -i $inputFile $command $outputFile 2> /dev/null > /dev/null &";
+        //info($command);
+        //exec($command);
     }
 }
