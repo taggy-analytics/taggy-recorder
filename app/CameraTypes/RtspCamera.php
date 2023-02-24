@@ -23,7 +23,7 @@ abstract class RtspCamera extends CameraType
         $outputFile = $outputDirectory . '/video-%05d.mp4';
         File::makeDirectory($outputDirectory, recursive: true);
         $processId = $this->runFFmpegCommand($this->getRtspUrl($camera), $outputFile, '-c:v copy -c:a copy -f segment -segment_time ' . config('taggy-recorder.video-conversion.segment-duration'));
-        $camera->update(['process_id' => $processId]);
+        $camera->update(['process_id' => $processId + 1]);  // I don't know why, but the returned process ID is one less than the actual process ID
     }
 
     public function stopRecording(Camera $camera)
