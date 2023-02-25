@@ -2,7 +2,7 @@
 
 return [
     'video-conversion' => [
-        'segment-duration' => 1,
+        'segment-duration' => 20,
         'thumbnails' => [
             'nth' => 20,
         ]

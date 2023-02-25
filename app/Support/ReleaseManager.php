@@ -9,7 +9,9 @@ class ReleaseManager
 {
     public static function getReleases()
     {
-        return File::directories(base_path('..'));
+        $directories = File::directories(base_path('..'));
+        sort($directories);
+        return $directories;
     }
 
     public static function releasesToKeep()
