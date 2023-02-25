@@ -13,7 +13,7 @@ class CreateThumbnailForRecordingFile
 {
     public function execute(RecordingFile $file)
     {
-        $exportedFramePath = $file->thumbnailPath();
+        $exportedFramePath = $file->thumbnailsPath();
 
         try {
             FFMpeg::open($file->videoPath())

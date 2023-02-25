@@ -28,13 +28,13 @@ class Recording extends Model
         return 'cameras/' . $this->camera->id . '/recordings/' . $this->id . '/';
     }
 
-    public function thumbnailPath()
+    public function thumbnailsPath()
     {
         return $this->getPath() . "thumbnails";
     }
 
-    public function rootPath()
+    public function thumbnailsMoviePath()
     {
-        return "recordings/{$this->id}";
+        return $this->thumbnailsPath() . '/thumbnails.mp4';
     }
 }
