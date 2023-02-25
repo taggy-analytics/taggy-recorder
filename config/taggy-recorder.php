@@ -7,4 +7,5 @@ return [
             'nth' => 20,
         ]
     ],
+    'releases-to-keep' => 4,
 ];

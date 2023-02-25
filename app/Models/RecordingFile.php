@@ -34,6 +34,6 @@ class RecordingFile extends Model
 
     public function videoPath()
     {
-        return $this->getPath('videos');
+        return $this->getPath('video');
     }
 }
