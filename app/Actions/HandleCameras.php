@@ -11,8 +11,6 @@ class HandleCameras
 {
     public function execute()
     {
-        info('Handle cameras');
-
         CameraType::discoverCameras();
 
         foreach(Camera::all() as $camera) {

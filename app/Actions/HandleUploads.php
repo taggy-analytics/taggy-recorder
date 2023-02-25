@@ -22,8 +22,6 @@ class HandleUploads
     {
         $mothership = Mothership::make();
 
-        info('Manage uploads');
-
         $files = RecordingFile::where('status', RecordingFileStatus::TO_BE_UPLOADED)->get();
 
         if($recording = Recording::where('status', RecordingStatus::ZIP_FILE_CREATED)->first()) {

@@ -24,6 +24,7 @@ abstract class PseudoDaemon extends Command
 
     public function process()
     {
+        info('Running ' . $this->action . '...');
         app($this->action)
             ->execute();
     }
