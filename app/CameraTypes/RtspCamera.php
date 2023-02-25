@@ -3,6 +3,7 @@
 namespace App\CameraTypes;
 
 use App\Models\Camera;
+use App\Support\FFMpegCommand;
 use App\Support\Recorder;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\File;
@@ -22,7 +23,7 @@ abstract class RtspCamera extends CameraType
         $outputDirectory = $camera->storagePath() . '/' . $recording->id . '/video';
         $outputFile = $outputDirectory . '/video-%05d.ts';
         File::makeDirectory($outputDirectory, recursive: true);
-        $processId = $this->runFFmpegCommand($this->getRtspUrl($camera), $outputFile, '-c copy -f segment -reset_timestamps 1 -segment_list ' . $outputDirectory . '/video.ffconcat -segment_time ' . config('taggy-recorder.video-conversion.segment-duration'));
+        $processId = FFMpegCommand::run($this->getRtspUrl($camera), $outputFile, '-c copy -f segment -reset_timestamps 1 -segment_list ' . $outputDirectory . '/video.ffconcat -segment_time ' . config('taggy-recorder.video-conversion.segment-duration'));
         $camera->update(['process_id' => $processId]);
     }
 

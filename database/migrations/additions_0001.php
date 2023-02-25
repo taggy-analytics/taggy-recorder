@@ -23,9 +23,9 @@ return new class extends Migration
 
         Schema::create('recordings', function (Blueprint $table) {
             $table->id();
+            $table->unsignedInteger('camera_id')->index();
             $table->string('name')->index();
             $table->string('status')->index()->default(\App\Enums\RecordingStatus::default()->value);
-            $table->unsignedInteger('camera_id')->index();
             $table->unsignedBigInteger('process_id')->nullable();
             $table->timestamps();
         });

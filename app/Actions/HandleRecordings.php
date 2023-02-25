@@ -8,6 +8,7 @@ use App\Enums\RecordingFileType;
 use App\Enums\RecordingStatus;
 use App\Models\Camera;
 use App\Models\Recording;
+use App\Support\FFMpegCommand;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Process;
 use Illuminate\Support\Facades\Storage;
@@ -59,12 +60,13 @@ class HandleRecordings
     {
         if(Camera::noCameraIsRecording()) {
             foreach(Recording::withStatus(RecordingStatus::THUMBNAILS_CREATED) as $recording) {
-                $command = 'ffmpeg -framerate 2 -i "' . Storage::path($recording->thumbnailsPath()) . '/video-%05d.jpg" -c:v libx264 -pix_fmt yuv420p -vf "pad=ceil(iw/2)*2:ceil(ih/2)*2" ' . Storage::path($recording->thumbnailsMoviePath());
-                // $command = 'ffmpeg -i "' . Storage::path($recording->getPath()) . 'video/video.ffconcat" -r 1 -c:v libx264 -pix_fmt yuv420p -vf "pad=ceil(iw/2)*2:ceil(ih/2)*2" ' . Storage::path("{$recording->rootPath()}/thumbnails.mp4");
-                info($command);
-                $process = Process::start($command);
-                $recording->update(['process_id' => $process->id()]);
+                $processId = FFMpegCommand::run(
+                    Storage::path($recording->thumbnailsPath()) . '/video-%05d.jpg',
+                    Storage::path($recording->thumbnailsMoviePath()),
+                    '-framerate 2 -c:v libx264 -pix_fmt yuv420p -vf "pad=ceil(iw/2)*2:ceil(ih/2)*2"'
+                );
 
+                $recording->update(['process_id' => $processId]);
                 $recording->setStatus(RecordingStatus::CREATING_MOVIE);
             }
         }
