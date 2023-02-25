@@ -59,7 +59,6 @@ class HandleRecordings
     {
         if(Camera::noCameraIsRecording()) {
             foreach(Recording::withStatus(RecordingStatus::THUMBNAILS_CREATED) as $recording) {
-                Storage::createDirectory($recording->rootPath());
                 $command = 'ffmpeg -framerate 2 -i "' . Storage::path($recording->thumbnailsPath()) . '/*.jpg" -c:v libx264 -pix_fmt yuv420p -vf "pad=ceil(iw/2)*2:ceil(ih/2)*2" ' . Storage::path($recording->thumbnailsMoviePath());
                 // $command = 'ffmpeg -i "' . Storage::path($recording->getPath()) . 'video/video.ffconcat" -r 1 -c:v libx264 -pix_fmt yuv420p -vf "pad=ceil(iw/2)*2:ceil(ih/2)*2" ' . Storage::path("{$recording->rootPath()}/thumbnails.mp4");
                 info($command);
