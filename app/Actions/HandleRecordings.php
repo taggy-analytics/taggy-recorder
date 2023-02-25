@@ -46,7 +46,7 @@ class HandleRecordings
             foreach(Recording::withStatus(RecordingStatus::PREPARING_PREPROCESSING) as $recording) {
                 $concatFilePath = $recording->camera->storagePath() . '/' . $recording->id . '/video/video.ffconcat';
                 $concatFile = explode(PHP_EOL, File::get($concatFilePath));
-                $concatFile = array_shift($concatFile);
+                array_shift($concatFile);
                 foreach ($concatFile as $line) {
                     $recording->files()->firstOrCreate([
                         'name' => Str::replaceFirst('file ', '', $line),
@@ -63,7 +63,7 @@ class HandleRecordings
         if(Camera::noCameraIsRecording()) {
             foreach(Recording::withStatus(RecordingStatus::CREATED_RECORDINGS_IN_DB) as $recording) {
                 // $command = 'ffmpeg -f image2 -r 2 -pattern_type glob -i "' . Storage::path($recording->thumbnailPath()) . '/*.jpg" -c:v libx264 -pix_fmt yuv420p -vf "pad=ceil(iw/2)*2:ceil(ih/2)*2" ' . Storage::path("{$recording->rootPath()}/thumbnails.mp4");
-                $command = 'ffmpeg -i "' . Storage::path($recording->getPath()) . '/video.ffconcat" -r 1 -c:v libx264 -pix_fmt yuv420p -vf "pad=ceil(iw/2)*2:ceil(ih/2)*2" ' . Storage::path("{$recording->rootPath()}/thumbnails.mp4");
+                $command = 'ffmpeg -i "' . Storage::path($recording->getPath()) . 'video/video.ffconcat" -r 1 -c:v libx264 -pix_fmt yuv420p -vf "pad=ceil(iw/2)*2:ceil(ih/2)*2" ' . Storage::path("{$recording->rootPath()}/thumbnails.mp4");
                 info($command);
                 $process = Process::start($command);
                 $recording->update(['process_id' => $process->id()]);
