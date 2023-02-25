@@ -13,6 +13,7 @@ class DeleteOldReleases
 
         foreach(ReleaseManager::getReleases() as $release) {
             if(!in_array($release, $releasesToKeep)) {
+                dump('Deleting old release: ' . $release);
                 File::deleteDirectory($release);
             }
         }
