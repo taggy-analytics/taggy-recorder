@@ -8,13 +8,10 @@ use App\Enums\RecordingFileType;
 use App\Enums\RecordingStatus;
 use App\Models\Camera;
 use App\Models\Recording;
-use App\Models\RecordingFile;
-use App\Support\Recorder;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Process;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
-use ZipArchive;
 
 class HandleRecordings
 {
@@ -45,7 +42,7 @@ class HandleRecordings
         if(Camera::noCameraIsRecording()) {
             foreach(Recording::withStatus(RecordingStatus::PREPARING_PREPROCESSING) as $recording) {
                 $concatFilePath = $recording->camera->storagePath() . '/' . $recording->id . '/video/video.ffconcat';
-                $concatFile = explode(PHP_EOL, File::get($concatFilePath));
+                $concatFile = explode(PHP_EOL, trim(File::get($concatFilePath)));
                 array_shift($concatFile);
                 foreach ($concatFile as $line) {
                     $recording->files()->firstOrCreate([
@@ -89,7 +86,7 @@ class HandleRecordings
     {
         if(Camera::noCameraIsRecording()) {
             foreach (Recording::withStatus(RecordingStatus::CREATED_RECORDING_FILES_IN_DB) as $recording) {
-                foreach($recording->files as $file) {
+                foreach($recording->files->whereNot('status', RecordingFileStatus::THUMBNAIL_CREATED) as $file) {
                     app(CreateThumbnailForRecordingFile::class)
                         ->execute($file);
                 }

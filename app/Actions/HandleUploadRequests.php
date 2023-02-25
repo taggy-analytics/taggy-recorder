@@ -30,7 +30,7 @@ class HandleUploadRequests
                     'video_id' => $uploadRecordingRequest['video_id'],
                 ]);
 
-            $thumbnail = Arr::first(Storage::files($recording->thumbnailPath()));
+            $thumbnail = RecordingFile::find(Arr::first($fileIdsToUpload))->thumbnailPath();
 
             $mothership->confirmRecordingUploadRequest($uploadRecordingRequest['video_id'], $numberOfFilesToUpload, $thumbnail);
         }

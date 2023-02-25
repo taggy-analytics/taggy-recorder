@@ -6,6 +6,7 @@ use App\Enums\RecordingFileStatus;
 use App\Enums\RecordingFileType;
 use App\Models\Traits\HasStatus;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Str;
 
 class RecordingFile extends Model
 {
@@ -21,9 +22,18 @@ class RecordingFile extends Model
         return $this->belongsTo(Recording::class);
     }
 
-    public function getPath($type = 'video')
+    private function getPath($type)
     {
         return $this->recording->getPath() . '/' . $type . '/' . $this->name;
     }
 
+    public function thumbnailPath()
+    {
+        return Str::replaceLast('.ts', '.jpg', $this->getPath('thumbnails'));
+    }
+
+    public function videoPath()
+    {
+        return $this->getPath('videos');
+    }
 }

@@ -13,10 +13,10 @@ class CreateThumbnailForRecordingFile
 {
     public function execute(RecordingFile $file)
     {
-        $exportedFramePath = "{$file->recording->thumbnailPath()}/{$file->id}.jpg";
+            $exportedFramePath = "{$file->recording->thumbnailPath()}/{$file->name}.jpg";
 
         try {
-            FFMpeg::open($file->getPath('video'))
+            FFMpeg::open($file->videoPath())
                 ->getFrameFromSeconds(0)
                 ->export()
                 ->toDisk('local')
