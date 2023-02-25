@@ -8,7 +8,7 @@ use Illuminate\Console\Command;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\File;
 
-class PseudoDaemon extends Command
+abstract class PseudoDaemon extends Command
 {
     use IsPseudoDaemon;
 
