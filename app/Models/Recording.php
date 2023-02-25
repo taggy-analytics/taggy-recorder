@@ -30,7 +30,7 @@ class Recording extends Model
 
     public function thumbnailPath()
     {
-        return "recordings/{$this->id}/thumbnails";
+        return $this->getPath() . "thumbnails";
     }
 
     public function rootPath()
