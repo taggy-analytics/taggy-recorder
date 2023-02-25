@@ -86,7 +86,7 @@ class HandleRecordings
     {
         if(Camera::noCameraIsRecording()) {
             foreach (Recording::withStatus(RecordingStatus::CREATED_RECORDING_FILES_IN_DB) as $recording) {
-                foreach($recording->files->whereNot('status', RecordingFileStatus::THUMBNAIL_CREATED) as $file) {
+                foreach($recording->files->where('status', '<>', RecordingFileStatus::THUMBNAIL_CREATED) as $file) {
                     app(CreateThumbnailForRecordingFile::class)
                         ->execute($file);
                 }
