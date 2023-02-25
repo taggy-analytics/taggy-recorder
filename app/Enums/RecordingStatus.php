@@ -6,7 +6,7 @@ enum RecordingStatus: string
 {
     case CREATED = 'created';
     case PREPARING_PREPROCESSING = 'preparing-preprocessing';
-    case CREATED_RECORDINGS_IN_DB = 'created-recordings-in-db';
+    case CREATED_RECORDING_FILES_IN_DB = 'created-recording-files-in-db';
     case THUMBNAILS_SELECTED = 'thumbnails-selected';
     case THUMBNAILS_CREATED = 'thumbnails-created';
     case ZIP_FILE_CREATED = 'zip-file-created';

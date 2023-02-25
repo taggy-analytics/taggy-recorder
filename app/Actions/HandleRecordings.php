@@ -22,10 +22,10 @@ class HandleRecordings
     {
         $this->setPreprocessingStatusForFinishedRecordings();
         // $this->chooseRecordingFilesToBeUsedInThumbnails();
-        // $this->createThumbnailsForRecordingFiles();
         // $this->checkIfThumbnailCreationWasFinishedForRecording();
         // $this->createZipFileWithThumbnails();
         $this->createRecordingFilesInDB();
+        $this->createThumbnailsForRecordingFiles();
         $this->createMovieWithThumbnails();
         $this->checkIfMovieCreationWasFinishedForRecording();
 
@@ -53,7 +53,7 @@ class HandleRecordings
                         'type' => RecordingFileType::VIDEO_TS,
                     ]);
                 }
-                $recording->setStatus(RecordingStatus::CREATED_RECORDINGS_IN_DB);
+                $recording->setStatus(RecordingStatus::CREATED_RECORDING_FILES_IN_DB);
             }
         }
     }
@@ -61,10 +61,10 @@ class HandleRecordings
     private function createMovieWithThumbnails()
     {
         if(Camera::noCameraIsRecording()) {
-            foreach(Recording::withStatus(RecordingStatus::CREATED_RECORDINGS_IN_DB) as $recording) {
-                // $command = 'ffmpeg -f image2 -r 2 -pattern_type glob -i "' . Storage::path($recording->thumbnailPath()) . '/*.jpg" -c:v libx264 -pix_fmt yuv420p -vf "pad=ceil(iw/2)*2:ceil(ih/2)*2" ' . Storage::path("{$recording->rootPath()}/thumbnails.mp4");
+            foreach(Recording::withStatus(RecordingStatus::THUMBNAILS_CREATED) as $recording) {
                 Storage::createDirectory($recording->rootPath());
-                $command = 'ffmpeg -i "' . Storage::path($recording->getPath()) . 'video/video.ffconcat" -r 1 -c:v libx264 -pix_fmt yuv420p -vf "pad=ceil(iw/2)*2:ceil(ih/2)*2" ' . Storage::path("{$recording->rootPath()}/thumbnails.mp4");
+                $command = 'ffmpeg -f image2 -r 2 -pattern_type glob -i "' . Storage::path($recording->thumbnailPath()) . '/*.jpg" -c:v libx264 -pix_fmt yuv420p -vf "pad=ceil(iw/2)*2:ceil(ih/2)*2" ' . Storage::path("{$recording->rootPath()}/thumbnails.mp4");
+                // $command = 'ffmpeg -i "' . Storage::path($recording->getPath()) . 'video/video.ffconcat" -r 1 -c:v libx264 -pix_fmt yuv420p -vf "pad=ceil(iw/2)*2:ceil(ih/2)*2" ' . Storage::path("{$recording->rootPath()}/thumbnails.mp4");
                 info($command);
                 $process = Process::start($command);
                 $recording->update(['process_id' => $process->id()]);
@@ -85,6 +85,19 @@ class HandleRecordings
         }
     }
 
+    private function createThumbnailsForRecordingFiles()
+    {
+        if(Camera::noCameraIsRecording()) {
+            foreach (Recording::withStatus(RecordingStatus::CREATED_RECORDING_FILES_IN_DB) as $recording) {
+                foreach($recording->files as $file) {
+                    app(CreateThumbnailForRecordingFile::class)
+                        ->execute($file);
+                }
+                $recording->setStatus(RecordingStatus::THUMBNAILS_CREATED);
+            }
+        }
+    }
+
     /*
     private function chooseRecordingFilesToBeUsedInThumbnails()
     {
@@ -98,15 +111,7 @@ class HandleRecordings
        }
     }
 
-    private function createThumbnailsForRecordingFiles()
-    {
-       if(Camera::noCameraIsRecording()) {
-           foreach(RecordingFile::withStatus(RecordingFileStatus::TO_BE_THUMBNAILED)->load('recording') as $file) {
-               app(CreateThumbnailForRecordingFile::class)
-                   ->execute($file);
-           }
-       }
-    }
+
 
     private function checkIfThumbnailCreationWasFinishedForRecording()
     {
