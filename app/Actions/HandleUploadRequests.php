@@ -7,7 +7,6 @@ use App\Models\Recording;
 use App\Models\RecordingFile;
 use App\Support\Mothership;
 use Illuminate\Support\Arr;
-use Illuminate\Support\Facades\Storage;
 
 class HandleUploadRequests
 {
@@ -19,6 +18,7 @@ class HandleUploadRequests
             $recording = Recording::find($uploadRecordingRequest['recording']['remote_id']);
             $start = floor($uploadRecordingRequest['range'][0] * $recording->files->count());
             $end = ceil($uploadRecordingRequest['range'][1] * $recording->files->count());
+            $totalVideoDuration = ($end - $start + 1) * config('taggy-recorder.video-conversion.segment-duration');
 
             $fileIdsToUpload = $recording->files->slice($start, $end - $start)->pluck('id');
 
@@ -32,7 +32,12 @@ class HandleUploadRequests
 
             $thumbnail = RecordingFile::find(Arr::first($fileIdsToUpload))->thumbnailsPath();
 
-            $mothership->confirmRecordingUploadRequest($uploadRecordingRequest['video_id'], $numberOfFilesToUpload, $thumbnail);
+            $mothership->confirmRecordingUploadRequest(
+                $uploadRecordingRequest['video_id'],
+                $numberOfFilesToUpload,
+                $thumbnail,
+                $totalVideoDuration,
+            );
         }
     }
 }

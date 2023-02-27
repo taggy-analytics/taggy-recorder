@@ -68,11 +68,12 @@ class Mothership
         }
     }
 
-    public function confirmRecordingUploadRequest($videoId, $totalSegments, $thumbnail)
+    public function confirmRecordingUploadRequest($videoId, $totalSegments, $thumbnail, $totalVideoDuration)
     {
         return $this->post('videos/' . $videoId . '/confirm-recording-upload-request', [
             'totalSegments' => $totalSegments,
             'thumbnail' => base64_encode(Storage::get($thumbnail)),
+            'duration' => $totalVideoDuration,
         ]);
     }
 
