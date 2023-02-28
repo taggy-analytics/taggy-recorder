@@ -20,8 +20,13 @@
                 </td>
                 <td>
                     @if($camera['isRecording'])
-                        <div class="animate-pulse rounded-full bg-green-500 h-6 w-6"></div>
-                        <x-button primary label="Stop" wire:click="stopRecording({{ $camera['id'] }})" />
+                        <div class="flex justify">
+                            <div class="animate-pulse rounded-full bg-red-500 h-6 w-6"></div>
+                            <div>
+                                <x-button primary label="Stop" wire:click="stopRecording({{ $camera['id'] }})" />
+                            </div>
+                        </div>
+
                     @elseif($camera['status'] == \App\Enums\CameraStatus::READY)
                         <x-button negative label="Start" wire:click="startRecording({{ $camera['id'] }})" />
                     @endif
