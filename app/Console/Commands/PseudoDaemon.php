@@ -19,6 +19,7 @@ abstract class PseudoDaemon extends Command
      */
     public function handle()
     {
+        info('Starting pseudo daemon ' . $this->action . '...');
         $this->runAsPseudoDaemon();
     }
 
