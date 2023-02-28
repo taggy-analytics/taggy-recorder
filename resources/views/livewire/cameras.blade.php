@@ -20,8 +20,8 @@
                 </td>
                 <td>
                     @if($camera['isRecording'])
-                        <div class="flex justify">
-                            <div class="animate-pulse rounded-full bg-red-500 h-6 w-6"></div>
+                        <div class="flex justify space-x-2">
+                            <div class="animate-pulse rounded-full bg-red-500 h-8 w-8"></div>
                             <div>
                                 <x-button primary label="Stop" wire:click="stopRecording({{ $camera['id'] }})" />
                             </div>

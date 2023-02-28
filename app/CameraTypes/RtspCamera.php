@@ -4,11 +4,7 @@ namespace App\CameraTypes;
 
 use App\Models\Camera;
 use App\Support\FFMpegCommand;
-use App\Support\Recorder;
-use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\File;
-use Illuminate\Support\Facades\Process;
-use Illuminate\Support\Facades\Storage;
 
 abstract class RtspCamera extends CameraType
 {
@@ -29,7 +25,8 @@ abstract class RtspCamera extends CameraType
 
     public function stopRecording(Camera $camera)
     {
-        posix_kill($camera->process_id, SIGINT);
+        // posix_kill($camera->process_id, SIGINT);
+        posix_kill($camera->process_id, 2);
     }
 
     private function getRtspUrl(Camera $camera)
