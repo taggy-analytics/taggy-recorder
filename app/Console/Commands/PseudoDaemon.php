@@ -5,8 +5,6 @@ namespace App\Console\Commands;
 use App\Support\ReleaseManager;
 use Hammerstone\PseudoDaemon\IsPseudoDaemon;
 use Illuminate\Console\Command;
-use Illuminate\Support\Arr;
-use Illuminate\Support\Facades\File;
 
 abstract class PseudoDaemon extends Command
 {

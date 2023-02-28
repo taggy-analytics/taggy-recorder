@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\CameraTypes\CameraType;
+use App\Data\CredentialsStatusData;
 use App\Enums\CameraStatus;
 use App\Enums\RecordingMode;
 use Illuminate\Database\Eloquent\Casts\AsCollection;
@@ -16,6 +17,7 @@ class Camera extends Model
         'status' => CameraStatus::class,
         'credentials' => AsCollection::class,
         'recording_mode' => RecordingMode::class,
+        'credentials_status' => CredentialsStatusData::class,
     ];
 
     public function recordings()

@@ -52,6 +52,7 @@ return new class extends Migration
             $table->unsignedBigInteger('process_id')->nullable();
             $table->dateTime('sent_to_mothership_at')->nullable();
             $table->json('credentials')->nullable();
+            $table->json('credentials_status')->nullable();
             $table->timestamps();
         });
     }
