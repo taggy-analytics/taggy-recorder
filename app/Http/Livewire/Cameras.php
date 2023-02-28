@@ -32,4 +32,14 @@ class Cameras extends Component
 
         Camera::find($key[1])->update([$key[2] => $value]);
     }
+
+    public function startRecording(Camera $camera)
+    {
+        $camera->startRecording();
+    }
+
+    public function stopRecording(Camera $camera)
+    {
+        $camera->stopRecording();
+    }
 }
