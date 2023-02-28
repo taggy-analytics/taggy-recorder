@@ -3,6 +3,7 @@
 namespace App\Actions;
 
 use App\Actions\Mothership\GetCredentialsForUnauthenticatedCameras;
+use App\Actions\Mothership\SendCamerasWithInvalidCredentialsToMothership;
 use App\Actions\Mothership\SendDiscoveredCamerasToMothership;
 use App\CameraTypes\CameraType;
 use App\Models\Camera;
@@ -21,5 +22,6 @@ class HandleCameras
         app(CheckAndStartRecording::class)->execute();
         app(SendDiscoveredCamerasToMothership::class)->execute();
         app(GetCredentialsForUnauthenticatedCameras::class)->execute();
+        app(SendCamerasWithInvalidCredentialsToMothership::class)->execute();
     }
 }
