@@ -23,6 +23,7 @@ class Cameras extends Component
                 'status' => $camera->status,
                 'recording_mode' => $camera->recording_mode,
                 'isRecording' => $camera->isRecording(),
+                'duration' => $camera->isRecording() ? $camera->recordings()->latest()->first()->getDuration() : null,
             ]]);
     }
 

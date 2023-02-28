@@ -27,6 +27,7 @@ return new class extends Migration
             $table->string('name')->index();
             $table->string('status')->index()->default(\App\Enums\RecordingStatus::default()->value);
             $table->unsignedBigInteger('process_id')->nullable();
+            $table->dateTime('stopped_at')->nullable();
             $table->timestamps();
         });
 

@@ -23,6 +23,9 @@
                         <div class="flex justify space-x-2">
                             <div class="animate-pulse rounded-full bg-red-500 h-8 w-8"></div>
                             <div>
+                                {{ sprintf('%02d:%02d', $camera['duration'] / 60, $camera['duration'] % 60) }}
+                            </div>
+                            <div>
                                 <x-button primary label="Stop" wire:click="stopRecording({{ $camera['id'] }})" />
                             </div>
                         </div>
