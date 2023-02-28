@@ -57,6 +57,11 @@ class Mothership
         return $this->get('cameras/' . $camera->identifier . '/credentials');
     }
 
+    public function reportInvalidCameraCredentials(Camera $camera)
+    {
+        return $this->post('cameras/' . $camera->identifier . '/invalid-credentials');
+    }
+
     public function getUploadRecordingRequests()
     {
         try {
