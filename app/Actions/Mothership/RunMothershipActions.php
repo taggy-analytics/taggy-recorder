@@ -9,7 +9,7 @@ class RunMothershipActions
 {
     public function execute()
     {
-        if(!!Storage::exists(Mothership::MOTHERSHIP_TOKEN_FILENAME)) {
+        if(!Storage::exists(Mothership::MOTHERSHIP_TOKEN_FILENAME)) {
             return;
         }
 
