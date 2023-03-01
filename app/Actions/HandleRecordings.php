@@ -25,7 +25,7 @@ class HandleRecordings
         $this->createThumbnailsForRecordingFiles();
         $this->createMovieWithThumbnails();
         $this->checkIfMovieCreationWasFinishedForRecording();
-
+        $this->deleteRecordings();
     }
 
     private function setPreprocessingStatusForFinishedRecordings()
@@ -91,6 +91,15 @@ class HandleRecordings
                         ->execute($file);
                 }
                 $recording->setStatus(RecordingStatus::THUMBNAILS_CREATED);
+            }
+        }
+    }
+
+    private function deleteRecordings()
+    {
+        if(Camera::noCameraIsRecording()) {
+            foreach (Recording::withStatus(RecordingStatus::TO_BE_DELETED) as $recording) {
+                $recording->delete();
             }
         }
     }

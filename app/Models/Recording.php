@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Models\Traits\HasStatus;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Storage;
 
 class Recording extends Model
 {
@@ -12,6 +13,15 @@ class Recording extends Model
     protected $casts = [
         'stopped_at' => 'datetime',
     ];
+
+    public static function boot() {
+        parent::boot();
+
+        static::deleting(function(Recording $recording) {
+            $recording->files()->delete();
+            Storage::deleteDirectory($this->getPath());
+        });
+    }
 
     public function files()
     {
