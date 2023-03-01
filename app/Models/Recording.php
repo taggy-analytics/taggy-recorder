@@ -19,7 +19,7 @@ class Recording extends Model
 
         static::deleting(function(Recording $recording) {
             $recording->files()->delete();
-            Storage::deleteDirectory($this->getPath());
+            Storage::deleteDirectory($recording->getPath());
         });
     }
 
