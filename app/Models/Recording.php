@@ -43,6 +43,11 @@ class Recording extends Model
         return $this->thumbnailsPath() . '/thumbnails.mp4';
     }
 
+    public function getThumbnail()
+    {
+        return $this->files->first()->thumbnailPath();
+    }
+
     public function getDuration()
     {
         $endTime = $this->stopped_at ?? now();

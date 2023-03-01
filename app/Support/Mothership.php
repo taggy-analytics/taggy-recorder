@@ -120,6 +120,7 @@ class Mothership
                 'recorder' => Recorder::make()->getMachineId(),
                 'recording_id' => $recording->id,
                 'movie' => base64_encode(Storage::get($recording->thumbnailsMoviePath())),
+                'thumbnail' => base64_encode(Storage::get($recording->getThumbnail())),
             ]);
 
             return true;
