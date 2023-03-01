@@ -1,20 +1,12 @@
 <?php
 
-namespace App\Actions;
+namespace App\Actions\Mothership;
 
-use App\Actions\Mothership\GetCredentialsForUnauthenticatedCameras;
-use App\Actions\Mothership\SendDiscoveredCamerasToMothership;
-use App\CameraTypes\CameraType;
 use App\Enums\RecordingFileStatus;
-use App\Enums\RecordingFileType;
 use App\Enums\RecordingStatus;
-use App\Models\Camera;
 use App\Models\Recording;
 use App\Models\RecordingFile;
 use App\Support\Mothership;
-use App\Support\Uploader;
-use Illuminate\Support\Str;
-use Spatie\Watcher\Watch;
 
 class HandleUploads
 {
@@ -43,9 +35,6 @@ class HandleUploads
                     $file->setStatus(RecordingFileStatus::UPLOADED);
                 }
             }
-        }
-        elseif(true) {
-
         }
     }
 }

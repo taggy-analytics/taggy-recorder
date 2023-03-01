@@ -4,8 +4,8 @@ namespace App\Console;
 
 use App\Console\Commands\HandleCameras;
 use App\Console\Commands\HandleRecordings;
-use App\Console\Commands\HandleUploadRequests;
 use App\Console\Commands\HandleUploads;
+use App\Console\Commands\RunMothershipActions;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 
@@ -34,7 +34,7 @@ class Kernel extends ConsoleKernel
             ->withoutOverlapping()
             ->everyMinute();
 
-        $schedule->command(HandleUploadRequests::class)
+        $schedule->command(RunMothershipActions::class)
             ->withoutOverlapping()
             ->everyMinute();
     }

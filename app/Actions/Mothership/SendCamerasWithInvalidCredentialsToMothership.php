@@ -10,14 +10,10 @@ class SendCamerasWithInvalidCredentialsToMothership
 {
     public function execute()
     {
-        $cameras = Camera::query()
+        Camera::query()
             ->whereIn('status', [CameraStatus::AUTHENTICATION_FAILED, CameraStatus::OFFLINE])
             ->get()
-            ->filter(fn(Camera $camera) => $camera->credentials_status->invalidCredentialsDiscoveredAt && !$camera->credentials_status->newCredentialsReportedAt);
-
-        if($cameras->count() > 0) {
-            app(SendCameraWithInvalidCredentialsToMothership::class)
-                ->execute();
-        }
+            ->filter(fn(Camera $camera) => $camera->credentials_status->invalidCredentialsDiscoveredAt && !$camera->credentials_status->newCredentialsReportedAt)
+            ->each(fn(Camera $camera) => Mothership::make()->reportInvalidCameraCredentials($camera));
     }
 }

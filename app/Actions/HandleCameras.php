@@ -20,8 +20,5 @@ class HandleCameras
 
         app(StopAbandonedRecordings::class)->execute();
         app(CheckAndStartRecording::class)->execute();
-        app(SendDiscoveredCamerasToMothership::class)->execute();
-        app(GetCredentialsForUnauthenticatedCameras::class)->execute();
-        app(SendCamerasWithInvalidCredentialsToMothership::class)->execute();
     }
 }
