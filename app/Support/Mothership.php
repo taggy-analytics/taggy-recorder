@@ -87,6 +87,11 @@ class Mothership
         return $this->get('recorders/' . Recorder::make()->getMachineId() . '/delete-requests');
     }
 
+    public function confirmDeleteRequest(Recording $recording)
+    {
+        return $this->delete('cameras/' . $recording->camera->id . '/recordings/' . $recording->id);
+    }
+
     public function sendRecordingThumbnails(Recording $recording)
     {
         $this->client->timeout(600);

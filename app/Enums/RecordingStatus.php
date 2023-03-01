@@ -14,7 +14,7 @@ enum RecordingStatus: string
     case CREATING_MOVIE = 'creating-movie';
     case MOVIE_CREATED = 'movie-created';
     case MOVIE_UPLOADED = 'movie-uploaded';
-
+    case TO_BE_DELETED = 'to-be-deleted';
     public static function default()
     {
         return self::CREATED;
