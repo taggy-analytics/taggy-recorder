@@ -21,5 +21,6 @@ class RunMothershipActions
         app(SendDiscoveredCamerasToMothership::class)->execute();
         app(SendCamerasWithInvalidCredentialsToMothership::class)->execute();
         app(GetCredentialsForUnauthenticatedCameras::class)->execute();
+        app(CheckForDeletedRecordings::class)->execute();
     }
 }

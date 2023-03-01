@@ -84,13 +84,7 @@ class Mothership
 
     public function getDeleteRecordingRequests()
     {
-        try {
-            return $this->get('recorders/' . Recorder::make()->getMachineId() . '/delete-requests');
-        }
-        catch(MothershipException $e) {
-            // mothership returns 404
-            return [];
-        }
+        return $this->get('recorders/' . Recorder::make()->getMachineId() . '/delete-requests');
     }
 
     public function sendRecordingThumbnails(Recording $recording)
