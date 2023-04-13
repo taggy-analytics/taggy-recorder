@@ -10,7 +10,7 @@ class QrCode extends Component
     public function render()
     {
         return view('livewire.qr-code', [
-            'qrCodeData' => base64_encode(json_encode(Recorder::make()->signedSystemId())),
+            'qrCodeData' => Recorder::make()->getSystemId(),
         ]);
     }
 }
