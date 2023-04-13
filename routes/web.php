@@ -14,3 +14,4 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', \App\Http\Livewire\Cameras::class);
+Route::get('/qr', \App\Http\Livewire\QrCode::class);

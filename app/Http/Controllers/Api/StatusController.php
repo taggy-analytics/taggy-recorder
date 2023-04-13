@@ -10,7 +10,7 @@ class StatusController extends Controller
     public function getStatus()
     {
         return [
-            'systemId' => Recorder::make()->getMachineId(),
+            'systemId' => Recorder::make()->getSystemId(),
             'publicKey' => Recorder::make()->getPublicKey(),
         ];
     }

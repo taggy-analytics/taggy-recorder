@@ -40,7 +40,7 @@ class Mothership
     public function reportRecording(Camera $camera, $filename, $duration, $screenshot)
     {
         return $this->post('cameras/' . $camera->identifier . '/recordings', [
-            'recorder' => Recorder::make()->getMachineId(),
+            'recorder' => Recorder::make()->getSystemId(),
             'filename' => $filename,
             'duration' => $duration,
             'screenshot' => $screenshot,
@@ -65,7 +65,7 @@ class Mothership
     public function getUploadRecordingRequests()
     {
         try {
-            return $this->get('recorders/' . Recorder::make()->getMachineId() . '/upload-requests');
+            return $this->get('recorders/' . Recorder::make()->getSystemId() . '/upload-requests');
         }
         catch(MothershipException $e) {
             // mothership returns 404
@@ -84,7 +84,7 @@ class Mothership
 
     public function getDeleteRecordingRequests()
     {
-        return $this->get('recorders/' . Recorder::make()->getMachineId() . '/delete-requests');
+        return $this->get('recorders/' . Recorder::make()->getSystemId() . '/delete-requests');
     }
 
     public function confirmDeleteRequest(Recording $recording)
@@ -98,7 +98,7 @@ class Mothership
 
         try {
             $this->post('cameras/' . $recording->camera->identifier . '/recordings', [
-                'recorder' => Recorder::make()->getMachineId(),
+                'recorder' => Recorder::make()->getSystemId(),
                 'thumbnails' => base64_encode(Storage::get("recordings/{$recording->id}/thumbnails.zip")),
             ]);
 
@@ -116,7 +116,7 @@ class Mothership
 
         try {
             $this->post('cameras/' . $recording->camera->identifier . '/recordings/thumbnails-movie', [
-                'recorder' => Recorder::make()->getMachineId(),
+                'recorder' => Recorder::make()->getSystemId(),
                 'recording_id' => $recording->id,
                 'movie' => base64_encode(Storage::get($recording->thumbnailsMoviePath())),
                 'thumbnail' => base64_encode(Storage::get($recording->getThumbnail())),

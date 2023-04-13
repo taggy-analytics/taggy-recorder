@@ -4,21 +4,30 @@ namespace App\Support;
 
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Storage;
 use Spatie\Crypto\Rsa\KeyPair;
+use Spatie\Crypto\Rsa\PrivateKey;
 
 class Recorder
 {
+    public const SYSTEM_ID_FILENAME = 'system-id.txt';
+
     public static function make()
     {
         return new self;
     }
 
-    public function getMachineId()
+    public function getSystemId()
     {
-        if(File::exists('/etc/machine-id')) {
-            return trim(File::get('/etc/machine-id'));
-        }
-        return '12345';
+        return Storage::get(self::SYSTEM_ID_FILENAME);
+    }
+
+    public function signedSystemId()
+    {
+        return [
+            'system-id' => $this->getSystemId(),
+            'signature' => base64_encode(PrivateKey::fromString($this->getPrivateKey())->encrypt($this->getSystemId())),
+        ];
     }
 
     public function getPublicKey()

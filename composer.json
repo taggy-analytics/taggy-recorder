@@ -19,6 +19,7 @@
         "ext-pcntl": "*",
         "ext-posix": "*",
         "ext-zip": "*",
+        "chillerlan/php-qrcode": "^4.3",
         "guzzlehttp/guzzle": "^7.2",
         "hammerstone/laravel-pseudo-daemon": "dev-main",
         "laravel/framework": "^10.0",
