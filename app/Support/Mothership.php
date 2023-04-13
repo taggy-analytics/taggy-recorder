@@ -10,6 +10,7 @@ use App\Models\RecordingFile;
 use Exception;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Storage;
+use Spatie\Crypto\Rsa\Exceptions\CouldNotDecryptData;
 use Spatie\Crypto\Rsa\PrivateKey;
 
 class Mothership
@@ -194,6 +195,20 @@ class Mothership
     public static function getToken()
     {
         $privateKey = PrivateKey::fromString(Recorder::make()->getPrivateKey());
+
+        if(!Storage::has(self::MOTHERSHIP_TOKEN_FILENAME)) {
+            // ToDo: not really nice. See https://trello.com/c/QkQq9zXD
+            $token = Http::baseUrl(config('services.mothership.endpoint'))
+                ->acceptJson()
+                ->get('recorders/' . Recorder::make()->getSystemId() . '/token')
+                ->json('token');
+
+            // try if token can be decrypted (throws CouldNotDecryptData exception)
+            $privateKey->decrypt(base64_decode($token));
+
+            Storage::put(self::MOTHERSHIP_TOKEN_FILENAME, $token);
+        }
+
         return $privateKey->decrypt(base64_decode(Storage::get(self::MOTHERSHIP_TOKEN_FILENAME)));
     }
 }

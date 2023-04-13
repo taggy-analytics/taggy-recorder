@@ -15,9 +15,6 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('status', [\App\Http\Controllers\Api\StatusController::class, 'getStatus']);
-Route::post('organization-token', [\App\Http\Controllers\Api\OrganizationController::class, 'setToken']);
-
-
 Route::get('cameras', [\App\Http\Controllers\Api\CameraController::class, 'index']);
 
 /*

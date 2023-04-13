@@ -32,7 +32,7 @@ class Preprovision extends Command
     public function handle()
     {
         if(!Storage::has(Recorder::SYSTEM_ID_FILENAME)) {
-            Storage::put(Recorder::SYSTEM_ID_FILENAME, Str::random(100));
+            Storage::put(Recorder::SYSTEM_ID_FILENAME, Str::random(16));
         }
 
         $this->info(base64_encode(json_encode([

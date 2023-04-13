@@ -18,7 +18,7 @@ class Recorder
 
     public function getSystemId()
     {
-        return Storage::get(self::SYSTEM_ID_FILENAME);
+        return trim(Storage::get(self::SYSTEM_ID_FILENAME));
     }
 
     public function getPublicKey()
