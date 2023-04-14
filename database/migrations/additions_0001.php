@@ -16,8 +16,10 @@ return new class extends Migration
             $table->string('status')->index();
             $table->string('ip_address')->nullable();
             $table->string('recording_mode')->index()->default(\App\Enums\RecordingMode::default()->value);
+            $table->unsignedBigInteger('process_id')->nullable();
             $table->dateTime('sent_to_mothership_at')->nullable();
             $table->json('credentials')->nullable();
+            $table->json('credentials_status')->nullable();
             $table->timestamps();
         });
 
@@ -38,21 +40,6 @@ return new class extends Migration
             $table->string('type')->index();
             $table->unsignedBigInteger('video_id')->index()->nullable();
             $table->string('status')->index()->default(\App\Enums\RecordingFileStatus::default()->value);
-            $table->timestamps();
-        });
-
-        Schema::create('cameras', function (Blueprint $table) {
-            $table->id();
-            $table->string('type')->index();
-            $table->string('name');
-            $table->string('identifier')->index();
-            $table->string('status')->index();
-            $table->string('ip_address')->nullable();
-            $table->string('recording_mode')->index()->default(\App\Enums\RecordingMode::default()->value);
-            $table->unsignedBigInteger('process_id')->nullable();
-            $table->dateTime('sent_to_mothership_at')->nullable();
-            $table->json('credentials')->nullable();
-            $table->json('credentials_status')->nullable();
             $table->timestamps();
         });
     }

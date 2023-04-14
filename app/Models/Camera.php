@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\File;
 class Camera extends Model
 {
     protected $casts = [
-        'sent_to_mothersip_at' => 'datetime',
+        'sent_to_mothership_at' => 'datetime',
         'status' => CameraStatus::class,
         'credentials' => AsCollection::class,
         'recording_mode' => RecordingMode::class,
