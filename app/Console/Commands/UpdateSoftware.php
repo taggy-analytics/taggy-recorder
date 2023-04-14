@@ -47,8 +47,8 @@ class UpdateSoftware extends Command
 
             Storage::delete('releases/' . $file);
 
-            symlink($releasePath . '/../../storage', $releasePath . '/storage');
-            symlink($releasePath . '/../../.env', $releasePath . '/.env');
+            symlink(realpath($releasePath . '/../../storage'), $releasePath . '/storage');
+            symlink(realpath($releasePath . '/../../.env'), $releasePath . '/.env');
 
             chdir($releasePath);
             Process::run('composer install');
