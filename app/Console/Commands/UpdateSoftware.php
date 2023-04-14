@@ -54,6 +54,10 @@ class UpdateSoftware extends Command
             Process::run('composer install');
             Process::run('php artisan migrate --force');
 
+            // As long as we are not API exclusively
+            Process::run('npm install');
+            Process::run('npm run build');
+
             unlink($releasePath . '/../../current');
             symlink($releasePath, $releasePath . '/../../current');
 
