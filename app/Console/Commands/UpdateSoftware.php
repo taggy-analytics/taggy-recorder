@@ -35,7 +35,7 @@ class UpdateSoftware extends Command
     public function handle()
     {
         if($file = Mothership::make()->checkForUpdateFile()) {
-            $releasePath = base_path('../' . Str::replace(':', '-', now()->toDateTimeString()));
+            $releasePath = base_path('../' . Str::replace([':', ' '], '-', now()->toDateTimeString()));
 
             $zip = new \ZipArchive();
             $zip->open(Storage::path('releases/' . $file));
@@ -47,14 +47,14 @@ class UpdateSoftware extends Command
 
             Storage::delete('releases/' . $file);
 
-            symlink($releasePath . '/../storage', $releasePath . '/storage');
-            symlink($releasePath . '/../.env', $releasePath . '/.env');
+            symlink($releasePath . '/../../storage', $releasePath . '/storage');
+            symlink($releasePath . '/../../.env', $releasePath . '/.env');
 
             chdir($releasePath);
             Process::run('composer install');
             Process::run('php artisan migrate --force');
 
-            unlink($releasePath . '/../current');
+            unlink($releasePath . '/../../current');
             symlink($releasePath, $releasePath . '/../../current');
 
             Process::run('php artisan cache:clear');
