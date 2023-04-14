@@ -10,13 +10,17 @@ use App\Models\RecordingFile;
 use Exception;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 use Spatie\Crypto\Rsa\Exceptions\CouldNotDecryptData;
 use Spatie\Crypto\Rsa\PrivateKey;
 
 class Mothership
 {
     private $client;
+    private $headers;
+
     public const MOTHERSHIP_TOKEN_FILENAME = 'mothership-token.txt';
+    public const CURRENT_SOFTWARE_VERSION_FILENAME = 'software-version.txt';
     public function __construct()
     {
         $this->client = Http::baseUrl(config('services.mothership.endpoint'))
@@ -160,14 +164,21 @@ class Mothership
             ->get('check-reachability');
     }
 
-    public function uploadFile($file, Camera $camera)
+    public function checkForUpdateFile()
     {
+        $file = $this->get('recorders/' . Recorder::make()->getSystemId() . '/update/' . Storage::get(self::CURRENT_SOFTWARE_VERSION_FILENAME), 'body');
 
+        if($file) {
+            $filename = trim(explode('=', $this->headers[ "content-disposition"])[1]);
+            Storage::put(self::CURRENT_SOFTWARE_VERSION_FILENAME, Str::replaceLast('.zip', '', $filename));
+            Storage::put('releases/' . $filename, $file);
+            return $filename;
+        }
     }
 
-    private function get($url)
+    private function get($url, $type = 'json')
     {
-        return $this->request('get', $url);
+        return $this->request('get', $url, type: $type);
     }
 
     private function post($url, $data = [])
@@ -180,7 +191,7 @@ class Mothership
         return $this->request('delete', $url);
     }
 
-    private function request($method, $url, $data = null)
+    private function request($method, $url, $data = null, $type = 'json')
     {
         $response = $this->client
             ->{$method}($url, $data);
@@ -189,7 +200,11 @@ class Mothership
             throw new MothershipException($response, $method, $url);
         }
 
-        return $response->json();
+        $this->headers = [
+            'content-disposition' => $response->header('content-disposition'),
+        ];
+
+        return $type == 'json' ? $response->json() : $response->body();
     }
 
     public static function getToken()
