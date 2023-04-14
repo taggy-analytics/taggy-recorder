@@ -35,7 +35,7 @@ class UpdateSoftware extends Command
     public function handle()
     {
         if($file = Mothership::make()->checkForUpdateFile()) {
-            $releasePath = base_path('../' . Str::replace([':', ' '], '-', now()->toDateTimeString()));
+            $releasePath = realpath(base_path('../' . Str::replace([':', ' '], '-', now()->toDateTimeString())));
 
             $zip = new \ZipArchive();
             $zip->open(Storage::path('releases/' . $file));
