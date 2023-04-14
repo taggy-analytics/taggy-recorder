@@ -2,6 +2,7 @@
 
 namespace App\CameraTypes;
 
+use App\Data\CredentialsStatusData;
 use App\Enums\CameraStatus;
 use App\Models\Camera;
 use Illuminate\Support\Facades\File;
@@ -39,6 +40,7 @@ abstract class CameraType
                     'status' => CameraStatus::DISCOVERED,
                     'ip_address' => $newCamera['ipAddress'],
                     'credentials' => $cameraClass::getDefaultCredentials(),
+                    'credentials_status' => new CredentialsStatusData(),
                 ]);
             }
         }
