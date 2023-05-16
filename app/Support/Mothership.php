@@ -37,6 +37,11 @@ class Mothership
         return $this->get('cameras');
     }
 
+    public function currentRecorder()
+    {
+        return $this->get('recorders/' . Recorder::make()->getSystemId());
+    }
+
     public function reportDiscoveredCamera(Camera $camera)
     {
         return $this->post('cameras', CameraResource::make($camera));
@@ -220,7 +225,7 @@ class Mothership
 
             // try if token can be decrypted (throws CouldNotDecryptData exception)
             $privateKey->decrypt(base64_decode($token));
-
+dd($token);
             Storage::put(self::MOTHERSHIP_TOKEN_FILENAME, $token);
         }
 

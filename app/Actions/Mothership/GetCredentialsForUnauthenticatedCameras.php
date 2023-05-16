@@ -12,9 +12,11 @@ class GetCredentialsForUnauthenticatedCameras
     {
         foreach(Camera::where('status', CameraStatus::AUTHENTICATION_FAILED)->get() as $camera) {
             $credentials = Mothership::make()->getCameraCredentials($camera);
-            $camera->update(['credentials' => $credentials]);
-            if($camera->getStatus() == CameraStatus::READY) {
-                Mothership::make()->reportDiscoveredCamera($camera);
+            if($credentials != $camera->credentials) {
+                $camera->update(['credentials' => $credentials]);
+                if($camera->getStatus() == CameraStatus::READY) {
+                    Mothership::make()->reportDiscoveredCamera($camera);
+                }
             }
         }
     }
