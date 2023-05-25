@@ -9,6 +9,8 @@ use App\Enums\RecordingStatus;
 use App\Models\Camera;
 use App\Models\Recording;
 use App\Support\FFMpegCommand;
+use Chrisyue\PhpM3u8\Facade\ParserFacade;
+use Chrisyue\PhpM3u8\Stream\TextStream;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
@@ -41,13 +43,14 @@ class HandleRecordings
     {
         if(Camera::noCameraIsRecording()) {
             foreach(Recording::withStatus(RecordingStatus::PREPARING_PREPROCESSING) as $recording) {
-                $concatFilePath = $recording->camera->storagePath() . '/' . $recording->id . '/video/video.ffconcat';
-                $concatFile = explode(PHP_EOL, trim(File::get($concatFilePath)));
-                array_shift($concatFile);
-                foreach ($concatFile as $line) {
+                $parser = new ParserFacade();
+                $files = collect($parser->parse(new TextStream($recording->getPath('video.m3u8')))['mediaSegments'])
+                    ->pluck('uri');
+
+                foreach ($files as $file) {
                     $recording->files()->firstOrCreate([
-                        'name' => Str::replaceFirst('file ', '', $line),
-                        'type' => RecordingFileType::VIDEO_TS,
+                        'name' => $file,
+                        'type' => RecordingFileType::VIDEO_M4S,
                     ]);
                 }
                 $recording->setStatus(RecordingStatus::CREATED_RECORDING_FILES_IN_DB);
