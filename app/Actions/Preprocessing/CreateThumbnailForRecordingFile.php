@@ -17,12 +17,13 @@ class CreateThumbnailForRecordingFile
 
         try {
             FFMpeg::open($file->videoPath())
+                ->fromDisk('public')
                 ->getFrameFromSeconds(0)
                 ->export()
-                ->toDisk('local')
+                ->toDisk('public')
                 ->save($exportedFramePath);
 
-            Image::load(Storage::disk('local')->path($exportedFramePath))
+            Image::load(Storage::disk('public')->path($exportedFramePath))
                 ->optimize()
                 ->height(320)
                 ->quality(50)
