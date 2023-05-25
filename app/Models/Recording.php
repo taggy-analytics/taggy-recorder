@@ -20,7 +20,7 @@ class Recording extends Model
 
         static::deleting(function(Recording $recording) {
             $recording->files()->delete();
-            Storage::deleteDirectory($recording->getPath());
+            Storage::disk('public')->deleteDirectory($recording->getPath());
         });
 
         static::creating(function(Recording $recording) {
@@ -45,7 +45,7 @@ class Recording extends Model
 
     public function getPath($path = '')
     {
-        return storage_path('app/public/recordings/' . $this->id . '/' . $this->key . '/' . $path);
+        return 'recordings/' . $this->id . '/' . $this->key . '/' . $path;
     }
 
     public function thumbnailsPath()

@@ -29,7 +29,7 @@ class RecordingFile extends Model
 
     public function thumbnailPath()
     {
-        return Str::replaceLast('.ts', '.jpg', $this->getPath('thumbnails'));
+        return Str::replace(['.ts', '.m4s'], '.jpg', $this->getPath('thumbnails'));
     }
 
     public function videoPath()

@@ -44,7 +44,7 @@ class HandleRecordings
         if(Camera::noCameraIsRecording()) {
             foreach(Recording::withStatus(RecordingStatus::PREPARING_PREPROCESSING) as $recording) {
                 $parser = new ParserFacade();
-                $files = collect($parser->parse(new TextStream(File::get($recording->getPath('video/video.m3u8'))))['mediaSegments'])
+                $files = collect($parser->parse(new TextStream(Storage::disk('public')->get($recording->getPath('video/video.m3u8'))))['mediaSegments'])
                     ->pluck('uri');
 
                 foreach ($files as $file) {
