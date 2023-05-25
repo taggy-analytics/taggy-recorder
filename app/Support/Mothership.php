@@ -225,7 +225,7 @@ class Mothership
 
             // try if token can be decrypted (throws CouldNotDecryptData exception)
             $privateKey->decrypt(base64_decode($token));
-dd($token);
+
             Storage::put(self::MOTHERSHIP_TOKEN_FILENAME, $token);
         }
 
