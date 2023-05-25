@@ -20,6 +20,12 @@ class Camera extends Model
         'credentials_status' => CredentialsStatusData::class,
     ];
 
+    public static function boot() {
+        static::creating(function(Camera $camera) {
+            $camera->credentials_status = new CredentialsStatusData();
+        });
+    }
+
     public function recordings()
     {
         return $this->hasMany(Recording::class);
