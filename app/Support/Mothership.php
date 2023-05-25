@@ -138,7 +138,6 @@ class Mothership
         }
         catch(Exception $e) {
             throw $e;
-            return false;
         }
     }
 
