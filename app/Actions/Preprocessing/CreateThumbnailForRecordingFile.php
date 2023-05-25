@@ -16,8 +16,8 @@ class CreateThumbnailForRecordingFile
         $exportedFramePath = $file->thumbnailPath();
 
         try {
-            FFMpeg::open($file->videoPath())
-                ->fromDisk('public')
+            FFMpeg::fromDisk('public')
+                ->open($file->videoPath())
                 ->getFrameFromSeconds(0)
                 ->export()
                 ->toDisk('public')
