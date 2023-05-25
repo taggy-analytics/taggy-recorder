@@ -63,8 +63,8 @@ class HandleRecordings
         if(Camera::noCameraIsRecording()) {
             foreach(Recording::withStatus(RecordingStatus::THUMBNAILS_CREATED) as $recording) {
                 $processId = FFMpegCommand::run(
-                    Storage::path($recording->thumbnailsPath()) . '/video-%05d.jpg',
-                    Storage::path($recording->thumbnailsMoviePath()),
+                    Storage::disk('public')->path($recording->thumbnailsPath()) . '/video-%05d.jpg',
+                    Storage::disk('public')->path($recording->thumbnailsMoviePath()),
                     '-framerate 2 -c:v libx264 -pix_fmt yuv420p -vf "pad=ceil(iw/2)*2:ceil(ih/2)*2"'
                 );
 
