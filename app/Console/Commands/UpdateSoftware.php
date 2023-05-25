@@ -65,6 +65,7 @@ class UpdateSoftware extends Command
             Process::run('php artisan cache:clear');
             Process::run('php artisan horizon:terminate');
             Process::run('php artisan taggy:delete-old-releases');
+            Process::run('php artisan storage:link');
         }
 
         return 0;

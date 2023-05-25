@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Models\Traits\HasStatus;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 class Recording extends Model
 {
@@ -20,6 +21,10 @@ class Recording extends Model
         static::deleting(function(Recording $recording) {
             $recording->files()->delete();
             Storage::deleteDirectory($recording->getPath());
+        });
+
+        static::creating(function(Recording $recording) {
+            $recording->key = Str::random();
         });
     }
 
@@ -38,9 +43,9 @@ class Recording extends Model
         return !$this->camera->isRecording() || $this->camera->recordings()->latest()->first()->id !== $this->id;
     }
 
-    public function getPath()
+    public function getPath($path = '')
     {
-        return 'cameras/' . $this->camera->id . '/recordings/' . $this->id . '/';
+        return storage_path('app/public/recordings/' . $this->id . '/' . $this->key . '/' . $path);
     }
 
     public function thumbnailsPath()
