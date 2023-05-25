@@ -128,8 +128,8 @@ class Mothership
             $this->post('cameras/' . $recording->camera->identifier . '/recordings/thumbnails-movie', [
                 'recorder' => Recorder::make()->getSystemId(),
                 'recording_id' => $recording->id,
-                'movie' => base64_encode(Storage::get($recording->thumbnailsMoviePath())),
-                'thumbnail' => base64_encode(Storage::get($recording->getThumbnail())),
+                'movie' => base64_encode(Storage::disk('public')->get($recording->thumbnailsMoviePath())),
+                'thumbnail' => base64_encode(Storage::disk('public')->get($recording->getThumbnail())),
                 'start_time' => $recording->created_at,
                 'duration' => $recording->getDuration(),
             ]);
