@@ -24,7 +24,7 @@ class RecordingFile extends Model
 
     private function getPath($type)
     {
-        return $this->recording->getPath() . '/' . $type . '/' . $this->name;
+        return $this->recording->getPath() . $type . '/' . $this->name;
     }
 
     public function thumbnailPath()
