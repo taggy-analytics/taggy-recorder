@@ -135,7 +135,7 @@ class Mothership
                 'recording_id' => $recording->id,
                 'movie' => base64_encode(Storage::disk('public')->get($recording->thumbnailsMoviePath())),
                 'thumbnail' => base64_encode(Storage::disk('public')->get($recording->getThumbnail())),
-                'start_time' => $recording->created_at,
+                'start_time' => $recording->started_at,
                 'duration' => $recording->getDuration(),
             ]);
 

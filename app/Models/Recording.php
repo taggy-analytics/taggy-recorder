@@ -13,7 +13,7 @@ class Recording extends Model
     use HasStatus;
 
     protected $casts = [
-        'start_time' => 'datetime',
+        'started_at' => 'datetime',
         'stopped_at' => 'datetime',
         'status' => RecordingStatus::class,
     ];
@@ -69,7 +69,7 @@ class Recording extends Model
     public function getDuration()
     {
         $endTime = $this->stopped_at ?? now();
-        return $endTime->diffInSeconds($this->created_at);
+        return $endTime->diffInSeconds($this->started_at);
     }
 
     public function getUrl()

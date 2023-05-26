@@ -13,7 +13,10 @@ abstract class RtspCamera extends CameraType
     {
         $recording = $camera->recordings()->create([
             'name' => now()->toDateTimeLocalString(),
+            'started_at' => now(),
         ]);
+
+        // ToDo: auf was muss started_at gesetzt werden? Experimentieren, wenn App läuft.
 
         info('Starting recording # ' . $recording->id . ' for camera #' . $camera->id . ': ' . $this->getRtspUrl($camera));
 

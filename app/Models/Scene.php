@@ -16,7 +16,7 @@ class Scene extends Model
     {
         return Recording::all()
             ->filter(function(Recording $recording) {
-                return $this->start_time >= $recording->created_at
+                return $this->start_time >= $recording->started_at
                     && $this->start_time <= $recording->getEndTime();
             });
     }
