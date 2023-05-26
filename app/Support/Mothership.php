@@ -39,7 +39,12 @@ class Mothership
 
     public function currentRecorder()
     {
-        return $this->get('recorders/' . Recorder::make()->getSystemId());
+        try {
+            return $this->get('recorders/' . Recorder::make()->getSystemId());
+        }
+        catch(MothershipException $exception) {
+            return null;
+        }
     }
 
     public function reportDiscoveredCamera(Camera $camera)
