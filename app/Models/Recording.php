@@ -70,4 +70,10 @@ class Recording extends Model
         $endTime = $this->stopped_at ?? now();
         return $endTime->diffInSeconds($this->created_at);
     }
+
+    public function getUrl()
+    {
+        return Storage::disk('public')
+            ->url($this->getPath('video/video.m3u8'));
+    }
 }
