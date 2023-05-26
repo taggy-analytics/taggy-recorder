@@ -34,8 +34,8 @@ class SceneController extends Controller
 
             $command = [
                 '-ss', self::convertSeconds($scene->start_time->diffInSeconds($recording->start_time)),
-                '-i', self::convertSeconds(Storage::disk('public')->path($m3u8Path)),
-                '-t', $scene->duration,
+                '-i', Storage::disk('public')->path($m3u8Path),
+                '-t', self::convertSeconds($scene->duration),
                 '-c', 'copy',
                 Storage::path($filename),
             ];
