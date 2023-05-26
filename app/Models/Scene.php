@@ -20,4 +20,9 @@ class Scene extends Model
                     && $this->start_time <= $recording->getEndTime();
             });
     }
+
+    public function videoFilePath(Recording $recording)
+    {
+        return 'scene-videos/' . $this->id . '-' . $recording->id . '.mp4';
+    }
 }

@@ -24,7 +24,7 @@ class SceneController extends Controller
 
     public function download(Scene $scene, Recording $recording)
     {
-        $filename = 'scene-videos/' . $scene->id . '-' . $recording->id . '.mp4';
+        $filename = $scene->videoFilePath($recording);
 
         if(!Storage::exists($filename)) {
             $command = [
@@ -60,6 +60,8 @@ class SceneController extends Controller
         $this->validateRequest($request);
 
         $scene->update($request->only(['start_time', 'duration', 'data']));
+
+        Recording::all()->each(fn(Recording $recording) => Storage::delete($scene->videoFilePath($recording)));
 
         // ToDo: push scene to all clients
 
