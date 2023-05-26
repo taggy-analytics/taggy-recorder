@@ -47,7 +47,6 @@ class SceneController extends Controller
         $scene = Scene::create($request->only(['start_time', 'duration', 'data']));
 
         // ToDo: push scene to all clients
-
         return SceneResource::make($scene);
     }
 
