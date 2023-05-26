@@ -33,8 +33,8 @@ class SceneController extends Controller
                 ->copy($recording->getPath('video/video.m3u8'), $m3u8Path);
 
             $command = [
-                '-ss', $scene->start_time->diffInSeconds($recording->start_time),
-                '-i', Storage::disk('public')->path($m3u8Path),
+                '-ss', self::convertSeconds($scene->start_time->diffInSeconds($recording->start_time)),
+                '-i', self::convertSeconds(Storage::disk('public')->path($m3u8Path)),
                 '-t', $scene->duration,
                 '-c', 'copy',
                 Storage::path($filename),
@@ -81,5 +81,15 @@ class SceneController extends Controller
             'start_time' => 'required|date',
             'duration' => 'required|integer',
         ]);
+    }
+
+    public static function convertSeconds($seconds)
+    {
+        $hours = floor($seconds / 3600);
+        $minutes = floor(($seconds / 60) % 60);
+        $seconds = $seconds % 60;
+        $milliseconds = floor(($seconds - floor($seconds)) * 1000);
+
+        return sprintf('%02d:%02d:%02d.%03d', $hours, $minutes, floor($seconds), $milliseconds);
     }
 }
