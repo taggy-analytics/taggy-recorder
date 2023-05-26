@@ -29,7 +29,7 @@ class SceneController extends Controller
         if(!Storage::exists($filename)) {
             $command = [
                 '-ss', $scene->start_time->diffInSeconds($recording->start_time),
-                '-i', $recording->getPath('video/video.m3u8'),
+                '-i', Storage::disk('public')->path($recording->getPath('video/video.m3u8')),
                 '-t', $scene->duration,
                 Storage::path($filename),
             ];
