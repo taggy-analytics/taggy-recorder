@@ -24,13 +24,14 @@ class SceneController extends Controller
 
     public function download(Scene $scene, Recording $recording)
     {
-        $filename = 'scene-videos/' . $scene->id . '-' . $recording->id . '.m4s';
+        $filename = 'scene-videos/' . $scene->id . '-' . $recording->id . '.mp4';
 
         if(!Storage::exists($filename)) {
             $command = [
                 '-ss', $scene->start_time->diffInSeconds($recording->start_time),
                 '-i', Storage::disk('public')->path($recording->getPath('video/video.m3u8')),
                 '-t', $scene->duration,
+                '-c', 'copy',
                 Storage::path($filename),
             ];
 
