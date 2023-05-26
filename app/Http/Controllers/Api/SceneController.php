@@ -33,7 +33,7 @@ class SceneController extends Controller
                 ->copy($recording->getPath('video/video.m3u8'), $m3u8Path);
 
             $command = [
-                '-ss', self::convertSeconds($scene->start_time->diffInSeconds($recording->start_time)),
+                '-ss', self::convertSeconds($scene->start_time->diffInSeconds($recording->started_at)),
                 '-i', Storage::disk('public')->path($m3u8Path),
                 '-t', self::convertSeconds($scene->duration),
                 '-c', 'copy',

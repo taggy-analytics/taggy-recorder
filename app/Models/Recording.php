@@ -43,7 +43,7 @@ class Recording extends Model
 
     public function isRecording()
     {
-        return is_null($this->stopped_at);
+        return is_null($this->stopped_at) || !$this->camera->isRecording();
     }
 
     public function getPath($path = '')
@@ -68,8 +68,7 @@ class Recording extends Model
 
     public function getDuration()
     {
-        $endTime = $this->stopped_at ?? now();
-        return $endTime->diffInSeconds($this->started_at);
+        return $this->getEndTime()->diffInSeconds($this->started_at);
     }
 
     public function getUrl()
@@ -80,6 +79,18 @@ class Recording extends Model
 
     public function getEndTime()
     {
-        return $this->isRecording() ? now() : $this->stopped_at;
+        if($this->isRecording()) {
+            return now();
+        }
+        else {
+            if(!$this->stopped_at) {
+                $duration = exec('ffprobe ' . $this->getPath('video/video.m3u8') . ' -show_entries format=duration -v quiet -of csv="p=0"');
+                $this->update([
+                    'stopped_at' => $this->started_at->addMilliseconds(round($duration * 1000)),
+                ]);
+            }
+
+            return $this->stopped_at;
+        }
     }
 }
