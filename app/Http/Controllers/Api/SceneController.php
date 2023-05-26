@@ -37,13 +37,9 @@ class SceneController extends Controller
 
             FFMpegCommand::runRaw(implode(' ', $command));
 
-            info(Storage::exists($filename) ? 'jau' : 'nö');
-            sleep(1);
-            info(Storage::exists($filename) ? 'jau' : 'nö');
-            sleep(1);
-            info(Storage::exists($filename) ? 'jau' : 'nö');
-            sleep(1);
-            info(Storage::exists($filename) ? 'jau' : 'nö');
+            while(!Storage::exists($filename)) {
+                usleep(100000);
+            }
         }
 
         return Storage::download($filename);
