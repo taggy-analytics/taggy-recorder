@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources;
 
+use App\Models\Recording;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class SceneResource extends JsonResource
@@ -13,7 +14,10 @@ class SceneResource extends JsonResource
             'startTime' => $this->start_time,
             'duration' => $this->duration,
             'data' => $this->data,
-            'recordings' => RecordingResource::collection($this->getContainingRecordings()),
+            'urls' => $this->getContainingRecordings()->map(fn (Recording $recording) => [
+                'url' => route('scenes.download', [$this->resource, $recording]),
+                'recording' => RecordingResource::make($recording),
+            ]),
         ];
     }
 }

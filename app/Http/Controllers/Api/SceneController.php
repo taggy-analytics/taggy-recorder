@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Resources\SceneResource;
+use App\Models\Recording;
 use App\Models\Scene;
 use Illuminate\Http\Request;
 
@@ -12,6 +13,16 @@ class SceneController extends Controller
     public function index()
     {
         return SceneResource::collection(Scene::all());
+    }
+
+    public function show(Scene $scene)
+    {
+        return SceneResource::make($scene);
+    }
+
+    public function download(Scene $scene, Recording $recording)
+    {
+        return SceneResource::make($scene);
     }
 
     public function store(Request $request)

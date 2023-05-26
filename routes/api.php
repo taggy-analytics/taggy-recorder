@@ -23,6 +23,7 @@ Route::get('recordings', [\App\Http\Controllers\Api\RecordingController::class, 
 Route::get('scenes', [\App\Http\Controllers\Api\SceneController::class, 'index']);
 Route::post('scenes', [\App\Http\Controllers\Api\SceneController::class, 'store']);
 Route::put('scenes/{scene}', [\App\Http\Controllers\Api\SceneController::class, 'update']);
+Route::get('scenes/{scene}/recordings/{recording}/download', [\App\Http\Controllers\Api\SceneController::class, 'download'])->name('scenes.download');
 
 /*
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {

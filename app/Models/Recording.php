@@ -13,6 +13,7 @@ class Recording extends Model
     use HasStatus;
 
     protected $casts = [
+        'start_time' => 'datetime',
         'stopped_at' => 'datetime',
         'status' => RecordingStatus::class,
     ];
