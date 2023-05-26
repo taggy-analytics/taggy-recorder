@@ -25,6 +25,7 @@ Route::post('scenes', [\App\Http\Controllers\Api\SceneController::class, 'store'
 Route::put('scenes/{scene}', [\App\Http\Controllers\Api\SceneController::class, 'update']);
 Route::get('scenes/{scene}/recordings/{recording}/video.mp4', [\App\Http\Controllers\Api\SceneController::class, 'download'])->name('scenes.download');
 
+
 /*
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
