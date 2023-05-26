@@ -12,11 +12,11 @@ class FFMpegCommand
         return self::runRaw($command);
     }
 
-    public static function runRaw($command, $app = 'ffmpeg')
+    public static function runRaw($command, $app = 'ffmpeg', $async = true)
     {
         $command = $app . ' ' . $command;
         info($command);
-        $process = Process::start($command);
+        $process = $async ? Process::start($command) : Process::run($command);
 
         // sh -c is called, which starts the actual ffmpeg process
         return $process->id() + 1;
