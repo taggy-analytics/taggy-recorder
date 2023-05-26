@@ -27,9 +27,14 @@ class SceneController extends Controller
         $filename = $scene->videoFilePath($recording);
 
         if(!Storage::exists($filename)) {
+            // FFmpeg doesn't like it if live HLS streams' m3u8s are used. So let's copy it first.
+            $m3u8Path = $recording->getPath('video/video-' . $scene->id . '.m3u8');
+            Storage::disk('public')
+                ->copy($recording->getPath('video/video.m3u8'), $m3u8Path);
+
             $command = [
                 '-ss', $scene->start_time->diffInSeconds($recording->start_time),
-                '-i', Storage::disk('public')->path($recording->getPath('video/video.m3u8')),
+                '-i', Storage::disk('public')->path($m3u8Path),
                 '-t', $scene->duration,
                 '-c', 'copy',
                 Storage::path($filename),
@@ -40,6 +45,8 @@ class SceneController extends Controller
             while(!Storage::exists($filename)) {
                 usleep(100000);
             }
+
+            Storage::disk('public')->delete($m3u8Path);
         }
 
         return Storage::download($filename);
