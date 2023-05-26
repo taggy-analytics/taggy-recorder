@@ -14,8 +14,12 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+/*
 Route::get('status', [\App\Http\Controllers\Api\StatusController::class, 'getStatus']);
 Route::get('cameras', [\App\Http\Controllers\Api\CameraController::class, 'index']);
+*/
+
+Route::get('resources', [\App\Http\Controllers\Api\ResourcesController::class, 'index']);
 
 /*
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
