@@ -76,4 +76,9 @@ class Recording extends Model
         return Storage::disk('public')
             ->url($this->getPath('video/video.m3u8'));
     }
+
+    public function getEndTime()
+    {
+        return $this->isRecording() ? now() : $this->stopped_at;
+    }
 }

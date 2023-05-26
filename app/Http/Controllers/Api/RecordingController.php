@@ -6,12 +6,10 @@ use App\Http\Controllers\Controller;
 use App\Http\Resources\RecordingResource;
 use App\Models\Recording;
 
-class ResourcesController extends Controller
+class RecordingController extends Controller
 {
     public function index()
     {
-        return [
-            'recordings' => RecordingResource::collection(Recording::all()),
-        ];
+        return RecordingResource::collection(Recording::all());
     }
 }

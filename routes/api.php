@@ -19,7 +19,8 @@ Route::get('status', [\App\Http\Controllers\Api\StatusController::class, 'getSta
 Route::get('cameras', [\App\Http\Controllers\Api\CameraController::class, 'index']);
 */
 
-Route::get('resources', [\App\Http\Controllers\Api\ResourcesController::class, 'index']);
+Route::get('recordings', [\App\Http\Controllers\Api\RecordingController::class, 'index']);
+Route::get('scenes', [\App\Http\Controllers\Api\RecordingController::class, 'index']);
 
 /*
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
