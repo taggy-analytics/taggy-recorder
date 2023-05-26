@@ -43,7 +43,7 @@ class Recording extends Model
 
     public function isRecording()
     {
-        return !$this->camera->isRecording() || $this->camera->recordings()->latest()->first()->id !== $this->id;
+        return is_null($this->stopped_at);
     }
 
     public function getPath($path = '')

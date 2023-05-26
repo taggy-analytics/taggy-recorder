@@ -14,7 +14,7 @@ class SceneResource extends JsonResource
             'startTime' => $this->start_time,
             'duration' => $this->duration,
             'data' => $this->data,
-            'urls' => $this->getContainingRecordings()->map(fn (Recording $recording) => [
+            'videos' => $this->getContainingRecordings()->map(fn (Recording $recording) => [
                 'url' => route('scenes.download', [$this->resource, $recording]),
                 'recording' => RecordingResource::make($recording),
             ]),
