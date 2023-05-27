@@ -12,4 +12,9 @@ class RecordingController extends Controller
     {
         return RecordingResource::collection(Recording::all());
     }
+
+    public function show(Recording $recording)
+    {
+        return RecordingResource::make($recording);
+    }
 }

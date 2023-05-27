@@ -79,7 +79,9 @@ class Camera extends Model
     public function stopRecording()
     {
         if($this->getType()->stopRecording($this)) {
-            return $this->recordings()->latest()->first()->update(['stopped_at' => now()]);
+            $recording = $this->recordings()->latest()->first();
+            $recording->update(['stopped_at' => now()]);
+            return $recording;
         }
 
         return false;

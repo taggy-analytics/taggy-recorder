@@ -24,14 +24,12 @@ class CameraController extends Controller
 
     public function update(Camera $camera, Request $request)
     {
-        info($request->only(['recording_mode', 'name', 'credentials']));
-
         $request->validate([
-            'status' => [new Enum(RecordingMode::class)],
+            'recording_mode' => [new Enum(RecordingMode::class)],
             'credentials' => 'array:user,password',
         ]);
 
-        $camera->update($request->only(['status', 'name', 'credentials']));
+        $camera->update($request->only(['recording_mode', 'name', 'credentials']));
 
         return CameraResource::make($camera);
     }
@@ -60,6 +58,6 @@ class CameraController extends Controller
             return null;
         }
 
-        return RecordingResource::make($this->recordings()->latest()->first());
+        return RecordingResource::make($camera->recordings()->latest()->first());
     }
 }
