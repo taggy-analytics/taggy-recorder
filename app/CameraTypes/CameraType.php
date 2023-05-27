@@ -5,6 +5,7 @@ namespace App\CameraTypes;
 use App\Data\CredentialsStatusData;
 use App\Enums\CameraStatus;
 use App\Models\Camera;
+use App\Models\Recording;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Process;
 use Illuminate\Support\Str;
@@ -18,7 +19,7 @@ abstract class CameraType
 
     abstract public static function getDefaultCredentials() : array;
 
-    abstract public function startRecording(Camera $camera);
+    abstract public function startRecording(Camera $camera, Recording $recording);
     abstract public function stopRecording(Camera $camera);
     abstract public function isRecording(Camera $camera);
 

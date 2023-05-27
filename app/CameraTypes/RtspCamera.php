@@ -3,13 +3,14 @@
 namespace App\CameraTypes;
 
 use App\Models\Camera;
+use App\Models\Recording;
 use App\Support\FFMpegCommand;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Storage;
 
 abstract class RtspCamera extends CameraType
 {
-    public function startRecording(Camera $camera)
+    public function startRecording(Camera $camera, Recording $recording)
     {
         $outputDirectory = Storage::disk('public')->path($recording->getPath('video'));
         $outputFile = $outputDirectory . '/video.m3u8';

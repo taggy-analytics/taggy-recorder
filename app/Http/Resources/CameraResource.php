@@ -15,6 +15,7 @@ class CameraResource extends JsonResource
     public function toArray($request)
     {
         return [
+            'id' => $this->id,
             'identifier' => $this->identifier,
             'status' => $this->status,
             'type' => (new \ReflectionClass($this->type))->getShortName(),

@@ -71,7 +71,7 @@ class Camera extends Model
 
         info('Starting recording # ' . $recording->id . ' for camera #' . $this->id);
 
-        $this->getType()->startRecording($this);
+        $this->getType()->startRecording($this, $recording);
 
         return $recording;
     }
