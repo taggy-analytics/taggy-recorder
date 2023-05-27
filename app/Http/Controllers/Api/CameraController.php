@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\Enums\CameraStatus;
+use App\Enums\RecordingMode;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\CameraResource;
 use App\Http\Resources\RecordingResource;
@@ -24,10 +24,10 @@ class CameraController extends Controller
 
     public function update(Camera $camera, Request $request)
     {
-        info($request->only(['status', 'name', 'credentials']));
+        info($request->only(['recording_mode', 'name', 'credentials']));
 
         $request->validate([
-            'status' => [new Enum(CameraStatus::class)],
+            'status' => [new Enum(RecordingMode::class)],
             'credentials' => 'array:user,password',
         ]);
 
@@ -52,5 +52,14 @@ class CameraController extends Controller
         }
 
         return RecordingResource::make($camera->stopRecording());
+    }
+
+    public function currentRecording(Camera $camera)
+    {
+        if(!$camera->isRecording()) {
+            return null;
+        }
+
+        return RecordingResource::make($this->recordings()->latest()->first());
     }
 }

@@ -20,6 +20,8 @@ class CameraResource extends JsonResource
             'type' => (new \ReflectionClass($this->type))->getShortName(),
             'name' => $this->name,
             'credentials' => $this->credentials,
+            'recording_mode' => $this->recording_mode,
+            'is_recording' => $this->isRecording(),
         ];
     }
 }

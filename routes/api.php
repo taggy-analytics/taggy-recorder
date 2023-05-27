@@ -22,6 +22,7 @@ Route::get('cameras', [\App\Http\Controllers\Api\CameraController::class, 'index
 Route::get('cameras', [\App\Http\Controllers\Api\CameraController::class, 'index']);
 Route::get('cameras/{camera}', [\App\Http\Controllers\Api\CameraController::class, 'show']);
 Route::put('cameras/{camera}', [\App\Http\Controllers\Api\CameraController::class, 'update']);
+Route::get('cameras/{camera}/recording', [\App\Http\Controllers\Api\CameraController::class, 'currentRecording']);
 Route::post('cameras/{camera}/recording/start', [\App\Http\Controllers\Api\CameraController::class, 'startRecording']);
 Route::post('cameras/{camera}/recording/stop', [\App\Http\Controllers\Api\CameraController::class, 'stopRecording']);
 
