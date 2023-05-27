@@ -11,15 +11,6 @@ abstract class RtspCamera extends CameraType
 {
     public function startRecording(Camera $camera)
     {
-        $recording = $camera->recordings()->create([
-            'name' => now()->toDateTimeLocalString(),
-            'started_at' => now(),
-        ]);
-
-        // ToDo: auf was muss started_at gesetzt werden? Experimentieren, wenn App läuft.
-
-        info('Starting recording # ' . $recording->id . ' for camera #' . $camera->id . ': ' . $this->getRtspUrl($camera));
-
         $outputDirectory = Storage::disk('public')->path($recording->getPath('video'));
         $outputFile = $outputDirectory . '/video.m3u8';
         File::makeDirectory($outputDirectory, recursive: true);

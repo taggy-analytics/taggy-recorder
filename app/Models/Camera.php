@@ -62,14 +62,24 @@ class Camera extends Model
             File::makeDirectory($this->storagePath(), recursive: true);
         };
 
-        return $this->getType()->startRecording($this);
+        $recording = $this->recordings()->create([
+            'name' => now()->toDateTimeLocalString(),
+            'started_at' => now(),
+        ]);
+
+        // ToDo: auf was muss started_at gesetzt werden? Experimentieren, wenn App läuft.
+
+        info('Starting recording # ' . $recording->id . ' for camera #' . $this->id);
+
+        $this->getType()->startRecording($this);
+
+        return $recording;
     }
 
     public function stopRecording()
     {
         if($this->getType()->stopRecording($this)) {
-            $this->recordings()->latest()->first()->update(['stopped_at' => now()]);
-            return true;
+            return $this->recordings()->latest()->first()->update(['stopped_at' => now()]);
         }
 
         return false;
