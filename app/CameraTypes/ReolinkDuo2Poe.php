@@ -44,7 +44,7 @@ class ReolinkDuo2Poe extends RtspCamera
         ];
     }
 
-    protected function getRtspUrl(Camera $camera)
+    public function getRtspUrl(Camera $camera)
     {
         $password = $camera->credentials['password'];
         $passwordPart = strlen($password) > 0 ? ':' . $password : '';
