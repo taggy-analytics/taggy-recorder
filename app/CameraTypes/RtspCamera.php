@@ -26,7 +26,7 @@ abstract class RtspCamera extends CameraType
         return posix_kill($camera->process_id, 2);
     }
 
-    private function getRtspUrl(Camera $camera)
+    public function getRtspUrl(Camera $camera)
     {
         return "rtsp://{$camera->credentials['user']}:{$camera->credentials['password']}@{$camera->ip_address}:554/h265Preview_01_main";
     }

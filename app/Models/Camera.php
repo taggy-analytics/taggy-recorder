@@ -76,6 +76,16 @@ class Camera extends Model
         return $recording;
     }
 
+    public function getStreams()
+    {
+        return [
+            [
+                'type' => 'rtsp',
+                'url' => $this->getType()->getRtspUrl($this), // ToDo: works only for RTSP cameras for now
+            ]
+        ];
+    }
+
     public function stopRecording()
     {
         if($this->getType()->stopRecording($this)) {
