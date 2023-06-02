@@ -175,7 +175,7 @@ class Mothership
 
     public function checkForUpdateFile()
     {
-        $file = $this->get('recorders/' . Recorder::make()->getSystemId() . '/update/' . Storage::get(self::CURRENT_SOFTWARE_VERSION_FILENAME), 'body');
+        $file = $this->get('recorders/' . Recorder::make()->getSystemId() . '/update/' . $this->currentSoftwareVersion(), 'body');
 
         if($file) {
             $filename = trim(explode('=', $this->headers[ "content-disposition"])[1]);
@@ -183,6 +183,11 @@ class Mothership
             Storage::put('releases/' . $filename, $file);
             return $filename;
         }
+    }
+
+    public function currentSoftwareVersion()
+    {
+        return Storage::get(self::CURRENT_SOFTWARE_VERSION_FILENAME);
     }
 
     private function get($url, $type = 'json')

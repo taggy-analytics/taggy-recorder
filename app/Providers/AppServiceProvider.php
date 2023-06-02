@@ -2,9 +2,12 @@
 
 namespace App\Providers;
 
+use App\Support\Mothership;
+use App\Support\Recorder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\ServiceProvider;
+use Spatie\LaravelIgnition\Facades\Flare;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -15,6 +18,10 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register()
     {
+        Flare::determineVersionUsing(function() {
+            return Mothership::make()->currentSoftwareVersion();
+        });
+
         Model::unguard();
         JsonResource::withoutWrapping();
     }
@@ -26,6 +33,6 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        //
+        Flare::context('recorderId', Recorder::make()->getSystemId());
     }
 }
