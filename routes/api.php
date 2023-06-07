@@ -32,6 +32,7 @@ Route::get('recordings/{recording}', [\App\Http\Controllers\Api\RecordingControl
 Route::get('scenes', [\App\Http\Controllers\Api\SceneController::class, 'index']);
 Route::post('scenes', [\App\Http\Controllers\Api\SceneController::class, 'store']);
 Route::put('scenes/{scene}', [\App\Http\Controllers\Api\SceneController::class, 'update']);
+Route::delete('scenes/{scene}', [\App\Http\Controllers\Api\SceneController::class, 'delete']);
 Route::get('scenes/{scene}/recordings/{recording}/video.mp4', [\App\Http\Controllers\Api\SceneController::class, 'download'])->name('scenes.download');
 
 /*

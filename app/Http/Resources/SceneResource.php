@@ -11,7 +11,7 @@ class SceneResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'startTime' => $this->start_time,
+            'start_time' => $this->start_time,
             'duration' => $this->duration,
             'data' => $this->data,
             'videos' => $this->getContainingRecordings()->map(fn (Recording $recording) => [

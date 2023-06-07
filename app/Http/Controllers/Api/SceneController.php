@@ -75,6 +75,11 @@ class SceneController extends Controller
         return SceneResource::make($scene);
     }
 
+    public function delete(Scene $scene)
+    {
+        $scene->delete();
+    }
+
     private function validateRequest(Request $request)
     {
         $request->validate([
