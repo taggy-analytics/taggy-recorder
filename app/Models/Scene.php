@@ -23,6 +23,16 @@ class Scene extends Model
 
     public function videoFilePath(Recording $recording)
     {
-        return 'scene-videos/' . $this->id . '-' . $recording->id . '.mp4?v=' . substr(md5($this->start_time->toDateTimeString('millisecond') . $this->duration), 0, 6);
+        return 'scene-videos/' . $this->id . '/' . $recording->id . '/' . $this->getHash($recording) . '.mp4';
+    }
+
+    private function getHash(Recording $recording = null)
+    {
+        return md5(serialize([
+            $this->id,
+            $recording?->id,
+            $this->start_time,
+            $this->duration,
+        ]));
     }
 }

@@ -43,7 +43,11 @@ class Recording extends Model
 
     public function isRecording()
     {
-        return is_null($this->stopped_at) || !$this->camera->isRecording();
+        if(is_null($this->stopped_at) && !$this->camera->isRecording()) {
+            $this->calculateStoppedAt();
+        }
+
+        return is_null($this->stopped_at);
     }
 
     public function getPath($path = '')
@@ -84,13 +88,18 @@ class Recording extends Model
         }
         else {
             if(!$this->stopped_at) {
-                $duration = exec('ffprobe ' . $this->getPath('video/video.m3u8') . ' -show_entries format=duration -v quiet -of csv="p=0"');
-                $this->update([
-                    'stopped_at' => $this->started_at->addMilliseconds(round($duration * 1000)),
-                ]);
+                $this->calculateStoppedAt();
             }
 
             return $this->stopped_at;
         }
+    }
+
+    private function calculateStoppedAt()
+    {
+        $duration = exec('ffprobe ' . $this->getPath('video/video.m3u8') . ' -show_entries format=duration -v quiet -of csv="p=0"');
+        $this->update([
+            'stopped_at' => $this->started_at->addMilliseconds(round($duration * 1000)),
+        ]);
     }
 }

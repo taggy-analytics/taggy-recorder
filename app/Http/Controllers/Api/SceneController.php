@@ -37,6 +37,7 @@ class SceneController extends Controller
                 '-i', Storage::disk('public')->path($m3u8Path),
                 '-t', self::convertSeconds($scene->duration),
                 '-c', 'copy',
+                '-f', 'mp4',
                 Storage::path($filename),
             ];
 
