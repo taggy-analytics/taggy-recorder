@@ -33,6 +33,7 @@ class UpdateSoftware extends Command
      */
     public function handle()
     {
+        // ToDo: store current Version at end of update process!!!
         if($file = Mothership::make()->checkForUpdateFile()) {
             $releasePath = base_path('../' . Str::replace([':', ' '], '-', now()->toDateTimeString()));
 
