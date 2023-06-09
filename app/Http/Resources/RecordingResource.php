@@ -14,6 +14,7 @@ class RecordingResource extends JsonResource
             'type' => is_null($this->stopped_at) ? 'live' : 'finished',
             'start_time' => $this->started_at,
             'duration' => $this->getDuration(),
+            'data' => $this->data,
             'url' => $this->getUrl(),
             'camera' => CameraResource::make($this->camera),
         ];

@@ -16,6 +16,7 @@ class Recording extends Model
         'started_at' => 'datetime',
         'stopped_at' => 'datetime',
         'status' => RecordingStatus::class,
+        'data' => 'array',
     ];
 
     public static function boot() {
