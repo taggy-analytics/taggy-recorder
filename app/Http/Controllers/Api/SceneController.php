@@ -27,6 +27,8 @@ class SceneController extends Controller
         $filename = $scene->videoFilePath($recording);
 
         if(!Storage::exists($filename)) {
+            Storage::makeDirectory(dirname($filename));
+
             // FFmpeg doesn't like it if live HLS streams' m3u8s are used. So let's copy it first.
             $m3u8Path = $recording->getPath('video/video-' . $scene->id . '.m3u8');
             Storage::disk('public')
