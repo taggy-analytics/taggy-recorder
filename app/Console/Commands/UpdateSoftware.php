@@ -34,8 +34,10 @@ class UpdateSoftware extends Command
      */
     public function handle()
     {
+        $mothership = Mothership::make();
+
         try {
-            $newVersion = Mothership::make()->checkForUpdateFile();
+            $newVersion = $mothership->checkForUpdateFile();
         }
         catch(RecorderNotAssociatedException $exception) {
             $this->error('Recorder is not associated with any organization.');
@@ -78,6 +80,11 @@ class UpdateSoftware extends Command
             Process::run('php artisan storage:link');
 
             Storage::put(Mothership::CURRENT_SOFTWARE_VERSION_FILENAME, $newVersion['version']);
+
+            $this->success('Recorder was updated to latest software (' . $newVersion['version'] . ').');
+        }
+        else {
+            $this->info('Recorder is already running on latest software (' . $mothership->currentSoftwareVersion() . ').');
         }
 
         return 0;
