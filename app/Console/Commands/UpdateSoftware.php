@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use App\Exceptions\RecorderNotAssociatedException;
 use App\Support\Mothership;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\File;
@@ -33,12 +34,17 @@ class UpdateSoftware extends Command
      */
     public function handle()
     {
-        $currentVersion = Mothership::make()->currentSoftwareVersion();
+        try {
+            $newVersion = Mothership::make()->checkForUpdateFile();
+        }
+        catch(RecorderNotAssociatedException $exception) {
+            $this->error('Recorder is not associated with any organization.');
+            return 1;
+        }
 
-        // ToDo: store current Version at end of update process!!!
-
-        if($file = Mothership::make()->checkForUpdateFile()) {
+        if($newVersion) {
             $releasePath = base_path('../' . Str::replace([':', ' '], '-', now()->toDateTimeString()));
+            $file = $newVersion['filename'];
 
             $zip = new \ZipArchive();
             $zip->open(Storage::path('releases/' . $file));
@@ -70,6 +76,8 @@ class UpdateSoftware extends Command
             Process::run('php artisan horizon:terminate');
             Process::run('php artisan taggy:delete-old-releases');
             Process::run('php artisan storage:link');
+
+            Storage::put(Mothership::CURRENT_SOFTWARE_VERSION_FILENAME, $newVersion['version']);
         }
 
         return 0;

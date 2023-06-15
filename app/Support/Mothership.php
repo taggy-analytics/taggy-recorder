@@ -3,6 +3,7 @@
 namespace App\Support;
 
 use App\Exceptions\MothershipException;
+use App\Exceptions\RecorderNotAssociatedException;
 use App\Http\Resources\CameraResource;
 use App\Models\Camera;
 use App\Models\Recording;
@@ -179,9 +180,12 @@ class Mothership
 
         if($file) {
             $filename = trim(explode('=', $this->headers[ "content-disposition"])[1]);
-            Storage::put(self::CURRENT_SOFTWARE_VERSION_FILENAME, Str::replaceLast('.zip', '', $filename));
             Storage::put('releases/' . $filename, $file);
-            return $filename;
+
+            return [
+                'version' => Str::replaceLast('.zip', '', $filename),
+                'filename' => $filename,
+            ];
         }
     }
 
@@ -227,10 +231,15 @@ class Mothership
 
         if(!Storage::has(self::MOTHERSHIP_TOKEN_FILENAME)) {
             // ToDo: not really nice. See https://trello.com/c/QkQq9zXD
-            $token = Http::baseUrl(config('services.mothership.endpoint'))
+            $getTokenResponse = Http::baseUrl(config('services.mothership.endpoint'))
                 ->acceptJson()
-                ->get('recorders/' . Recorder::make()->getSystemId() . '/token')
-                ->json('token');
+                ->get('recorders/' . Recorder::make()->getSystemId() . '/token');
+
+            if($getTokenResponse->status() == 422) {
+                throw new RecorderNotAssociatedException();
+            }
+
+            $token = $getTokenResponse->json('token');
 
             // try if token can be decrypted (throws CouldNotDecryptData exception)
             $privateKey->decrypt(base64_decode($token));
