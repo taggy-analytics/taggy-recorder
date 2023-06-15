@@ -10,6 +10,7 @@ use Spatie\Crypto\Rsa\KeyPair;
 class Recorder
 {
     public const SYSTEM_ID_FILENAME = 'system-id.txt';
+    public const INSTALLATION_FINISHED_FILENAME = 'installation-finished.txt';
 
     public static function make()
     {
@@ -70,5 +71,15 @@ class Recorder
                 'input' => Arr::get($process, 3),
             ])
             ->filter(fn($process) => !in_array($process['input'], [null, 'ps']));
+    }
+
+    public function markInstallationAsFinished()
+    {
+        Storage::put(self::INSTALLATION_FINISHED_FILENAME, '');
+    }
+
+    public function installationIsFinished()
+    {
+        return Storage::exists(self::INSTALLATION_FINISHED_FILENAME);
     }
 }
