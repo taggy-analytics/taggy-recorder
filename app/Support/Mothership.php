@@ -189,6 +189,11 @@ class Mothership
         }
     }
 
+    public function log($data)
+    {
+        return $this->post('recorders/' . Recorder::make()->getSystemId() . '/log?key=' . config('taggy-recorder.mothership-logging-key'), $data);
+    }
+
     public function currentSoftwareVersion()
     {
         return Storage::get(self::CURRENT_SOFTWARE_VERSION_FILENAME);

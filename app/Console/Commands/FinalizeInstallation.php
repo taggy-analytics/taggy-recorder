@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use App\Enums\LogMessageType;
 use App\Support\Mothership;
 use App\Support\NetworkManager;
 use App\Support\Recorder;
@@ -36,6 +37,7 @@ class FinalizeInstallation extends Command
         $this->updateSystemConfiguration();
 
         $recorder->markInstallationAsFinished();
+        reportToMothership(LogMessageType::INSTALLATION_FINISHED);
 
         return 0;
     }

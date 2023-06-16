@@ -17,6 +17,7 @@ class RunMothershipActions
             return;
         }
 
+        app(SendLogToMothership::class)->execute();
         app(CheckIfRecorderIsAssignedToOrganization::class)->execute();
         app(HandleUploadRequests::class)->execute();
         app(SendDiscoveredCamerasToMothership::class)->execute();

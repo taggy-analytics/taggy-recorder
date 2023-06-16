@@ -2,6 +2,8 @@
 
 namespace App\Support;
 
+use App\Enums\LogMessageType;
+use App\Models\RecorderLog;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Storage;
@@ -81,5 +83,10 @@ class Recorder
     public function installationIsFinished()
     {
         return Storage::exists(self::INSTALLATION_FINISHED_FILENAME);
+    }
+
+    public function log(LogMessageType $type, $message = '', $data = [])
+    {
+        RecorderLog::create(compact('type', 'message', 'data'));
     }
 }
