@@ -71,5 +71,6 @@ class NetworkManager
     {
         Process::run('sudo netplan generate');
         Process::run('sudo netplan apply');
+        Process::run('sudo systemctl restart dnsmasq');
     }
 }

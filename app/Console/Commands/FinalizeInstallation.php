@@ -72,7 +72,6 @@ class FinalizeInstallation extends Command
         }
 
         NetworkManager::make()->applyNetworkConfig();
-        Process::run('sudo systemctl restart dnsmasq');
     }
 
     private function preprovision()
