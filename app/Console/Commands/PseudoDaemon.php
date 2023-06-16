@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use App\Support\Recorder;
 use App\Support\ReleaseManager;
 use Hammerstone\PseudoDaemon\IsPseudoDaemon;
 use Illuminate\Console\Command;
@@ -17,8 +18,10 @@ abstract class PseudoDaemon extends Command
      */
     public function handle()
     {
-        info('Starting pseudo daemon ' . $this->action . '...');
-        $this->runAsPseudoDaemon();
+        if(Recorder::make()->installationIsFinished()) {
+            info('Starting pseudo daemon ' . $this->action . '...');
+            $this->runAsPseudoDaemon();
+        }
     }
 
     public function process()

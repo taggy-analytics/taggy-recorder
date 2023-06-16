@@ -36,6 +36,11 @@ Route::put('scenes/{scene}', [\App\Http\Controllers\Api\SceneController::class, 
 Route::delete('scenes/{scene}', [\App\Http\Controllers\Api\SceneController::class, 'delete']);
 Route::get('scenes/{scene}/recordings/{recording}/video.mp4', [\App\Http\Controllers\Api\SceneController::class, 'download'])->name('scenes.download');
 
+Route::get('wifis', [\App\Http\Controllers\Api\WifiController::class, 'index']);
+Route::post('wifis', [\App\Http\Controllers\Api\WifiController::class, 'store']);
+Route::delete('wifis/{ssid}', [\App\Http\Controllers\Api\WifiController::class, 'destroy']);
+Route::put('wifis/{ssid}/change-password', [\App\Http\Controllers\Api\WifiController::class, 'updatePassword']);
+
 /*
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();

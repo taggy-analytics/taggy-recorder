@@ -3,9 +3,12 @@
 namespace App\Console\Commands;
 
 use App\Support\Mothership;
+use App\Support\NetworkManager;
 use App\Support\Recorder;
 use Illuminate\Console\Command;
+use Illuminate\Foundation\Console\KeyGenerateCommand;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Process;
 
 class FinalizeInstallation extends Command
@@ -17,13 +20,6 @@ class FinalizeInstallation extends Command
 
     public function handle()
     {
-        $this->updateSystemConfiguration();
-        return;
-
-
-
-
-
         $recorder = Recorder::make();
 
         if ($recorder->installationIsFinished()) {
@@ -35,8 +31,9 @@ class FinalizeInstallation extends Command
             return 1;
         }
 
-        $this->updateSystemConfiguration();
+        $this->call(KeyGenerateCommand::class, ['--force' => true]);
         $this->preprovision();
+        $this->updateSystemConfiguration();
 
         $recorder->markInstallationAsFinished();
 
@@ -46,12 +43,35 @@ class FinalizeInstallation extends Command
     private function updateSystemConfiguration()
     {
         $ethernetId = $this->getExternalEthernetInterfaceId();
-        $this->replaceStringInFile('/etc/netplan/10-taggy.yaml', self::ETHERNET_ID_PLACEHOLDER, $ethernetId);
-        $this->replaceStringInFile('/etc/dnsmasq.conf', self::ETHERNET_ID_PLACEHOLDER, $ethernetId);
-        Process::run('sudo netplan generate');
-        Process::run('sudo netplan apply');
-        Process::run('sudo systemctl restart dnsmasq');
+
+        File::move('/etc/netplan/50-cloud-init.yaml', '/etc/netplan/50-cloud-init.yaml.backup');
+
+        Process::run('sudo chmod 777 /etc/netplan');
+        if($ethernetId) {
+            File::put('/etc/netplan/10-taggy.yaml', str_replace(self::ETHERNET_ID_PLACEHOLDER, $ethernetId, File::get(resource_path('installation/10-taggy-with-ethernet.yaml'))));
+        }
+        else {
+            File::put('/etc/netplan/10-taggy.yaml', File::get(resource_path('installation/10-taggy.yaml')));
+        }
+        Process::run('sudo chmod 755 /etc/netplan');
+        Process::run('sudo chown root:root /etc/netplan/10-taggy.yaml');
+        Process::run('sudo chmod 600 /etc/netplan/10-taggy.yaml');
+
+        Process::run('sudo chmod 666 /etc/dnsmasq.conf');
+        if($ethernetId) {
+            File::put('/etc/dnsmasq.conf', str_replace(self::ETHERNET_ID_PLACEHOLDER, $ethernetId, File::get(resource_path('installation/dnsmasq.conf'))));
+        }
+        else {
+            File::put('/etc/dnsmasq.conf', str_replace('except-interface=' . self::ETHERNET_ID_PLACEHOLDER, '', File::get(resource_path('installation/dnsmasq.conf'))));
+        }
+        Process::run('sudo chmod 644 /etc/dnsmasq.conf');
+
         Process::run('iptables -t nat -A POSTROUTING -o ' . $ethernetId . ' -j MASQUERADE');
+
+        NetworkManager::make()->applyNetworkConfig();
+        Process::run('sudo systemctl restart dnsmasq');
+
+        Process::run('sudo apt install iptables-persistent');
     }
 
     private function preprovision()
@@ -72,13 +92,5 @@ class FinalizeInstallation extends Command
         $finalResult = array_diff($interfaces, $exclude);
 
         return Arr::first($finalResult);
-    }
-
-    function replaceStringInFile($file, $search, $replace) {
-        if(file_exists($file) && is_writable($file)) {
-            $content = file_get_contents($file);
-            $contentChunks = str_replace($search, $replace, $content);
-            file_put_contents($file, $contentChunks);
-        }
     }
 }
