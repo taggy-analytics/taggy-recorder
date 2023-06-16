@@ -66,12 +66,13 @@ class FinalizeInstallation extends Command
         }
         Process::run('sudo chmod 644 /etc/dnsmasq.conf');
 
-        Process::run('iptables -t nat -A POSTROUTING -o ' . $ethernetId . ' -j MASQUERADE');
+        if($ethernetId) {
+            Process::run('iptables -t nat -A POSTROUTING -o ' . $ethernetId . ' -j MASQUERADE');
+            Process::run('sudo iptables-save');
+        }
 
         NetworkManager::make()->applyNetworkConfig();
         Process::run('sudo systemctl restart dnsmasq');
-
-        Process::run('sudo apt install iptables-persistent');
     }
 
     private function preprovision()
