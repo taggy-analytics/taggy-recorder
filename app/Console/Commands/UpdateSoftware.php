@@ -81,7 +81,7 @@ class UpdateSoftware extends Command
 
             Storage::put(Mothership::CURRENT_SOFTWARE_VERSION_FILENAME, $newVersion['version']);
 
-            $this->success('Recorder was updated to latest software (' . $newVersion['version'] . ').');
+            $this->info('Recorder was updated to latest software (' . $newVersion['version'] . ').');
         }
         else {
             $this->info('Recorder is already running on latest software (' . $mothership->currentSoftwareVersion() . ').');
