@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Resources\RecordingResource;
 use App\Models\Recording;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class RecordingController extends Controller
 {
@@ -24,5 +25,13 @@ class RecordingController extends Controller
         $recording->update($request->only(['data']));
 
         return RecordingResource::make($recording);
+    }
+
+    public function videoVod(Recording $recording)
+    {
+        $m3u8 = Storage::disk('public')
+            ->get($recording->getPath('video/video.m3u8'));
+
+        return $m3u8 . PHP_EOL . '#EXT-X-ENDLIST';
     }
 }
