@@ -33,7 +33,7 @@ class RecordingController extends Controller
         $m3u8 = Storage::disk('public')
             ->get($recording->getPath('video/video.m3u8'));
 
-        $appendix = Str::contains($m3u8, '#EXT-X-ENDLIST') ? '' : PHP_EOL . '#EXT-X-ENDLIST';
+        $appendix = Str::contains($m3u8, '#EXT-X-ENDLIST') ? '' : '#EXT-X-ENDLIST';
 
         return $m3u8 . $appendix;
     }
