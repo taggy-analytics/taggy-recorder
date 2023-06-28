@@ -28,7 +28,7 @@ class RecordingController extends Controller
         return RecordingResource::make($recording);
     }
 
-    public function videoVod(Recording $recording)
+    public function videoVod(Recording $recording, $key)
     {
         $m3u8 = Storage::disk('public')
             ->get($recording->getPath('video/video.m3u8'));

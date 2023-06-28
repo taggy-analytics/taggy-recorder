@@ -16,7 +16,7 @@ class RecordingResource extends JsonResource
             'duration' => $this->getDuration(),
             'data' => $this->data,
             'url' => $this->getUrl(),
-            'url_vod' => route('recording.video-vod', [$this->resource, $this->resource]),
+            'url_vod' => route('recording.video-vod', ['recording' => $this->resource->id, 'key' => $this->resource->key]),
             'camera' => CameraResource::make($this->camera),
         ];
     }
