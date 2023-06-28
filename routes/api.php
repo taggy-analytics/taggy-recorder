@@ -28,7 +28,6 @@ Route::post('cameras/{camera}/recording/stop', [\App\Http\Controllers\Api\Camera
 
 Route::get('recordings', [\App\Http\Controllers\Api\RecordingController::class, 'index']);
 Route::get('recordings/{recording}', [\App\Http\Controllers\Api\RecordingController::class, 'show']);
-Route::get('recordings/{recording:key}/video-vod.m3u8', [\App\Http\Controllers\Api\RecordingController::class, 'videoVod'])->name('recording.video-vod');
 Route::put('recordings/{recording}', [\App\Http\Controllers\Api\RecordingController::class, 'update']);
 
 Route::get('scenes', [\App\Http\Controllers\Api\SceneController::class, 'index']);
