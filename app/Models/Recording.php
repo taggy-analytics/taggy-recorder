@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Enums\RecordingStatus;
 use App\Models\Traits\HasStatus;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
@@ -99,6 +100,11 @@ class Recording extends Model
     private function calculateStoppedAt()
     {
         $duration = exec('ffprobe ' . $this->getPath('video/video.m3u8') . ' -show_entries format=duration -v quiet -of csv="p=0"');
+
+        if(!is_numeric($duration)) {
+            $duration = $this->started_at->diffInSeconds(File::lastModified($this->getPath('video/video.m3u8')));
+        }
+
         $this->update([
             'stopped_at' => $this->started_at->addMilliseconds(round($duration * 1000)),
         ]);
