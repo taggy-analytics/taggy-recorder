@@ -44,7 +44,7 @@ class Recording extends Model
 
     public function isRecording()
     {
-        if(is_null($this->stopped_at) && !$this->camera->isRecording()) {
+        if(is_null($this->stopped_at) && !$this->camera?->isRecording()) {
             $this->calculateStoppedAt();
         }
 
