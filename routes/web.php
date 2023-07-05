@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\Api\RecordingController;
+use App\Http\Controllers\QrCodeController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -13,7 +15,6 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', \App\Http\Livewire\Cameras::class);
-Route::get('/qr', \App\Http\Livewire\QrCode::class);
-
-Route::get('storage/recordings/{recording}/{key}/video/video-vod.m3u8', [\App\Http\Controllers\Api\RecordingController::class, 'videoVod'])->name('recording.video-vod');
+// Route::get('/', \App\Http\Livewire\Cameras::class);
+Route::get('/qr', QrCodeController::class);
+Route::get('storage/recordings/{recording}/{ key}/video/video-vod.m3u8', [RecordingController::class, 'videoVod'])->name('recording.video-vod');
