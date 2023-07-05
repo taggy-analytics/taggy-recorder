@@ -33,8 +33,8 @@ class FinalizeInstallation extends Command
         }
 
         $this->call(KeyGenerateCommand::class, ['--force' => true]);
-        $this->preprovision();
-        $this->updateSystemConfiguration();
+        //$this->preprovision();
+        //$this->updateSystemConfiguration();
 
         $recorder->markInstallationAsFinished();
         reportToMothership(LogMessageType::INSTALLATION_FINISHED);

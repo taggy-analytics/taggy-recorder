@@ -88,7 +88,7 @@ class ReolinkDuo2Poe extends RtspCamera
             $camera->credentials_status->newCredentialsSuccessfulAt = now();
             $camera->save();
         }
-        elseif($status == CameraStatus::CONNECTION_REFUSED) {
+        elseif(in_array($status, [CameraStatus::CONNECTION_REFUSED], CameraStatus::AUTHENTICATION_FAILED)) {
             if(!$camera->credentials_status->invalidCredentialsDiscoveredAt) {
                 $camera->credentials_status->invalidCredentialsDiscoveredAt = now();
                 $camera->save();
