@@ -11,6 +11,7 @@ use App\Models\Recording;
 use App\Support\FFMpegCommand;
 use Chrisyue\PhpM3u8\Facade\ParserFacade;
 use Chrisyue\PhpM3u8\Stream\TextStream;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
@@ -44,7 +45,10 @@ class HandleRecordings
         if(Camera::noCameraIsRecording()) {
             foreach(Recording::withStatus(RecordingStatus::PREPARING_PREPROCESSING) as $recording) {
                 $parser = new ParserFacade();
-                $files = collect($parser->parse(new TextStream(Storage::disk('public')->get($recording->getPath('video/video.m3u8'))))['mediaSegments'])
+
+                info($parser->parse(new TextStream(Storage::disk('public')->get($recording->getPath('video/video.m3u8')))));
+
+                $files = collect(Arr::get($parser->parse(new TextStream(Storage::disk('public')->get($recording->getPath('video/video.m3u8')))), 'mediaSegments'))
                     ->pluck('uri');
 
                 foreach ($files as $file) {
