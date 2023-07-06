@@ -33,6 +33,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        Flare::context('recorderId', Recorder::make()->getSystemId());
+        Flare::context('Recorder ID', Recorder::make()->getSystemId());
+        Flare::context('Taggy Version', Mothership::make()->currentSoftwareVersion());
     }
 }
