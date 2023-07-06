@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Enums\RecordingStatus;
 use App\Models\Traits\HasStatus;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Storage;
@@ -102,7 +103,8 @@ class Recording extends Model
         $duration = exec('ffprobe ' . $this->getPath('video/video.m3u8') . ' -show_entries format=duration -v quiet -of csv="p=0"');
 
         if(!is_numeric($duration)) {
-            $duration = $this->started_at->diffInSeconds(Storage::disk('public')->lastModified($this->getPath('video/video.m3u8')));
+            $lastModified = Carbon::parse(Storage::disk('public')->lastModified($this->getPath('video/video.m3u8')));
+            $duration = $this->started_at->diffInSeconds($lastModified);
         }
 
         $this->update([
