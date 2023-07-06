@@ -102,7 +102,7 @@ class Recording extends Model
         $duration = exec('ffprobe ' . $this->getPath('video/video.m3u8') . ' -show_entries format=duration -v quiet -of csv="p=0"');
 
         if(!is_numeric($duration)) {
-            $duration = $this->started_at->diffInSeconds(File::lastModified($this->getPath('video/video.m3u8')));
+            $duration = $this->started_at->diffInSeconds(Storage::disk('public')->lastModified($this->getPath('video/video.m3u8')));
         }
 
         $this->update([
