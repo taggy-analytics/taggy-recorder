@@ -70,7 +70,7 @@ class Recording extends Model
 
     public function getThumbnail()
     {
-        return $this->files->first()->thumbnailPath();
+        return $this->files->first()?->thumbnailPath();
     }
 
     public function getDuration()
