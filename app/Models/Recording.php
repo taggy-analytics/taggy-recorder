@@ -14,6 +14,8 @@ class Recording extends Model
 {
     use HasStatus;
 
+    protected $dateFormat = 'Y-m-d H:i:s.v';
+
     protected $casts = [
         'started_at' => 'datetime',
         'stopped_at' => 'datetime',
@@ -75,7 +77,7 @@ class Recording extends Model
 
     public function getDuration()
     {
-        return $this->getEndTime()->diffInSeconds($this->started_at);
+        return $this->getEndTime()->diffInMilliseconds($this->started_at) / 1000;
     }
 
     public function getUrl()

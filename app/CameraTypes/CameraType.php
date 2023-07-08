@@ -23,6 +23,13 @@ abstract class CameraType
     abstract public function stopRecording(Camera $camera);
     abstract public function isRecording(Camera $camera);
 
+    protected $recordingStartDelay = 0;
+
+    public function getRecordingStartDelay()
+    {
+        return $this->recordingStartDelay;
+    }
+
     public static function discoverCameras()
     {
         $newCameras = collect();

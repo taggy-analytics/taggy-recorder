@@ -64,14 +64,12 @@ class Camera extends Model
 
         $recording = $this->recordings()->create([
             'name' => now()->toDateTimeLocalString(),
-            'started_at' => now(),
         ]);
-
-        // ToDo: auf was muss started_at gesetzt werden? Experimentieren, wenn App läuft.
-
+        
         info('Starting recording # ' . $recording->id . ' for camera #' . $this->id);
 
         $this->getType()->startRecording($this, $recording);
+        $recording->update(['started_at' => now()->addSeconds($this->getType()->getRecordingStartDelay())]);
 
         return $recording;
     }
