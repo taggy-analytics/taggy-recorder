@@ -19,7 +19,7 @@ class FFMpegCommand
         $process = $async ? Process::start($command) : Process::run($command);
 
         // sh -c is called, which starts the actual ffmpeg process
-        return $process->id() + 1;
+        return $async ? ($process->id() + 1) : Process::run($command)->output();
     }
 
     public static function convertSeconds($seconds)

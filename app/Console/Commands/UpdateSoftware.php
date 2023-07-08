@@ -75,9 +75,9 @@ class UpdateSoftware extends Command
             symlink($releasePath, $releasePath . '/../../current');
 
             Process::run('php artisan cache:clear');
+            Process::run('php artisan storage:link');
             Process::run('php artisan horizon:terminate');
             Process::run('php artisan taggy:delete-old-releases');
-            Process::run('php artisan storage:link');
 
             Storage::put(Mothership::CURRENT_SOFTWARE_VERSION_FILENAME, $newVersion['version']);
 
