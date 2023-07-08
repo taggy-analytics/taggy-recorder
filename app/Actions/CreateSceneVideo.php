@@ -26,7 +26,7 @@ class CreateSceneVideo
             ->append($m3u8Path, PHP_EOL . '#EXT-X-ENDLIST');
 
         $command = [
-            '-ss', FFMpegCommand::convertSeconds($scene->start_time->diffInSeconds($recording->started_at)),
+            '-ss', FFMpegCommand::convertSeconds($scene->start_time->diffInMilliseconds($recording->started_at) / 1000),
             '-i', Storage::disk('public')->path($m3u8Path),
             '-t', FFMpegCommand::convertSeconds($scene->duration),
             '-c', 'copy',
