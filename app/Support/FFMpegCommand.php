@@ -21,4 +21,14 @@ class FFMpegCommand
         // sh -c is called, which starts the actual ffmpeg process
         return $process->id() + 1;
     }
+
+    public static function convertSeconds($seconds)
+    {
+        $hours = floor($seconds / 3600);
+        $minutes = floor(($seconds / 60) % 60);
+        $seconds = $seconds % 60;
+        $milliseconds = floor(($seconds - floor($seconds)) * 1000);
+
+        return sprintf('%02d:%02d:%02d.%03d', $hours, $minutes, floor($seconds), $milliseconds);
+    }
 }

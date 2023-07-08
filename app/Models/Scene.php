@@ -21,9 +21,9 @@ class Scene extends Model
             });
     }
 
-    public function videoFilePath(Recording $recording)
+    public function videoFilePath(Recording $recording, $extension = 'mp4')
     {
-        return 'scene-videos/' . $this->id . '/' . $recording->id . '/' . $this->getHash($recording) . '.mp4';
+        return 'scene-videos/' . $this->id . '/' . $recording->id . '/' . $this->getHash($recording) . '.' . $extension;
     }
 
     private function getHash(Recording $recording = null)

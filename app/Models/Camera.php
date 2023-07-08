@@ -65,7 +65,7 @@ class Camera extends Model
         $recording = $this->recordings()->create([
             'name' => now()->toDateTimeLocalString(),
         ]);
-        
+
         info('Starting recording # ' . $recording->id . ' for camera #' . $this->id);
 
         $this->getType()->startRecording($this, $recording);
