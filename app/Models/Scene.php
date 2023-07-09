@@ -7,6 +7,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class Scene extends Model
 {
+    protected $dateFormat = 'Y-m-d H:i:s.v';
+
     protected $casts = [
         'data' => 'array',
         'start_time' => 'datetime',

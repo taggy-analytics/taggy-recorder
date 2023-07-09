@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Resources\SceneResource;
 use App\Models\Recording;
 use App\Models\Scene;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
@@ -35,7 +36,12 @@ class SceneController extends Controller
     {
         $this->validateRequest($request);
 
-        $scene = Scene::create($request->only(['start_time', 'duration', 'data']));
+        $data = $request->only(['start_time', 'duration', 'data']);
+
+        $delta = $request->is_live_tagging ? now()->diffInMilliseconds($request->system_time) : 0;
+        $data['start_time'] = Carbon::parse($data['start_time'])->subMilliseconds($delta);
+
+        $scene = Scene::create($data);
 
         foreach($scene->getContainingRecordings() as $recording) {
             app(CreateSceneVideo::class)
@@ -69,6 +75,8 @@ class SceneController extends Controller
     private function validateRequest(Request $request)
     {
         $request->validate([
+            'is_live_tagging' => 'required|boolean',
+            'system_time' => 'required|date',
             'start_time' => 'required|date',
             'duration' => 'required|integer',
         ]);
