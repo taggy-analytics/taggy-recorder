@@ -10,7 +10,7 @@ use Symfony\Component\Process\Process;
 
 class ReolinkDuo2Poe extends RtspCamera
 {
-    protected $recordingStartDelay = 2;
+    protected $recordingStartDelay = 1700;
 
     public static function discover()
     {

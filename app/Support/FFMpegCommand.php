@@ -22,13 +22,13 @@ class FFMpegCommand
         return $async ? ($process->id() + 1) : Process::run($command)->output();
     }
 
-    public static function convertSeconds($seconds)
+    public static function convertSeconds($originalSeconds)
     {
-        $hours = floor($seconds / 3600);
-        $minutes = floor(($seconds / 60) % 60);
-        $seconds = $seconds % 60;
-        $milliseconds = floor(($seconds - floor($seconds)) * 1000);
+        $hours = floor($originalSeconds / 3600);
+        $minutes = floor(($originalSeconds / 60) % 60);
+        $seconds = $originalSeconds % 60;
+        $milliseconds = floor(($originalSeconds - floor($originalSeconds)) * 1000);
 
-        return sprintf('%02d:%02d:%02d.%03d', $hours, $minutes, floor($seconds), $milliseconds);
+        return sprintf('%02d:%02d:%02d.%03d', $hours, $minutes, $seconds, $milliseconds);
     }
 }

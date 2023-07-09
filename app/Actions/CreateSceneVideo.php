@@ -37,7 +37,7 @@ class CreateSceneVideo
         FFMpegCommand::runRaw(implode(' ', $command), async: false);
         Storage::put($scene->videoFilePath($recording, 'ready'), '');
 
-        Storage::disk('public')->delete($m3u8Path);
+        // Storage::disk('public')->delete($m3u8Path);
 
         // ToDo: push video available event to clients
     }

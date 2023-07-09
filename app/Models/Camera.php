@@ -69,7 +69,7 @@ class Camera extends Model
         info('Starting recording # ' . $recording->id . ' for camera #' . $this->id);
 
         $this->getType()->startRecording($this, $recording);
-        $recording->update(['started_at' => now()->addSeconds($this->getType()->getRecordingStartDelay())]);
+        $recording->update(['started_at' => now()->subMilliseconds($this->getType()->getRecordingStartDelay())]);
 
         return $recording;
     }
