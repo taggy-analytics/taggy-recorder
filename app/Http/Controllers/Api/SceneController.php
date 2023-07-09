@@ -35,9 +35,7 @@ class SceneController extends Controller
     public function store(Request $request)
     {
         $this->validateRequest($request);
-
-        info($request->all());
-
+        
         $data = $request->only(['start_time', 'duration', 'data']);
 
         $delta = $request->is_live_tagging ? now()->diffInMilliseconds($request->system_time) : 0;
