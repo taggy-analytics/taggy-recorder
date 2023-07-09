@@ -18,6 +18,11 @@ class CreateSceneVideo
 
         Storage::makeDirectory(dirname($filename));
 
+        // ToDo: das muss besser gehen. Es muss sichergestellt werden, dass alle hls-Dateien für den Schnitt bereits vorhanden sind
+        if($scene->getEndTime()->diffInSeconds() < 5) {
+            sleep(5);
+        }
+
         // FFmpeg doesn't like it if live HLS streams' m3u8s are used. So let's copy it first.
         $m3u8Path = $recording->getPath('video/video-' . $scene->id . '.m3u8');
         Storage::disk('public')

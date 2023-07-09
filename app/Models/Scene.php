@@ -21,6 +21,11 @@ class Scene extends Model
             });
     }
 
+    public function getEndTime()
+    {
+        return $this->start_time->addMilliseconds($this->duration * 1000);
+    }
+
     public function videoFilePath(Recording $recording, $extension = 'mp4')
     {
         return 'scene-videos/' . $this->id . '/' . $recording->id . '/' . $this->getHash($recording) . '.' . $extension;
