@@ -30,9 +30,13 @@ class CreateSceneVideo
         Storage::disk('public')
             ->append($m3u8Path, PHP_EOL . '#EXT-X-ENDLIST');
 
+        $start = $scene->start_time->diffInMilliseconds($recording->started_at) / 1000;
+
         $command = [
-            '-ss', FFMpegCommand::convertSeconds($scene->start_time->diffInMilliseconds($recording->started_at) / 1000),
+            '-ss', FFMpegCommand::convertSeconds($start - 3),
+            '-start_at_zero',
             '-i', Storage::disk('public')->path($m3u8Path),
+            '-ss', 3,
             '-t', FFMpegCommand::convertSeconds($scene->duration),
             '-c', 'copy',
             '-f', 'mp4',
@@ -42,7 +46,7 @@ class CreateSceneVideo
         FFMpegCommand::runRaw(implode(' ', $command), async: false);
         Storage::put($scene->videoFilePath($recording, 'ready'), '');
 
-        // Storage::disk('public')->delete($m3u8Path);
+        Storage::disk('public')->delete($m3u8Path);
 
         // ToDo: push video available event to clients
     }
