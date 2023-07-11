@@ -6,5 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class SceneContainer extends Model
 {
-
+    protected $casts = [
+        'start_time' => 'datetime',
+    ];
 }

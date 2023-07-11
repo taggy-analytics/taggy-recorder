@@ -25,9 +25,11 @@ class HandleRecordings
         // $this->checkIfThumbnailCreationWasFinishedForRecording();
         // $this->createZipFileWithThumbnails();
         $this->createRecordingFilesInDB();
-        $this->createThumbnailsForRecordingFiles();
-        $this->createMovieWithThumbnails();
-        $this->checkIfMovieCreationWasFinishedForRecording();
+        // $this->createThumbnailsForRecordingFiles();
+        // $this->createMovieWithThumbnails();
+        // $this->checkIfMovieCreationWasFinishedForRecording();
+
+        $this->createRecordingFilesInDB();
         $this->deleteRecordings();
     }
 
@@ -53,6 +55,7 @@ class HandleRecordings
                     $recording->files()->firstOrCreate([
                         'name' => $file,
                         'type' => RecordingFileType::VIDEO_M4S,
+                        'status' => RecordingFileStatus::TO_BE_UPLOADED,
                     ]);
                 }
                 $recording->setStatus(RecordingStatus::CREATED_RECORDING_FILES_IN_DB);
