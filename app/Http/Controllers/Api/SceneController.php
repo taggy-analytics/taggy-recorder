@@ -35,8 +35,12 @@ class SceneController extends Controller
     public function store(Request $request)
     {
         $this->validateRequest($request);
-        
+
         $data = $request->only(['start_time', 'duration', 'data']);
+
+        // As long as data is sent within "data"
+        $data['uuid'] = $request->data['uuid'];
+        $data['container_uuid'] = $request->data['container_id'];
 
         $delta = $request->is_live_tagging ? now()->diffInMilliseconds($request->system_time) : 0;
         $data['start_time'] = Carbon::parse($data['start_time'])->subMilliseconds($delta);

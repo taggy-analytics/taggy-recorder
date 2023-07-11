@@ -30,6 +30,10 @@ Route::get('recordings', [\App\Http\Controllers\Api\RecordingController::class, 
 Route::get('recordings/{recording}', [\App\Http\Controllers\Api\RecordingController::class, 'show']);
 Route::put('recordings/{recording}', [\App\Http\Controllers\Api\RecordingController::class, 'update']);
 
+Route::get('scene-containers', [\App\Http\Controllers\Api\SceneContainerController::class, 'index']);
+Route::post('scene-containers', [\App\Http\Controllers\Api\SceneContainerController::class, 'store']);
+Route::get('scene-containers/{container}', [\App\Http\Controllers\Api\SceneContainerController::class, 'show']);
+
 Route::get('scenes', [\App\Http\Controllers\Api\SceneController::class, 'index']);
 Route::post('scenes', [\App\Http\Controllers\Api\SceneController::class, 'store']);
 Route::get('scenes/{scene}', [\App\Http\Controllers\Api\SceneController::class, 'show']);
