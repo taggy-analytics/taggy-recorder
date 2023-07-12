@@ -53,6 +53,7 @@ class Mothership
         return $this->post('cameras', CameraResource::make($camera));
     }
 
+    /*
     public function reportRecording(Camera $camera, $filename, $duration, $screenshot)
     {
         return $this->post('cameras/' . $camera->identifier . '/recordings', [
@@ -60,6 +61,20 @@ class Mothership
             'filename' => $filename,
             'duration' => $duration,
             'screenshot' => $screenshot,
+        ]);
+    }
+    */
+
+    public function reportRecording(Recording $recording)
+    {
+        return $this->post('recorders/' . Recorder::make()->getSystemId() . '/recording-to-video', [
+            'uuid' => $recording->uuid,
+            'cameraId' => $recording->camera_id,
+            'key' => $recording->key,
+            'totalSegments' => $recording->countSegments(),
+            'sceneContainer' => $recording->data['assigned_container'],
+            'startTime' => $recording->started_at,
+            'duration' => $recording->getDuration(),
         ]);
     }
 

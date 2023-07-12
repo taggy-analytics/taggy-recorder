@@ -9,6 +9,7 @@ use App\Enums\RecordingStatus;
 use App\Models\Camera;
 use App\Models\Recording;
 use App\Support\FFMpegCommand;
+use App\Support\Mothership;
 use Chrisyue\PhpM3u8\Facade\ParserFacade;
 use Chrisyue\PhpM3u8\Stream\TextStream;
 use Illuminate\Support\Arr;
@@ -29,8 +30,20 @@ class HandleRecordings
         // $this->createMovieWithThumbnails();
         // $this->checkIfMovieCreationWasFinishedForRecording();
 
-        $this->createRecordingFilesInDB();
+        $this->reportRecordings();
         $this->deleteRecordings();
+    }
+
+    private function reportRecordings()
+    {
+        if(Camera::noCameraIsRecording()) {
+            foreach(Recording::withStatus(RecordingStatus::CREATED_RECORDING_FILES_IN_DB) as $recording) {
+                if($video = Mothership::make()->reportRecording($recording)) {
+                    $recording->files()->update(['video_id' => $video['id']]);
+                    $recording->setStatus(RecordingStatus::REPORTED_TO_MOTHERSHIP);
+                }
+            }
+        }
     }
 
     private function setPreprocessingStatusForFinishedRecordings()
