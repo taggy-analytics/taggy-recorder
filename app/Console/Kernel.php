@@ -22,21 +22,22 @@ class Kernel extends ConsoleKernel
         $schedule->command(HandleCameras::class)
             ->runInBackground()
             ->withoutOverlapping()
-            ->everyMinute();
+            ->everyFiveSeconds();
 
         $schedule->command(HandleUploads::class)
             ->runInBackground()
             ->withoutOverlapping()
-            ->everyMinute();
+            ->everyTwentySeconds();
 
         $schedule->command(HandleRecordings::class)
             ->runInBackground()
             ->withoutOverlapping()
-            ->everyMinute();
+            ->everyTwentySeconds();
 
         $schedule->command(RunMothershipActions::class)
+            ->runInBackground()
             ->withoutOverlapping()
-            ->everyMinute();
+            ->everyTwentySeconds();
     }
 
     /**
