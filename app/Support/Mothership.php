@@ -175,7 +175,7 @@ class Mothership
     public function sendPlaylist($videoId, $playlist)
     {
         $this->post('videos/' . $videoId . '/playlist', [
-            'segment' => base64_encode($playlist),
+            'playlist' => base64_encode($playlist),
         ]);
     }
 
