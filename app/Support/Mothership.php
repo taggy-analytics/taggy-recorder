@@ -71,7 +71,7 @@ class Mothership
             'uuid' => $recording->uuid,
             'cameraId' => $recording->camera_id,
             'key' => $recording->key,
-            'totalSegments' => $recording->countSegments(),
+            'totalSegments' => $recording->files()->count(),
             'sceneContainer' => $recording->data['assigned_container'],
             'startTime' => $recording->started_at,
             'duration' => $recording->getDuration(),
