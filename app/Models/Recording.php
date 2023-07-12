@@ -4,7 +4,9 @@ namespace App\Models;
 
 use App\Enums\RecordingStatus;
 use App\Models\Traits\HasStatus;
+use App\Models\Traits\HasUuid;
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Storage;
@@ -13,6 +15,7 @@ use Illuminate\Support\Str;
 class Recording extends Model
 {
     use HasStatus;
+    use HasUuid;
 
     protected $dateFormat = 'Y-m-d H:i:s.v';
 
