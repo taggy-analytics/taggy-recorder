@@ -30,20 +30,7 @@ class HandleRecordings
         // $this->createMovieWithThumbnails();
         // $this->checkIfMovieCreationWasFinishedForRecording();
 
-        $this->reportRecordings();
         $this->deleteRecordings();
-    }
-
-    private function reportRecordings()
-    {
-        if(Camera::noCameraIsRecording()) {
-            foreach(Recording::withStatus(RecordingStatus::CREATED_RECORDING_FILES_IN_DB) as $recording) {
-                if($video = Mothership::make()->reportRecording($recording)) {
-                    $recording->files()->update(['video_id' => $video['id']]);
-                    $recording->setStatus(RecordingStatus::REPORTED_TO_MOTHERSHIP);
-                }
-            }
-        }
     }
 
     private function setPreprocessingStatusForFinishedRecordings()
