@@ -168,7 +168,7 @@ class Mothership
 
         $this->post('videos/' . $file->video_id . '/segments', [
             'name' => $file->name,
-            'segment' => base64_encode(Storage::get($file->videoPath())),
+            'segment' => base64_encode(Storage::disk('public')->get($file->videoPath())),
         ]);
     }
 

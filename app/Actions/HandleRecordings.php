@@ -55,7 +55,7 @@ class HandleRecordings
                     $recording->files()->firstOrCreate([
                         'name' => $file,
                         'type' => RecordingFileType::VIDEO_M4S,
-                        'status' => RecordingFileStatus::TO_BE_UPLOADED,
+                        'status' => RecordingFileStatus::CREATED,
                     ]);
                 }
                 $recording->setStatus(RecordingStatus::CREATED_RECORDING_FILES_IN_DB);
