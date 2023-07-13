@@ -85,7 +85,7 @@ class Mothership
         return $this->post('scene-containers/' . $scene->container_uuid . '/scenes', [
             'uuid' => $scene->uuid,
             'name' => $scene->data['name'],
-            'tags' => $scene->data['tags'],
+            'tags' => $scene->data['tag_ids'],
             'startTime' => $scene->start_time,
             'duration' => $scene->duration,
         ]);
