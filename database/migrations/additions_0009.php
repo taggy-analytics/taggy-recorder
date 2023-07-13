@@ -8,10 +8,6 @@ return new class extends Migration
 {
     public function up()
     {
-        Schema::table('scenes', function (Blueprint $table) {
-            $table->dateTime('reported_at')->nullable()->after('data');
-        });
-
         Schema::create('mothership_reports', function (Blueprint $table) {
             $table->id();
             $table->morphs('model');

@@ -8,6 +8,7 @@ use App\Http\Resources\CameraResource;
 use App\Models\Camera;
 use App\Models\Recording;
 use App\Models\RecordingFile;
+use App\Models\Scene;
 use Exception;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Http;
@@ -76,6 +77,17 @@ class Mothership
             'sceneContainer' => Arr::get($recording->data, 'assigned_container'),
             'startTime' => $recording->started_at,
             'duration' => $recording->getDuration(),
+        ]);
+    }
+
+    public function sendScene(Scene $scene)
+    {
+        return $this->post('scene-containers/' . $scene->container_uuid . '/scenes', [
+            'uuid' => $scene->uuid,
+            'name' => $scene->data['name'],
+            'tags' => $scene->data['tags'],
+            'startTime' => $scene->start_time,
+            'duration' => $scene->duration,
         ]);
     }
 
