@@ -9,6 +9,7 @@ use App\Models\Camera;
 use App\Models\Recording;
 use App\Models\RecordingFile;
 use Exception;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
@@ -72,7 +73,7 @@ class Mothership
             'cameraId' => $recording->camera_id,
             'key' => $recording->key,
             'totalSegments' => $recording->files()->count(),
-            'sceneContainer' => $recording->data['assigned_container'],
+            'sceneContainer' => Arr::get($recording->data, 'assigned_container'),
             'startTime' => $recording->started_at,
             'duration' => $recording->getDuration(),
         ]);

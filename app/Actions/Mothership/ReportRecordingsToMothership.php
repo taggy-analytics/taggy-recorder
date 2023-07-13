@@ -20,6 +20,7 @@ class ReportRecordingsToMothership
                     'video_id' => $video['id'],
                     'status' => RecordingFileStatus::TO_BE_UPLOADED,
                 ]);
+                $recording->addM3u8EndTag();
                 $playlist = Storage::disk('public')
                     ->get($recording->getPath('video/video.m3u8'));
                 $mothership->sendPlaylist($video['id'], $playlist);
