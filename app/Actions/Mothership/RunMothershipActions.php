@@ -22,14 +22,24 @@ class RunMothershipActions
             return;
         }
 
-        app(SendLogToMothership::class)->execute();
-        app(CheckIfRecorderIsAssignedToOrganization::class)->execute();
-        app(SendReportablesToMothership::class)->execute();
-        app(HandleUploadRequests::class)->execute();
-        app(SendDiscoveredCamerasToMothership::class)->execute();
-        app(SendCamerasWithInvalidCredentialsToMothership::class)->execute();
-        app(ReportRecordingsToMothership::class)->execute();
-        app(GetCredentialsForUnauthenticatedCameras::class)->execute();
-        app(CheckForDeletedRecordings::class)->execute();
+        $this->runAction(SendLogToMothership::class);
+        $this->runAction(CheckIfRecorderIsAssignedToOrganization::class);
+        $this->runAction(SendReportablesToMothership::class);
+        $this->runAction(HandleUploadRequests::class);
+        $this->runAction(SendCamerasWithInvalidCredentialsToMothership::class);
+        $this->runAction(SendDiscoveredCamerasToMothership::class);
+        $this->runAction(ReportRecordingsToMothership::class);
+        $this->runAction(GetCredentialsForUnauthenticatedCameras::class);
+        $this->runAction(CheckForDeletedRecordings::class);
+    }
+
+    private function runAction($action)
+    {
+        try {
+            app($action)->execute();
+        }
+        catch(\Exception $exception) {
+            report($exception);
+        }
     }
 }
