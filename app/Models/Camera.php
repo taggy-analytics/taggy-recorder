@@ -91,8 +91,7 @@ class Camera extends Model
         if($this->getType()->stopRecording($this)) {
             $recording = $this->recordings()->latest()->first();
             $recording->update(['stopped_at' => now()]);
-
-            $this->addM3u8EndTag();
+            $recording->addM3u8EndTag();
 
             return $recording;
         }
@@ -103,18 +102,6 @@ class Camera extends Model
     public function getType() : CameraType
     {
         return (new $this->type);
-    }
-
-    private function addM3u8EndTag()
-    {
-        $m3u8 = Storage::disk('public')
-            ->get($this->getPath('video/video.m3u8'));
-
-        if(!Str::contains($m3u8, '#EXT-X-ENDLIST')) {
-            $m3u8 .= PHP_EOL . '#EXT-X-ENDLIST';
-            Storage::disk('public')
-                ->put($this->getPath('video/video.m3u8'), $m3u8);
-        }
     }
 
     /*

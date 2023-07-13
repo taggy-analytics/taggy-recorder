@@ -103,6 +103,18 @@ class Recording extends Model
         }
     }
 
+    public function addM3u8EndTag()
+    {
+        $m3u8 = Storage::disk('public')
+            ->get($this->getPath('video/video.m3u8'));
+
+        if(!Str::contains($m3u8, '#EXT-X-ENDLIST')) {
+            $m3u8 .= PHP_EOL . '#EXT-X-ENDLIST';
+            Storage::disk('public')
+                ->put($this->getPath('video/video.m3u8'), $m3u8);
+        }
+    }
+
     private function calculateStoppedAt()
     {
         $duration = exec('ffprobe ' . $this->getPath('video/video.m3u8') . ' -show_entries format=duration -v quiet -of csv="p=0"');
