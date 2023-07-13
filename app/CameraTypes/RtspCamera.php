@@ -23,7 +23,8 @@ abstract class RtspCamera extends CameraType
 
     public function stopRecording(Camera $camera)
     {
-        return posix_kill($camera->process_id, SIGKILL);
+        // SIGKILL = 9; Constants do not always work for whatever reason
+        return posix_kill($camera->process_id, 9);
     }
 
     public function getRtspUrl(Camera $camera)
