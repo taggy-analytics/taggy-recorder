@@ -9,6 +9,8 @@ use App\Enums\RecordingMode;
 use Illuminate\Database\Eloquent\Casts\AsCollection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 class Camera extends Model
 {
@@ -89,6 +91,9 @@ class Camera extends Model
         if($this->getType()->stopRecording($this)) {
             $recording = $this->recordings()->latest()->first();
             $recording->update(['stopped_at' => now()]);
+
+            $this->addM3u8EndTag();
+
             return $recording;
         }
 
@@ -98,6 +103,18 @@ class Camera extends Model
     public function getType() : CameraType
     {
         return (new $this->type);
+    }
+
+    private function addM3u8EndTag()
+    {
+        $m3u8 = Storage::disk('public')
+            ->get($this->getPath('video/video.m3u8'));
+
+        if(!Str::contains($m3u8, '#EXT-X-ENDLIST')) {
+            $m3u8 .= PHP_EOL . '#EXT-X-ENDLIST';
+            Storage::disk('public')
+                ->put($this->getPath('video/video.m3u8'), $m3u8);
+        }
     }
 
     /*
