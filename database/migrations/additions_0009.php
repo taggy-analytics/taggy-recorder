@@ -12,7 +12,7 @@ return new class extends Migration
             $table->dateTime('reported_at')->nullable()->after('data');
         });
 
-        Schema::create('reportables', function (Blueprint $table) {
+        Schema::create('mothership_reports', function (Blueprint $table) {
             $table->id();
             $table->morphs('model');
             $table->dateTime('reported_at')->nullable();
