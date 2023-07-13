@@ -2,11 +2,13 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Casts\AsArrayObject;
+use App\Models\Traits\IsReportedToMothership;
 use Illuminate\Database\Eloquent\Model;
 
 class Scene extends Model
 {
+    use IsReportedToMothership;
+
     protected $dateFormat = 'Y-m-d H:i:s.v';
 
     protected $casts = [
@@ -41,5 +43,10 @@ class Scene extends Model
             $this->start_time,
             $this->duration,
         ]));
+    }
+
+    public static function unreported()
+    {
+        return self::whereNull('reported_at')->get();
     }
 }
