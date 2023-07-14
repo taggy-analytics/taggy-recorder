@@ -5,6 +5,7 @@ namespace App\Actions\Mothership;
 use App\Models\Camera;
 use App\Support\Mothership;
 
+/*
 class SendDiscoveredCamerasToMothership
 {
     public function execute()
@@ -15,3 +16,4 @@ class SendDiscoveredCamerasToMothership
         }
     }
 }
+*/

@@ -59,6 +59,7 @@ class HandleRecordings
                     ]);
                 }
                 $recording->setStatus(RecordingStatus::CREATED_RECORDING_FILES_IN_DB);
+                $recording->reportToMothership();
             }
         }
     }

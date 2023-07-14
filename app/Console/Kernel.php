@@ -24,10 +24,12 @@ class Kernel extends ConsoleKernel
             ->withoutOverlapping()
             ->everyFiveSeconds();
 
+        /*
         $schedule->command(HandleUploads::class)
             ->runInBackground()
             ->withoutOverlapping()
             ->everyTwentySeconds();
+        */
 
         $schedule->command(HandleRecordings::class)
             ->runInBackground()

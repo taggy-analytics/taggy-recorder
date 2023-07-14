@@ -22,38 +22,36 @@ class Mothership
     private $client;
     private $headers;
 
-    public const MOTHERSHIP_TOKEN_FILENAME = 'mothership-token.txt';
+    // public const MOTHERSHIP_TOKEN_FILENAME = 'mothership-token.txt';
     public const CURRENT_SOFTWARE_VERSION_FILENAME = 'software-version.txt';
     public function __construct()
     {
         $this->client = Http::baseUrl(config('services.mothership.endpoint'))
             ->acceptJson()
-            ->withToken(self::getToken());
+            ->withHeaders([
+                'Recorder-Id' => Recorder::make()->getSystemId(),
+            ])
+            // ToDo: get user token from app
+            ->withToken(env('SEBS_MOTHERSHIP_TOKEN'));
     }
     public static function make()
     {
         return new self;
     }
 
+    /*
     public function getCameras()
     {
         return $this->get('cameras');
     }
+    */
 
-    public function currentRecorder()
-    {
-        try {
-            return $this->get('recorders/' . Recorder::make()->getSystemId());
-        }
-        catch(MothershipException $exception) {
-            return null;
-        }
-    }
-
+    /*
     public function reportDiscoveredCamera(Camera $camera)
     {
         return $this->post('cameras', CameraResource::make($camera));
     }
+    */
 
     /*
     public function reportRecording(Camera $camera, $filename, $duration, $screenshot)
@@ -69,7 +67,7 @@ class Mothership
 
     public function reportRecording(Recording $recording)
     {
-        return $this->post('recorders/' . Recorder::make()->getSystemId() . '/recording-to-video', [
+        return $this->post('recordings/to-video', [
             'uuid' => $recording->uuid,
             'cameraId' => $recording->camera_id,
             'key' => $recording->key,
@@ -91,21 +89,28 @@ class Mothership
         ]);
     }
 
+    /*
     public function deleteRecording(Camera $camera, $recordingId)
     {
         return $this->delete('cameras/' . $camera->identifier . '/recordings/' . $recordingId);
     }
+    */
 
+    /*
     public function getCameraCredentials(Camera $camera)
     {
         return $this->get('cameras/' . $camera->identifier . '/credentials');
     }
+    */
 
+    /*
     public function reportInvalidCameraCredentials(Camera $camera)
     {
         return $this->post('cameras/' . $camera->identifier . '/invalid-credentials');
     }
+    */
 
+    /*
     public function getUploadRecordingRequests()
     {
         try {
@@ -116,7 +121,9 @@ class Mothership
             return [];
         }
     }
+    */
 
+    /*
     public function confirmRecordingUploadRequest($videoId, $totalSegments, $thumbnail, $totalVideoDuration)
     {
         return $this->post('videos/' . $videoId . '/confirm-recording-upload-request', [
@@ -125,17 +132,23 @@ class Mothership
             'duration' => $totalVideoDuration,
         ]);
     }
+    */
 
+    /*
     public function getDeleteRecordingRequests()
     {
         return $this->get('recorders/' . Recorder::make()->getSystemId() . '/delete-requests');
     }
+    */
 
+    /*
     public function confirmDeleteRequest(Recording $recording)
     {
         return $this->delete('cameras/' . $recording->camera->id . '/recordings/' . $recording->id);
     }
+    */
 
+    /*
     public function sendRecordingThumbnails(Recording $recording)
     {
         $this->client->timeout(600);
@@ -153,7 +166,9 @@ class Mothership
             return false;
         }
     }
+    */
 
+    /*
     public function sendRecordingThumbnailsMovie(Recording $recording)
     {
         $this->client->timeout(600);
@@ -174,6 +189,7 @@ class Mothership
             throw $e;
         }
     }
+    */
 
     public function sendRecordingFile(RecordingFile $file)
     {
@@ -265,6 +281,7 @@ class Mothership
         return $type == 'json' ? $response->json() : $response->body();
     }
 
+    /*
     public static function getToken()
     {
         $privateKey = PrivateKey::fromString(Recorder::make()->getPrivateKey());
@@ -289,4 +306,5 @@ class Mothership
 
         return $privateKey->decrypt(base64_decode(Storage::get(self::MOTHERSHIP_TOKEN_FILENAME)));
     }
+    */
 }

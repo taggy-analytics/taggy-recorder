@@ -6,6 +6,7 @@ use App\Enums\CameraStatus;
 use App\Enums\RecordingMode;
 use App\Models\Camera;
 
+/*
 class CheckAndStartRecording
 {
     public function execute()
@@ -21,3 +22,4 @@ class CheckAndStartRecording
         }
     }
 }
+*/

@@ -6,6 +6,7 @@ use App\Enums\CameraStatus;
 use App\Models\Camera;
 use App\Support\Mothership;
 
+/*
 class GetCredentialsForUnauthenticatedCameras
 {
     public function execute()
@@ -21,3 +22,4 @@ class GetCredentialsForUnauthenticatedCameras
         }
     }
 }
+*/

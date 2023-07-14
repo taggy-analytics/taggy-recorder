@@ -16,6 +16,6 @@ class HandleCameras
         }
 
         app(StopAbandonedRecordings::class)->execute();
-        app(CheckAndStartRecording::class)->execute();
+        // app(CheckAndStartRecording::class)->execute();
     }
 }

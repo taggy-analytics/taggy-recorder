@@ -5,6 +5,7 @@ namespace App\Actions\Mothership;
 use App\Support\Mothership;
 use Illuminate\Support\Facades\Storage;
 
+/*
 class CheckIfRecorderIsAssignedToOrganization
 {
     public function execute()
@@ -16,3 +17,4 @@ class CheckIfRecorderIsAssignedToOrganization
         }
     }
 }
+*/

@@ -5,6 +5,7 @@ namespace App\Http\Livewire;
 use App\Models\Camera;
 use Livewire\Component;
 
+/*
 class Cameras extends Component
 {
     public $cameras;
@@ -44,3 +45,4 @@ class Cameras extends Component
         $camera->stopRecording();
     }
 }
+*/

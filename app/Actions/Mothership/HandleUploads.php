@@ -10,6 +10,7 @@ use App\Support\Mothership;
 
 class HandleUploads
 {
+    /*
     public function execute()
     {
         $mothership = Mothership::make();
@@ -28,13 +29,15 @@ class HandleUploads
                 $recording->setStatus(RecordingStatus::MOVIE_UPLOADED);
             }
         }
-        elseif($files->count() > 0) {
+
+        // elseif($files->count() > 0) {
             if($mothership->isOnline()) {
                 foreach($files as $file) {
                     $mothership->sendRecordingFile($file);
                     $file->setStatus(RecordingFileStatus::UPLOADED);
                 }
             }
-        }
+        //}
     }
+    */
 }

@@ -5,12 +5,14 @@ namespace App\Models;
 use App\Enums\RecordingFileStatus;
 use App\Enums\RecordingFileType;
 use App\Models\Traits\HasStatus;
+use App\Models\Traits\IsReportedToMothership;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
 
 class RecordingFile extends Model
 {
     use HasStatus;
+    use IsReportedToMothership;
 
     protected $casts = [
         'status' => RecordingFileStatus::class,

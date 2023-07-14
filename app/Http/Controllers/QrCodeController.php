@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Support\Recorder;
 
+/*
 class QrCodeController extends Controller
 {
     public function __invoke()
@@ -13,3 +14,4 @@ class QrCodeController extends Controller
         ]);
     }
 }
+*/

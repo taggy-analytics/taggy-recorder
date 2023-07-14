@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Enums\RecordingStatus;
 use App\Models\Traits\HasStatus;
 use App\Models\Traits\HasUuid;
+use App\Models\Traits\IsReportedToMothership;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Model;
@@ -16,6 +17,7 @@ class Recording extends Model
 {
     use HasStatus;
     use HasUuid;
+    use IsReportedToMothership;
 
     protected $dateFormat = 'Y-m-d H:i:s.v';
 

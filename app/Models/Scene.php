@@ -3,7 +3,6 @@
 namespace App\Models;
 
 use App\Models\Traits\IsReportedToMothership;
-use App\Support\Mothership;
 use Illuminate\Database\Eloquent\Model;
 
 class Scene extends Model
@@ -34,14 +33,6 @@ class Scene extends Model
     public function videoFilePath(Recording $recording, $extension = 'mp4')
     {
         return 'scene-videos/' . $this->id . '/' . $recording->id . '/' . $this->getHash($recording) . '.' . $extension;
-    }
-
-    public function sendToMothership()
-    {
-        Mothership::make()
-            ->sendScene($this);
-
-        return true;
     }
 
     private function getHash(Recording $recording = null)

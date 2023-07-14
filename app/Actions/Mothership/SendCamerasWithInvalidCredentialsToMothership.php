@@ -6,6 +6,7 @@ use App\Enums\CameraStatus;
 use App\Models\Camera;
 use App\Support\Mothership;
 
+/*
 class SendCamerasWithInvalidCredentialsToMothership
 {
     public function execute()
@@ -17,3 +18,4 @@ class SendCamerasWithInvalidCredentialsToMothership
             ->each(fn(Camera $camera) => Mothership::make()->reportInvalidCameraCredentials($camera));
     }
 }
+*/
