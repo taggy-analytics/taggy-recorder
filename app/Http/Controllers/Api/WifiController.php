@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\Console\Commands\FinalizeInstallation;
+// use App\Console\Commands\FinalizeInstallation;
 use App\Http\Controllers\Controller;
 use App\Support\NetworkManager;
 use App\Support\Recorder;
@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Artisan;
 
 class WifiController extends Controller
 {
+    /*
     public function index()
     {
         return NetworkManager::make()->getWifis();
@@ -43,4 +44,5 @@ class WifiController extends Controller
 
         NetworkManager::make()->updateWifiPassword($ssid, $request->password);
     }
+    */
 }

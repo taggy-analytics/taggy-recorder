@@ -75,10 +75,7 @@ class Recorder
             ->filter(fn($process) => !in_array($process['input'], [null, 'ps']));
     }
 
-    public function markInstallationAsFinished()
-    {
-        Storage::put(self::INSTALLATION_FINISHED_FILENAME, '');
-    }
+
 
     public function installationIsFinished()
     {

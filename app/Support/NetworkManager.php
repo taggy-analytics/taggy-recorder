@@ -9,6 +9,7 @@ use Symfony\Component\Yaml\Yaml;
 
 class NetworkManager
 {
+    /*
     //private const WIFI_CONFIG_PATH = '/etc/netplan/20-wifis.yaml';
     private const WIFI_CONFIG_PATH = '/Users/seb/dev/taggy-recorder/storage/app/wifis.yaml';
 
@@ -73,4 +74,5 @@ class NetworkManager
         Process::run('sudo netplan apply');
         Process::run('sudo systemctl restart dnsmasq');
     }
+    */
 }

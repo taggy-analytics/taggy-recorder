@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\Process;
 
 class FinalizeInstallation extends Command
 {
+    /*
     protected $signature = 'taggy:finalize-installation';
     protected $description = 'Finalize installation';
 
@@ -32,7 +33,7 @@ class FinalizeInstallation extends Command
             return 1;
         }
 
-        $this->call(KeyGenerateCommand::class, ['--force' => true]);
+        // $this->call(KeyGenerateCommand::class, ['--force' => true]);
         //$this->preprovision();
         //$this->updateSystemConfiguration();
 
@@ -95,4 +96,5 @@ class FinalizeInstallation extends Command
 
         return Arr::first($finalResult);
     }
+    */
 }
