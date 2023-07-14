@@ -1,42 +1,20 @@
 <?php
 
-namespace App\Console\Commands;
+namespace App\Actions;
 
-use App\Exceptions\RecorderNotAssociatedException;
 use App\Support\Mothership;
 use App\Support\Recorder;
-use Illuminate\Console\Command;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Process;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
-class UpdateSoftware extends Command
+class UpdateSoftware
 {
-    /**
-     * The name and signature of the console command.
-     *
-     * @var string
-     */
-    protected $signature = 'taggy:update-software';
-
-    /**
-     * The console command description.
-     *
-     * @var string
-     */
-    protected $description = 'Update software';
-
-    /**
-     * ra
-     * Execute the console command.
-     *
-     * @return int
-     */
-    public function handle()
+    public function execute()
     {
         if(!Recorder::make()->installationIsFinished()) {
-            return 1;
+            return;
         }
 
         $mothership = Mothership::make();
@@ -80,12 +58,18 @@ class UpdateSoftware extends Command
 
             Storage::put(Mothership::CURRENT_SOFTWARE_VERSION_FILENAME, $newVersion['version']);
 
-            $this->info('Recorder was updated to latest software (' . $newVersion['version'] . ').');
+            return [
+                'updated' => true,
+                'version' => $newVersion['version'],
+                'message' => 'Recorder was updated to latest software (' . $newVersion['version'] . ').',
+            ];
         }
         else {
-            $this->info('Recorder is already running on latest software (' . $mothership->currentSoftwareVersion() . ').');
+            return [
+                'updated' => false,
+                'version' => $mothership->currentSoftwareVersion(),
+                'message' => 'Recorder is already running on latest software (' . $mothership->currentSoftwareVersion() . ').',
+            ];
         }
-
-        return 0;
     }
 }
