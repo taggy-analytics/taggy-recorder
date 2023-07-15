@@ -8,8 +8,9 @@ abstract class Report
 {
     protected Mothership $mothership;
 
-    public function __construct()
+    public function execute($model)
     {
-        $this->mothership = Mothership::make();
+        $this->mothership = Mothership::make($model->mothershipReport->user_token);
+        return $this->executeReport($model);
     }
 }

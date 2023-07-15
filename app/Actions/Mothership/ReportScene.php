@@ -7,7 +7,7 @@ use App\Support\Mothership;
 
 class ReportScene
 {
-    public function execute(Scene $scene)
+    public function executeReport(Scene $scene)
     {
         Mothership::make()
             ->sendScene($scene);

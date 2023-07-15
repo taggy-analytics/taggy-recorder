@@ -12,7 +12,7 @@ trait IsReportedToMothership
             MothershipReport::create([
                 'model_type' => $model::class,
                 'model_id' => $model->id,
-                'user_token' => request()->header('User-Token', 'default'),
+                'user_token' => request()->header('User-Token'),
                 'ready_to_send' => false,
             ]);
         });

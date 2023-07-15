@@ -24,7 +24,7 @@ class Mothership
 
     // public const MOTHERSHIP_TOKEN_FILENAME = 'mothership-token.txt';
     public const CURRENT_SOFTWARE_VERSION_FILENAME = 'software-version.txt';
-    public function __construct()
+    public function __construct($userToken)
     {
         $this->client = Http::baseUrl(config('services.mothership.endpoint'))
             ->acceptJson()
@@ -32,11 +32,11 @@ class Mothership
                 'Recorder-Id' => Recorder::make()->getSystemId(),
             ])
             // ToDo: get user token from app
-            ->withToken(env('SEBS_MOTHERSHIP_TOKEN'));
+            ->withToken($userToken);
     }
-    public static function make()
+    public static function make($userToken = null)
     {
-        return new self;
+        return new self($userToken);
     }
 
     /*

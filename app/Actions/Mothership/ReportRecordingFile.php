@@ -7,7 +7,7 @@ use App\Models\RecordingFile;
 
 class ReportRecordingFile extends Report
 {
-    public function execute(RecordingFile $recordingFile): bool
+    public function executeReport(RecordingFile $recordingFile): bool
     {
         $this->mothership->sendRecordingFile($recordingFile);
         $recordingFile->setStatus(RecordingFileStatus::UPLOADED);

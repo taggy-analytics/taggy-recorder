@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\Storage;
 
 class ReportRecording extends Report
 {
-    public function execute(Recording $recording): bool
+    public function executeReport(Recording $recording): bool
     {
         if(Arr::has($recording->data, 'eid')) {
             info('Recording #' . $recording->id . ' has no entity ID.');
