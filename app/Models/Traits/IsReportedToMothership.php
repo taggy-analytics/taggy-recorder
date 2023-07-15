@@ -12,7 +12,8 @@ trait IsReportedToMothership
             MothershipReport::create([
                 'model_type' => $model::class,
                 'model_id' => $model->id,
-                'user_token' => request()->header('User-Token'),
+                // ToDo: remove
+                'user_token' => request()->header('User-Token', env('SEBS_MOTHERSHIP_TOKEN')),
                 'ready_to_send' => false,
             ]);
         });
