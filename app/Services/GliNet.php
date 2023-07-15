@@ -9,7 +9,7 @@ class GliNet
 {
     private $connector;
 
-    public static function make()
+    public static function make(): GliNet
     {
         return new self;
     }
@@ -21,12 +21,13 @@ class GliNet
 
     public function clients()
     {
-        return $this->send(new ClientListRequest());
+        return collect($this->send(new ClientListRequest())['clients']);
     }
 
     private function send($request)
     {
-        return collect($this->connector->send(new ClientListRequest())
-            ->json('clients'));
+        return $this->connector
+            ->send($request)
+            ->json();
     }
 }

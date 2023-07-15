@@ -18,7 +18,7 @@ class GliNetConnector extends Connector
      */
     public function resolveBaseUrl(): string
     {
-        return 'console.gl-inet.com/api';
+        return 'http://GL-AR300M.lan/cgi-bin/api';
     }
 
     /**

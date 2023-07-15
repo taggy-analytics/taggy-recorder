@@ -5,6 +5,7 @@ namespace App\Actions\Mothership;
 use App\Enums\RecordingFileStatus;
 use App\Enums\RecordingStatus;
 use App\Models\Recording;
+use App\Models\RecordingFile;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Storage;
 
@@ -22,7 +23,7 @@ class ReportRecording extends Report
                 'video_id' => $video['id'],
                 'status' => RecordingFileStatus::TO_BE_UPLOADED,
             ]);
-            $recording->files()->each->reportToMothership($recording->mothershipReport->user_token);
+            $recording->files()->each(fn(RecordingFile $file) => $file->reportToMothership($recording->mothershipReport->user_token));
             $recording->addM3u8EndTag();
             $playlist = Storage::disk('public')
                 ->get($recording->getPath('video/video.m3u8'));

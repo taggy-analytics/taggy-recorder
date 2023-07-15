@@ -35,6 +35,6 @@ class UpdateSoftware extends Command
      */
     public function handle()
     {
-        $this->info(app(\App\Actions\UpdateSoftware::class)->execute());
+        $this->info(json_encode(app(\App\Actions\UpdateSoftware::class)->execute(), JSON_PRETTY_PRINT));
     }
 }

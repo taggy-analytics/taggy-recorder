@@ -69,6 +69,7 @@ class Mothership
     {
         return $this->post('recordings/to-video', [
             'uuid' => $recording->uuid,
+            'recorderSystemId' => Recorder::make()->getSystemId(),
             'cameraId' => $recording->camera_id,
             'key' => $recording->key,
             'totalSegments' => $recording->files()->count(),
