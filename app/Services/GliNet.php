@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Http\Integrations\GliNet\GliNetConnector;
 use App\Http\Integrations\GliNet\Requests\ClientListRequest;
+use Illuminate\Support\Arr;
 
 class GliNet
 {
@@ -21,7 +22,7 @@ class GliNet
 
     public function clients()
     {
-        return collect($this->send(new ClientListRequest())['clients']);
+        return collect(Arr::get($this->send(new ClientListRequest()), 'clients'));
     }
 
     private function send($request)
