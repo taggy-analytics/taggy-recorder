@@ -46,6 +46,7 @@ class SceneController extends Controller
         $data['start_time'] = Carbon::parse($data['start_time'])->subMilliseconds($delta);
 
         $scene = Scene::create($data);
+        $scene->reportToMothership();
 
         foreach($scene->getContainingRecordings() as $recording) {
             app(CreateSceneVideo::class)

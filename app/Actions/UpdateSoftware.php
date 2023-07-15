@@ -76,4 +76,10 @@ class UpdateSoftware
             ];
         }
     }
+
+    private function getTokenForSoftwareUpdate()
+    {
+        // ToDo: entweder Token bei API Aufruf nehmen und speichern - oder bei Update über GUI mit eingeloggtem User
+        return env('SEBS_MOTHERSHIP_TOKEN');
+    }
 }
