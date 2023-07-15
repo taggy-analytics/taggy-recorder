@@ -9,7 +9,7 @@ return new class extends Migration
     public function up()
     {
         Schema::table('mothership_reports', function (Blueprint $table) {
-            $table->boolean('ready_to_send')->default(0)->after('');
+            $table->boolean('ready_to_send')->default(0)->after('model_id');
         });
     }
 };
