@@ -12,7 +12,7 @@ return new class extends Migration
             $table->id();
             $table->morphs('model');
             $table->dateTime('reported_at')->nullable();
-            $table->string('user_token');
+            $table->text('user_token');
             $table->timestamps();
         });
     }
