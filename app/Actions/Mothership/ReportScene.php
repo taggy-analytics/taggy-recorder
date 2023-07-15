@@ -3,13 +3,12 @@
 namespace App\Actions\Mothership;
 
 use App\Models\Scene;
-use App\Support\Mothership;
 
-class ReportScene
+class ReportScene extends Report
 {
     public function executeReport(Scene $scene)
     {
-        Mothership::make()
+        $this->mothership
             ->sendScene($scene);
 
         return true;
