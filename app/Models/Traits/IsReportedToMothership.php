@@ -13,7 +13,7 @@ trait IsReportedToMothership
                 'model_type' => $model::class,
                 'model_id' => $model->id,
                 // ToDo: remove
-                'user_token' => request()->header('User-Token', env('SEBS_MOTHERSHIP_TOKEN')),
+                'user_token' => request()->header('User-Token'),
                 'ready_to_send' => false,
             ]);
         });
