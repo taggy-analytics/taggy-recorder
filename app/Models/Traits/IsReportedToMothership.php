@@ -12,7 +12,6 @@ trait IsReportedToMothership
             MothershipReport::create([
                 'model_type' => $model::class,
                 'model_id' => $model->id,
-                // ToDo: remove
                 'user_token' => request()->header('User-Token'),
                 'ready_to_send' => false,
             ]);

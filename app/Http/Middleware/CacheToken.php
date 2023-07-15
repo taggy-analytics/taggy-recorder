@@ -15,7 +15,6 @@ class CacheToken
      */
     public function handle(Request $request, Closure $next): Response
     {
-        info('Caching token: ' . $request->header('User-Token'));
         cache()->put('user-token', $request->header('User-Token'), now()->addMinutes(10));
         return $next($request);
     }
