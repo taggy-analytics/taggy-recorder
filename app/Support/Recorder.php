@@ -7,6 +7,7 @@ use App\Models\RecorderLog;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 use Spatie\Crypto\Rsa\KeyPair;
 
 class Recorder
@@ -21,6 +22,10 @@ class Recorder
 
     public function getSystemId()
     {
+        if(!Storage::exists(self::SYSTEM_ID_FILENAME)) {
+            Storage::put(self::SYSTEM_ID_FILENAME, Str::random(16));
+        }
+
         return trim(Storage::get(self::SYSTEM_ID_FILENAME));
     }
 

@@ -10,7 +10,13 @@ abstract class Report
 
     public function execute($model)
     {
-        $this->mothership = Mothership::make($model->mothershipReport->user_token);
-        return $this->executeReport($model);
+        try {
+            $this->mothership = Mothership::make($model->mothershipReport->user_token);
+            return $this->executeReport($model);
+        }
+        catch(\Exception $exception) {
+            report($exception);
+            return false;
+        }
     }
 }

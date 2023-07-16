@@ -10,6 +10,6 @@ enum RecordingMode: string
 
     public static function default()
     {
-        return self::AUTOMATIC;
+        return self::MANUAL;
     }
 }
