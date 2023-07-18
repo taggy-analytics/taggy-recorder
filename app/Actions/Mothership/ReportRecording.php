@@ -13,7 +13,7 @@ class ReportRecording extends Report
 {
     public function executeReport(Recording $recording): bool
     {
-        if(Arr::has($recording->data, 'eid')) {
+        if(!Arr::has($recording->data, 'eid')) {
             info('Recording #' . $recording->id . ' has no entity ID.');
             return false;
         }

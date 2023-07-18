@@ -8,6 +8,11 @@ class SetupRouter
 {
     public function execute()
     {
+        // Change LAN IP
+        // Change SSID
+        // Set initial WLAN password
+
+
         $gatewayIp = $this->getGatewayIp();
 
         if($gatewayIp == '192.168.222.1') {
