@@ -21,7 +21,7 @@ class UpdateSoftware
             ];
         }
 
-        $mothership = Mothership::make();
+        $mothership = Mothership::make($this->getTokenForSoftwareUpdate());
 
         $newVersion = $mothership->checkForUpdateFile();
 
