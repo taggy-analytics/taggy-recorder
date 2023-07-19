@@ -24,14 +24,13 @@ class EnsureNetworkIsSetup
             $output = Process::run('nslookup ' . $eth0IpAdress)
                 ->output();
 
-            info($output);
-
             if(Str::contains($output, $this->getHostname())) {
-                info('Output contains hostname.');
                 return true;
             }
 
-            info('Hostname not found in output!');
+            Process::run('sudo ip link set eth0 down');
+            sleep(1);
+            Process::run('sudo ip link set eth0 up');
 
             $counter++;
             sleep(3);
