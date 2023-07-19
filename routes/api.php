@@ -20,6 +20,7 @@ Route::get('cameras', [\App\Http\Controllers\Api\CameraController::class, 'index
 */
 
 Route::get('recorder/system-id', [\App\Http\Controllers\Api\RecorderController::class, 'systemId']);
+Route::get('recorder/update-sofware', [\App\Http\Controllers\Api\RecorderController::class, 'updateSoftware']);
 
 Route::get('cameras', [\App\Http\Controllers\Api\CameraController::class, 'index']);
 Route::get('cameras/{camera}', [\App\Http\Controllers\Api\CameraController::class, 'show']);

@@ -12,4 +12,9 @@ class RecorderController extends Controller
         return Recorder::make()->getSystemId();
     }
 
+    public function updateSoftware()
+    {
+        return app(\App\Actions\UpdateSoftware::class)
+            ->execute();
+    }
 }
