@@ -12,6 +12,8 @@ class SetupRouter
         // Change SSID
         // Set initial WLAN password
 
+        // gl-ar300m.lan
+
 
         $gatewayIp = $this->getGatewayIp();
 

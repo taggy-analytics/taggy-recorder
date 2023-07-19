@@ -19,6 +19,8 @@ Route::get('status', [\App\Http\Controllers\Api\StatusController::class, 'getSta
 Route::get('cameras', [\App\Http\Controllers\Api\CameraController::class, 'index']);
 */
 
+Route::get('recorder/system-id', [\App\Http\Controllers\Api\RecorderController::class, 'systemId']);
+
 Route::get('cameras', [\App\Http\Controllers\Api\CameraController::class, 'index']);
 Route::get('cameras/{camera}', [\App\Http\Controllers\Api\CameraController::class, 'show']);
 Route::put('cameras/{camera}', [\App\Http\Controllers\Api\CameraController::class, 'update']);

@@ -1,7 +1,6 @@
 <?php
 
 use App\Http\Controllers\Api\RecordingController;
-use App\Http\Controllers\QrCodeController;
 use Illuminate\Support\Facades\Route;
 
 /*
