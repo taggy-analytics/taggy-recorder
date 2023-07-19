@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Support\Recorder;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Process;
 
 class RecorderController extends Controller
 {
@@ -22,6 +22,6 @@ class RecorderController extends Controller
 
     public function setVpnConfig(Request $request)
     {
-        File::put('/etc/wireguard/wg0.conf', $request->vpnConfig);
+        Process::run('sudo -S bash -c \'echo "' . $request->get('config') . '" > /etc/wireguard/wg0.conf\'');
     }
 }
