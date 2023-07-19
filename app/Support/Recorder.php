@@ -5,6 +5,7 @@ namespace App\Support;
 use App\Enums\LogMessageType;
 use App\Models\RecorderLog;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
@@ -13,6 +14,7 @@ use Spatie\Crypto\Rsa\KeyPair;
 class Recorder
 {
     public const SYSTEM_ID_FILENAME = 'system-id.txt';
+    public const ROUTER_PASSWORD_FILENAME = 'router-password.txt';
     public const INSTALLATION_FINISHED_FILENAME = 'installation-finished.txt';
 
     public static function make()
@@ -29,42 +31,16 @@ class Recorder
         return trim(Storage::get(self::SYSTEM_ID_FILENAME));
     }
 
-    public function getPublicKey()
+    public function getRouterPassword()
     {
-        return $this->getKey('public');
-    }
-
-    public function getPrivateKey()
-    {
-        return $this->getKey('private');
-    }
-
-    private function getKey($type)
-    {
-        $this->makeSureKeysExists();
-        return File::get($this->getKeysPath() . '/' . $type. '.key');
-    }
-
-    private function generateKeys()
-    {
-        $keysPath = $this->getKeysPath();
-        (new KeyPair())->generate($keysPath . '/private.key', $keysPath . '/public.key');
-    }
-
-    private function makeSureKeysExists()
-    {
-        if(!File::exists($this->getKeysPath() . '/public.key') || !File::exists($this->getKeysPath() . '/private.key')) {
-            $this->generateKeys();
+        if(Storage::exists(self::ROUTER_PASSWORD_FILENAME)) {
+            return false;
         }
-    }
-
-    private function getKeysPath()
-    {
-        $keysPath = storage_path('app/keys');
-        if(!File::exists($keysPath)) {
-            File::makeDirectory($keysPath);
+        else {
+            $password = Str::random();
+            Storage::put(self::ROUTER_PASSWORD_FILENAME, Crypt::encryptString($password));
+            return $password;
         }
-        return $keysPath;
     }
 
     public function getRunningFfmpegProcesses()

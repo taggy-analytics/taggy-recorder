@@ -20,7 +20,11 @@ Route::get('cameras', [\App\Http\Controllers\Api\CameraController::class, 'index
 */
 
 Route::get('recorder/system-id', [\App\Http\Controllers\Api\RecorderController::class, 'systemId']);
-Route::get('recorder/update-sofware', [\App\Http\Controllers\Api\RecorderController::class, 'updateSoftware']);
+Route::get('recorder/update-software', [\App\Http\Controllers\Api\RecorderController::class, 'updateSoftware']);
+
+Route::post('recorder/vpn/configuration', [\App\Http\Controllers\Api\RecorderController::class, 'setVpnConfiguration']);
+
+Route::get('router/password', [\App\Http\Controllers\Api\RouterController::class, 'getPassword']);
 
 Route::get('cameras', [\App\Http\Controllers\Api\CameraController::class, 'index']);
 Route::get('cameras/{camera}', [\App\Http\Controllers\Api\CameraController::class, 'show']);

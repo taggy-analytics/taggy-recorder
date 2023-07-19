@@ -9,4 +9,5 @@ return [
     ],
     'releases-to-keep' => 4,
     'mothership-logging-key' => env('MOTHERSHIP_LOGGING_KEY'),
+    'hostname' => env('HOSTNAME'),
 ];
