@@ -24,7 +24,7 @@ class Recorder
             DotenvEditor::setKey('SYSTEM_ID', Str::random(16));
         }
 
-        return DotenvEditor::getKey('SYSTEM_ID');
+        return DotenvEditor::getValue('SYSTEM_ID');
     }
 
     public function getRouterPassword()
