@@ -16,8 +16,13 @@ abstract class PseudoDaemon extends Command
     {
         if(Recorder::make()->installationIsFinished()) {
             info('Running ' . $this->action . '...');
-            app($this->action)
-                ->execute();
+            try {
+                app($this->action)
+                    ->execute();
+            }
+            catch(\Exception $exception) {
+                report($exception);
+            }
         }
     }
 }
