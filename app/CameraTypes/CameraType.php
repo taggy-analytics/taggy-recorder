@@ -7,6 +7,7 @@ use App\Enums\CameraStatus;
 use App\Models\Camera;
 use App\Models\Recording;
 use App\Services\GliNet;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Process;
 use Illuminate\Support\Str;
@@ -71,18 +72,23 @@ abstract class CameraType
 
     protected static function getDevices()
     {
-        return GliNet::make()
-            ->clients()
-            ->map(fn($client) => [
-                'identifier' => $client['mac'],
-                'name' => $client['name'],
-                'ipAddress' => $client['ip'],
-            ]);
+        try {
+            return GliNet::make()
+                ->clients()
+                ->map(fn($client) => [
+                    'identifier' => $client['mac'],
+                    'name' => $client['name'],
+                    'ipAddress' => $client['ip'],
+                ]);
+        }
+        catch(\Exception $exception) {
+            return new Collection();
+        }
     }
 
     protected static function discoverByVendorMac($mac)
     {
-        
+
         return self::getDevices()
             ->filter(fn($device) => Str::startsWith(strtolower($device['identifier']), strtolower($mac)))
             ->filter(fn($device) => !Camera::pluck('ip_address')->contains($device['ipAddress']))
