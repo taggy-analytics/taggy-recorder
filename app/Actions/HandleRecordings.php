@@ -64,6 +64,7 @@ class HandleRecordings
         }
     }
 
+    /*
     private function createMovieWithThumbnails()
     {
         if(Camera::noCameraIsRecording()) {
@@ -103,6 +104,7 @@ class HandleRecordings
             }
         }
     }
+    */
 
     private function deleteRecordings()
     {
