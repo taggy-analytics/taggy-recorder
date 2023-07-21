@@ -14,7 +14,6 @@ use Spatie\Crypto\Rsa\KeyPair;
 
 class Recorder
 {
-    public const SYSTEM_ID_FILENAME = 'system-id.txt';
     public const INSTALLATION_FINISHED_FILENAME = 'installation-finished.txt';
 
     public static function make()
@@ -24,11 +23,11 @@ class Recorder
 
     public function getSystemId()
     {
-        if(!Storage::exists(self::SYSTEM_ID_FILENAME)) {
-            Storage::put(self::SYSTEM_ID_FILENAME, Str::random(16));
+        if(!DotenvEditor::keyExists('SYSTEM_ID')) {
+            DotenvEditor::setKey('SYSTEM_ID', Str::random(16));
         }
 
-        return trim(Storage::get(self::SYSTEM_ID_FILENAME));
+        return DotenvEditor::getKey('SYSTEM_ID');
     }
 
     public function getRouterPassword()
