@@ -28,7 +28,7 @@ class Recorder
             Storage::put(self::SYSTEM_ID_FILENAME, Str::random(16));
         }
 
-        return json_encode(trim(Storage::get(self::SYSTEM_ID_FILENAME)));
+        return trim(Storage::get(self::SYSTEM_ID_FILENAME));
     }
 
     public function getRouterPassword()

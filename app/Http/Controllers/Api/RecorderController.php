@@ -12,7 +12,7 @@ class RecorderController extends Controller
 {
     public function systemId()
     {
-        return Recorder::make()->getSystemId();
+        return json_encode(Recorder::make()->getSystemId());
     }
 
     public function updateSoftware()
