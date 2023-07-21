@@ -82,6 +82,7 @@ abstract class CameraType
 
     protected static function discoverByVendorMac($mac)
     {
+        
         return self::getDevices()
             ->filter(fn($device) => Str::startsWith(strtolower($device['identifier']), strtolower($mac)))
             ->filter(fn($device) => !Camera::pluck('ip_address')->contains($device['ipAddress']))
