@@ -9,12 +9,12 @@ use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
+use Jackiedo\DotenvEditor\DotenvEditor;
 use Spatie\Crypto\Rsa\KeyPair;
 
 class Recorder
 {
     public const SYSTEM_ID_FILENAME = 'system-id.txt';
-    public const ROUTER_PASSWORD_FILENAME = 'router-password.txt';
     public const INSTALLATION_FINISHED_FILENAME = 'installation-finished.txt';
 
     public static function make()
@@ -28,17 +28,17 @@ class Recorder
             Storage::put(self::SYSTEM_ID_FILENAME, Str::random(16));
         }
 
-        return trim(Storage::get(self::SYSTEM_ID_FILENAME));
+        return json_encode(trim(Storage::get(self::SYSTEM_ID_FILENAME)));
     }
 
     public function getRouterPassword()
     {
-        if(Storage::exists(self::ROUTER_PASSWORD_FILENAME)) {
+        if(DotenvEditor::keyExists('GLINET_PASSWORD')) {
             return false;
         }
         else {
             $password = Str::random();
-            Storage::put(self::ROUTER_PASSWORD_FILENAME, Crypt::encryptString($password));
+            DotenvEditor::setKey('GLINET_PASSWORD', $password);
             return $password;
         }
     }

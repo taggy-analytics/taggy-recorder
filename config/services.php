@@ -46,4 +46,8 @@ return [
         'username' => env('REOLINK_USERNAME', 'admin'),
         'password' => env('REOLINK_PASSWORD', ''),
     ],
+
+    'glinet' => [
+        'password' => env('GLINET_PASSWORD'),
+    ]
 ];

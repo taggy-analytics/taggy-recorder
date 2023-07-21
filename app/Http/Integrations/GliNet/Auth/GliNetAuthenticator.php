@@ -26,7 +26,7 @@ class GliNetAuthenticator implements Authenticator
         }
 
         $token = cache()->remember('glinet-token', now()->addMinutes(5), function() use ($pendingRequest) {
-            $response = $pendingRequest->getConnector()->send(new LoginRequest('12345678'));
+            $response = $pendingRequest->getConnector()->send(new LoginRequest(config('services.glinet.password')));
             return $response->json('token');
         });
 
