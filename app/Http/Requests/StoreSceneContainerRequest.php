@@ -27,7 +27,7 @@ class StoreSceneContainerRequest extends FormRequest
         return [
             'entity_id' => 'required|integer',
             'name' => 'required|string',
-            'uuid' => 'required|uuid',
+            'uuid' => 'required|uuid|unique:scene_containers,uuid',
             'start_time' => 'required|date',
             'type' => ['required', new Enum(SceneContainerType::class)],
             'sub_type' => ['required', new Enum(SessionType::class)],
