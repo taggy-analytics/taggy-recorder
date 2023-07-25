@@ -38,10 +38,12 @@ class RecorderController extends Controller
     public function startVpn()
     {
         Process::run('sudo wg-quick up wg0');
+        return $this->vpnStatus();
     }
 
     public function stopVpn()
     {
         Process::run('sudo wg-quick down wg0');
+        return $this->vpnStatus();
     }
 }
