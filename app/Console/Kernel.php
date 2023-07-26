@@ -21,7 +21,7 @@ class Kernel extends ConsoleKernel
     {
         $schedule->command(HandleCameras::class)
             ->runInBackground()
-            ->withoutOverlapping()
+            ->withoutOverlapping(1)
             ->everyFiveSeconds();
 
         /*
@@ -33,7 +33,7 @@ class Kernel extends ConsoleKernel
 
         $schedule->command(HandleRecordings::class)
             ->runInBackground()
-            ->withoutOverlapping()
+            ->withoutOverlapping(1)
             ->everyTwentySeconds();
 
         $schedule->command(RunMothershipActions::class)
