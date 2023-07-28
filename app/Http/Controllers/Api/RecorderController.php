@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Support\Recorder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Process;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
 class RecorderController extends Controller
@@ -19,6 +20,13 @@ class RecorderController extends Controller
     {
         return app(\App\Actions\UpdateSoftware::class)
             ->execute();
+    }
+
+    public function installationFinished()
+    {
+        if(!Recorder::make()->installationIsFinished()) {
+            Storage::touch(Recorder::INSTALLATION_FINISHED_FILENAME);
+        }
     }
 
     public function vpnStatus()

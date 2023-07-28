@@ -22,6 +22,7 @@ class Recorder
     {
         if(!DotenvEditor::keyExists('SYSTEM_ID')) {
             DotenvEditor::setKey('SYSTEM_ID', Str::random(16));
+            DotenvEditor::save();
         }
 
         return DotenvEditor::getValue('SYSTEM_ID');
