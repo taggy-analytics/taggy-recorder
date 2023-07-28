@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Actions\EnsureAppKeyIsSet;
 use App\Http\Controllers\Controller;
 use App\Support\Recorder;
 use Illuminate\Http\Request;
@@ -27,6 +28,11 @@ class RecorderController extends Controller
         if(!Recorder::make()->installationIsFinished()) {
             Storage::touch(Recorder::INSTALLATION_FINISHED_FILENAME);
         }
+    }
+
+    public function refreshAppKey()
+    {
+        app(EnsureAppKeyIsSet::class)->execute();
     }
 
     public function vpnStatus()
