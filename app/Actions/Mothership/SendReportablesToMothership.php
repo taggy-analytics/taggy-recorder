@@ -10,9 +10,8 @@ class SendReportablesToMothership
     {
         foreach(MothershipReport::unreported() as $mothershipReport) {
             $actionClass = 'App\\Actions\\Mothership\\Report' . (new \ReflectionClass($mothershipReport->model))->getShortName();
-            if(app($actionClass)->execute($mothershipReport->model)) {
-                $mothershipReport->update(['reported_at' => now()]);
-            }
+            app($actionClass)->onQueue()->execute($mothershipReport->model);
+            $mothershipReport->update(['reported_at' => now()]);
         }
     }
 }

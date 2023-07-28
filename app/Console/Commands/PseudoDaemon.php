@@ -15,7 +15,6 @@ abstract class PseudoDaemon extends Command
     public function handle()
     {
         if(Recorder::make()->installationIsFinished()) {
-            info('Running ' . $this->action . '...');
             try {
                 app($this->action)
                     ->execute();

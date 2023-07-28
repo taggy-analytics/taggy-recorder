@@ -35,6 +35,11 @@ trait IsReportedToMothership
             $data['user_token'] = $userToken;
         }
 
-        $this->mothershipReport->update($data);
+        if($this->mothershipReport) {
+            $this->mothershipReport->update($data);
+        }
+        else {
+            info($this::class . '#' . $this->id . ' has no associated mothership report.');
+        }
     }
 }

@@ -12,7 +12,9 @@ abstract class Report
     {
         try {
             $this->mothership = Mothership::make($model->mothershipReport->user_token);
-            return $this->executeReport($model);
+            if($this->executeReport($model)) {
+                $model->mothershipReport->update(['processed_at' => now()]);
+            }
         }
         catch(\Exception $exception) {
             report($exception);

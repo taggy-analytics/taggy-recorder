@@ -9,6 +9,7 @@ class MothershipReport extends Model
     protected $casts = [
         'user_token' => 'encrypted',
         'reported_at' => 'datetime',
+        'processed_at' => 'datetime',
         'ready_to_send' => 'boolean',
     ];
 
