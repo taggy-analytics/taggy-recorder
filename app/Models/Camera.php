@@ -43,12 +43,16 @@ class Camera extends Model
     public function getStatus($refresh = true)
     {
         if($refresh) {
+            $oldStatus = $this->status;
+
             $this->update([
                 'status' => $this->getType()->getStatus($this),
             ]);
-        }
 
-        info('Camera #' . $this->id . ' status: ' . $this->status->value);
+            if($this->wasChanged('status')) {
+                info('Camera #' . $this->id . ' changed status: ' . $oldStatus->value . ' --> ' . $this->status->value);
+            }
+        }
 
         return $this->status;
     }
