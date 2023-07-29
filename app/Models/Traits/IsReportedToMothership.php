@@ -9,12 +9,7 @@ trait IsReportedToMothership
     public static function bootIsReportedToMothership(): void
     {
         static::created(function ($model) {
-            MothershipReport::create([
-                'model_type' => $model::class,
-                'model_id' => $model->id,
-                'user_token' => request()->header('User-Token'),
-                'ready_to_send' => false,
-            ]);
+            $model->createMothershipReport();
         });
 
         static::deleting(function ($model) {
@@ -35,11 +30,22 @@ trait IsReportedToMothership
             $data['user_token'] = $userToken;
         }
 
-        if($this->mothershipReport) {
-            $this->mothershipReport->update($data);
-        }
-        else {
+        if(!$this->mothershipReport) {
             info($this::class . '#' . $this->id . ' has no associated mothership report.');
+            $this->createMothershipReport();
+            $this->load('mothershipReport');
         }
+
+        $this->mothershipReport->update($data);
+    }
+
+    public function createMothershipReport()
+    {
+        MothershipReport::create([
+            'model_type' => $this::class,
+            'model_id' => $this->id,
+            'user_token' => request()->header('User-Token'),
+            'ready_to_send' => false,
+        ]);
     }
 }
