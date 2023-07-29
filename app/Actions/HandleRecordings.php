@@ -46,11 +46,13 @@ class HandleRecordings
     {
         if(Camera::noCameraIsRecording()) {
             foreach(Recording::withStatus(RecordingStatus::PREPARING_PREPROCESSING) as $recording) {
+                $recording->setStatus(RecordingStatus::CREATING_RECORDING_FILES_IN_DB);
                 $parser = new ParserFacade();
 
                 $files = collect(Arr::get($parser->parse(new TextStream(Storage::disk('public')->get($recording->getPath('video/video.m3u8')))), 'mediaSegments'))
                     ->pluck('uri');
 
+                // ToDo: mass insert for performance boost
                 foreach ($files as $file) {
                     $recording->files()->firstOrCreate([
                         'name' => $file,

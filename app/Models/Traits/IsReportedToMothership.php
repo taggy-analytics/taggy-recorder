@@ -41,9 +41,10 @@ trait IsReportedToMothership
 
     public function createMothershipReport()
     {
-        MothershipReport::create([
+        MothershipReport::updateOrCreate([
             'model_type' => $this::class,
             'model_id' => $this->id,
+        ],[
             'user_token' => request()->header('User-Token'),
             'ready_to_send' => false,
         ]);

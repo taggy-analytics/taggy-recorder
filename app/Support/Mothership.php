@@ -3,27 +3,21 @@
 namespace App\Support;
 
 use App\Exceptions\MothershipException;
-use App\Exceptions\RecorderNotAssociatedException;
-use App\Http\Resources\CameraResource;
-use App\Models\Camera;
 use App\Models\Recording;
 use App\Models\RecordingFile;
 use App\Models\Scene;
-use Exception;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
-use Spatie\Crypto\Rsa\Exceptions\CouldNotDecryptData;
-use Spatie\Crypto\Rsa\PrivateKey;
 
 class Mothership
 {
     private $client;
     private $headers;
 
-    // public const MOTHERSHIP_TOKEN_FILENAME = 'mothership-token.txt';
     public const CURRENT_SOFTWARE_VERSION_FILENAME = 'software-version.txt';
+
     public function __construct($userToken)
     {
         $this->client = Http::baseUrl(config('services.mothership.endpoint'))
