@@ -26,6 +26,7 @@ class HandleRecordings
         // $this->checkIfThumbnailCreationWasFinishedForRecording();
         // $this->createZipFileWithThumbnails();
         $this->createRecordingFilesInDB();
+        $this->reportUnreportedRecordingsToMothership();
         // $this->createThumbnailsForRecordingFiles();
         // $this->createMovieWithThumbnails();
         // $this->checkIfMovieCreationWasFinishedForRecording();
@@ -46,7 +47,6 @@ class HandleRecordings
     {
         if(Camera::noCameraIsRecording()) {
             foreach(Recording::withStatus(RecordingStatus::PREPARING_PREPROCESSING) as $recording) {
-                $recording->setStatus(RecordingStatus::CREATING_RECORDING_FILES_IN_DB);
                 $parser = new ParserFacade();
 
                 $files = collect(Arr::get($parser->parse(new TextStream(Storage::disk('public')->get($recording->getPath('video/video.m3u8')))), 'mediaSegments'))
@@ -57,11 +57,21 @@ class HandleRecordings
                     $recording->files()->firstOrCreate([
                         'name' => $file,
                         'type' => RecordingFileType::VIDEO_M4S,
+                    ], [
                         'status' => RecordingFileStatus::CREATED,
                     ]);
                 }
-                $recording->reportToMothership();
                 $recording->setStatus(RecordingStatus::CREATED_RECORDING_FILES_IN_DB);
+            }
+        }
+    }
+
+    private function reportUnreportedRecordingsToMothership()
+    {
+        if(Camera::noCameraIsRecording()) {
+            foreach(Recording::withStatus(RecordingStatus::CREATED_RECORDING_FILES_IN_DB) as $recording) {
+                $recording->setStatus(RecordingStatus::READY_FOR_REPORTING_TO_MOTHERSHIP);
+                $recording->reportToMothership();
             }
         }
     }
