@@ -2,20 +2,17 @@
 
 namespace App\Actions;
 
-use App\Actions\Preprocessing\CreateThumbnailForRecordingFile;
 use App\Enums\RecordingFileStatus;
 use App\Enums\RecordingFileType;
 use App\Enums\RecordingStatus;
 use App\Models\Camera;
+use App\Models\MothershipReport;
 use App\Models\Recording;
-use App\Support\FFMpegCommand;
-use App\Support\Mothership;
+use App\Models\RecordingFile;
 use Chrisyue\PhpM3u8\Facade\ParserFacade;
 use Chrisyue\PhpM3u8\Stream\TextStream;
 use Illuminate\Support\Arr;
-use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Str;
 
 class HandleRecordings
 {
@@ -50,17 +47,29 @@ class HandleRecordings
                 $parser = new ParserFacade();
 
                 $files = collect(Arr::get($parser->parse(new TextStream(Storage::disk('public')->get($recording->getPath('video/video.m3u8')))), 'mediaSegments'))
-                    ->pluck('uri');
-
-                // ToDo: mass insert for performance boost
-                foreach ($files as $file) {
-                    $recording->files()->firstOrCreate([
+                    ->pluck('uri')
+                    ->map(fn($file) => [
+                        'recording_id' => $recording->id,
                         'name' => $file,
                         'type' => RecordingFileType::VIDEO_M4S,
-                    ], [
                         'status' => RecordingFileStatus::CREATED,
-                    ]);
-                }
+                    ])->toArray();
+
+                RecordingFile::insert($files);
+
+                $userToken = $recording->mothershipReport->user_token;
+
+                $mothershipReports = $recording->load('files')
+                    ->files()
+                    ->pluck('id')
+                    ->map(fn($fileId) => [
+                        'model_type' => RecordingFile::class,
+                        'model_id' => $fileId,
+                        'user_token' => $userToken,
+                    ])->toArray();
+
+                MothershipReport::insert($mothershipReports);
+
                 $recording->setStatus(RecordingStatus::CREATED_RECORDING_FILES_IN_DB);
             }
         }
