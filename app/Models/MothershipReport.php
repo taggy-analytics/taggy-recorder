@@ -21,7 +21,7 @@ class MothershipReport extends Model
     public static function unreported()
     {
         return self::query()
-            ->whereNull('reported_at')
+            ->whereNull('processed_at')
             ->where('ready_to_send', true)
             ->get();
     }
