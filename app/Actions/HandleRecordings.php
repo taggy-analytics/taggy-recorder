@@ -46,6 +46,8 @@ class HandleRecordings
             foreach(Recording::withStatus(RecordingStatus::PREPARING_PREPROCESSING) as $recording) {
                 $parser = new ParserFacade();
 
+                $currentTime = now()->toDateTimeString();
+
                 $files = collect(Arr::get($parser->parse(new TextStream(Storage::disk('public')->get($recording->getPath('video/video.m3u8')))), 'mediaSegments'))
                     ->pluck('uri')
                     ->map(fn($file) => [
@@ -53,6 +55,8 @@ class HandleRecordings
                         'name' => $file,
                         'type' => RecordingFileType::VIDEO_M4S,
                         'status' => RecordingFileStatus::CREATED,
+                        'updated_at' => $currentTime,
+                        'created_at' => $currentTime,
                     ])->toArray();
 
                 RecordingFile::insert($files);
@@ -66,6 +70,8 @@ class HandleRecordings
                         'model_type' => RecordingFile::class,
                         'model_id' => $fileId,
                         'user_token' => $userToken,
+                        'updated_at' => $currentTime,
+                        'created_at' => $currentTime,
                     ])->toArray();
 
                 MothershipReport::insert($mothershipReports);

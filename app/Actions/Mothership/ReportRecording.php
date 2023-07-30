@@ -25,12 +25,15 @@ class ReportRecording extends Report
                 'status' => RecordingFileStatus::TO_BE_UPLOADED,
             ]);
 
+            $currentTime = now()->toDateTimeString();
+
             MothershipReport::query()
                 ->where('model_type', RecordingFile::class)
                 ->whereIn('model_id', $recording->files()->pluck('id'))
                 ->update([
                     'ready_to_send' => true,
                     'user_token' => $recording->mothershipReport->user_token,
+                    'updated_at' => $currentTime,
                 ]);
 
             $recording->addM3u8EndTag();
