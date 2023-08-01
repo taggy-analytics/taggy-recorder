@@ -11,6 +11,6 @@ class Rtc extends HealthCheck
 
     public function shouldReport()
     {
-        return !$this->commandContains('timedatectl', 'RTC time: n/a');
+        return $this->commandContains('timedatectl', 'RTC time: n/a');
     }
 }

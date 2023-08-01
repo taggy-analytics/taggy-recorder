@@ -12,5 +12,6 @@ class RecorderLog extends Model
     protected $casts = [
         'type' => LogMessageType::class,
         'data' => 'array',
+        'reported_at' => 'datetime',
     ];
 }

@@ -16,7 +16,7 @@ class SendLogToMothership
     {
         $mothership = Mothership::make();
 
-        foreach(RecorderLog::all() as $logEntry) {
+        foreach(RecorderLog::whereNull('reported_at')->get() as $logEntry) {
             $response = $mothership->log([
                 'occurred_at' => $logEntry->created_at->toDateTimeString(),
                 'type' => $logEntry->type->value,
@@ -25,8 +25,15 @@ class SendLogToMothership
             ]);
 
             if($response == 'OK') {
-                $logEntry->delete();
+                $logEntry->update([
+                    'reported_at' => now(),
+                ]);
             }
         }
+
+        RecorderLog::query()
+            ->whereNotNull('reported_at')
+            ->where('reported_at', '<', now()->subDay())
+            ->delete();
     }
 }

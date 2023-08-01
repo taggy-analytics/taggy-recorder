@@ -62,6 +62,6 @@ class Recorder
 
     public function log(LogMessageType $type, $message = '', $data = [])
     {
-        RecorderLog::create(compact('type', 'message', 'data'));
+        RecorderLog::firstOrCreate(compact('type', 'message'), compact('data'));
     }
 }

@@ -79,6 +79,11 @@ class ReolinkDuo2Poe extends RtspCamera
             default => CameraStatus::UNKNOWN_ERROR,
         };
 
+        if($status == CameraStatus::UNKNOWN_ERROR) {
+            info('Camera unknown error');
+            info($output);
+        }
+
         if($status == CameraStatus::READY && $camera->credentials_status->invalidCredentialsDiscoveredAt) {
             // Camera can be reached for the first time!!!
             $camera->credentials_status->invalidCredentialsDiscoveredAt = null;
