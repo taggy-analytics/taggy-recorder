@@ -61,15 +61,12 @@ class HandleRecordings
 
                 RecordingFile::insert($files);
 
-                $userToken = $recording->mothershipReport->user_token;
-
                 $mothershipReports = $recording->load('files')
                     ->files()
                     ->pluck('id')
                     ->map(fn($fileId) => [
                         'model_type' => RecordingFile::class,
                         'model_id' => $fileId,
-                        'user_token' => $userToken,
                         'updated_at' => $currentTime,
                         'created_at' => $currentTime,
                     ])->toArray();
