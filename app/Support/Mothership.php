@@ -236,7 +236,7 @@ class Mothership
 
     public function log($data)
     {
-        return $this->post('recorders/' . Recorder::make()->getSystemId() . '/log?key=' . config('taggy-recorder.mothership-logging-key'), $data);
+        return $this->post('recorders/' . Recorder::make()->getSystemId() . '/log?key=' . config('taggy-recorder.mothership-logging-key'), $data, 'raw');
     }
 
     public function currentSoftwareVersion()
@@ -249,9 +249,9 @@ class Mothership
         return $this->request('get', $url, type: $type);
     }
 
-    private function post($url, $data = [])
+    private function post($url, $data = [], $type = 'json')
     {
-        return $this->request('post', $url, $data);
+        return $this->request('post', $url, $data, $type);
     }
 
     private function delete($url)
