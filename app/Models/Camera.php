@@ -44,12 +44,13 @@ class Camera extends Model
     {
         if($refresh) {
             $oldStatus = $this->status;
+            $newStatus = $this->getType()->getStatus($this);
 
-            if($this->status !== CameraStatus::UNKNOWN_ERROR) {
+            // if($newStatus !== CameraStatus::UNKNOWN_ERROR) {
                 $this->update([
-                    'status' => $this->getType()->getStatus($this),
+                    'status' => $newStatus,
                 ]);
-            }
+            // }
 
             if($this->wasChanged('status')) {
                 info('Camera #' . $this->id . ' changed status: ' . $oldStatus->value . ' --> ' . $this->status->value);

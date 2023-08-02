@@ -76,6 +76,7 @@ class ReolinkDuo2Poe extends RtspCamera
             Str::contains($output, '404 Stream Not Found') => CameraStatus::STREAM_NOT_FOUND,
             Str::contains($output, 'Connection refused') => CameraStatus::CONNECTION_REFUSED,
             Str::contains($output, 'Stream #0:0:') => CameraStatus::READY,
+            Str::contains($output, 'Network is unreachable') => CameraStatus::NOT_REACHABLE,
             default => CameraStatus::UNKNOWN_ERROR,
         };
 
