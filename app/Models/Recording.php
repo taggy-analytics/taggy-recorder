@@ -132,7 +132,7 @@ class Recording extends Model
         }
 
         $this->update([
-            'stopped_at' => $this->started_at->addMilliseconds(round($duration * 1000)),
+            'stopped_at' => $this->started_at?->addMilliseconds(round($duration * 1000)),
         ]);
     }
 }
