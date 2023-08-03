@@ -10,6 +10,21 @@ use Illuminate\Support\Facades\Storage;
 
 abstract class RtspCamera extends CameraType
 {
+    public function isAvailable(Camera $camera)
+    {
+        $ch = curl_init();
+        $timeout = 5;
+        curl_setopt($ch, CURLOPT_URL, $this->getRtspUrl($camera));
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($ch, CURLOPT_TIMEOUT, $timeout);
+
+        $curlResult = curl_exec($ch);
+
+        curl_close($ch);
+
+        return $curlResult;
+    }
+
     public function startRecording(Camera $camera, Recording $recording)
     {
         $outputDirectory = Storage::disk('public')->path($recording->getPath('video'));

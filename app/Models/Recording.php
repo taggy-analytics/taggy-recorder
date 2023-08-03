@@ -7,6 +7,7 @@ use App\Models\Traits\HasStatus;
 use App\Models\Traits\HasUuid;
 use App\Models\Traits\IsReportedToMothership;
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\File;
@@ -24,6 +25,7 @@ class Recording extends Model
     protected $casts = [
         'started_at' => 'datetime',
         'stopped_at' => 'datetime',
+        'aborted_at' => 'datetime',
         'status' => RecordingStatus::class,
         'data' => 'array',
     ];
@@ -39,6 +41,19 @@ class Recording extends Model
         static::creating(function(Recording $recording) {
             $recording->key = Str::random();
         });
+    }
+
+    public function scopeRunning(Builder $query)
+    {
+        return $query->where('status', RecordingStatus::CREATED);
+    }
+
+    public function scopeFreshlyAborted(Builder $query)
+    {
+        return $query
+            ->whereNull('restart_recording_id')
+            ->whereNotNull('aborted_at')
+            ->where('aborted_at', '>', now()->subMinutes(config('taggy-recorder.recording.restart-aborted-recordings-timeout')));
     }
 
     public function files()
@@ -115,6 +130,13 @@ class Recording extends Model
             Storage::disk('public')
                 ->put($this->getPath('video/video.m3u8'), $m3u8);
         }
+    }
+
+    public function restart()
+    {
+        $newRecording = $this->camera->startRecording();
+        $this->update(['restart_recording_id' => $newRecording->id]);
+        return $newRecording;
     }
 
     private function calculateStoppedAt()

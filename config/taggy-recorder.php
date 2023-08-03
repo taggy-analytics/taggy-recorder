@@ -9,4 +9,7 @@ return [
     ],
     'releases-to-keep' => 4,
     'mothership-logging-key' => env('MOTHERSHIP_LOGGING_KEY'),
+    'recording' => [
+        'restart-aborted-recordings-timeout' => 15,
+    ],
 ];

@@ -21,6 +21,7 @@ abstract class CameraType
 
     abstract public static function getDefaultCredentials() : array;
 
+    abstract public function isAvailable(Camera $camera);
     abstract public function startRecording(Camera $camera, Recording $recording);
     abstract public function stopRecording(Camera $camera);
     abstract public function isRecording(Camera $camera);

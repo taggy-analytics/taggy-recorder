@@ -60,6 +60,13 @@ class Recorder
         return Storage::exists(self::INSTALLATION_FINISHED_FILENAME);
     }
 
+    public function getUptime()
+    {
+        $uptime = explode(' ', file_get_contents('/proc/uptime'));
+        $uptime_seconds = floatval($uptime[0]);
+        return $uptime_seconds;
+    }
+
     public function log(LogMessageType $type, $message = '', $data = [])
     {
         RecorderLog::firstOrCreate(compact('type', 'message'), compact('data'));

@@ -62,6 +62,8 @@ class UpdateSoftware
 
             Storage::put(Mothership::CURRENT_SOFTWARE_VERSION_FILENAME, $newVersion['version']);
 
+            info('Updated software to ' . $newVersion['version']);
+
             return [
                 'updated' => true,
                 'version' => $newVersion['version'],

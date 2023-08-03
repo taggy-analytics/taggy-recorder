@@ -5,6 +5,7 @@ namespace App\Console;
 use App\Console\Commands\HandleCameras;
 use App\Console\Commands\HandleRecordings;
 use App\Console\Commands\HandleUploads;
+use App\Console\Commands\MonitorRecordings;
 use App\Console\Commands\RunHealthChecks;
 use App\Console\Commands\RunMothershipActions;
 use Illuminate\Console\Scheduling\Schedule;
@@ -41,6 +42,11 @@ class Kernel extends ConsoleKernel
             ->runInBackground()
             ->withoutOverlapping()
             ->everyTwentySeconds();
+
+        $schedule->command(MonitorRecordings::class)
+            ->runInBackground()
+            ->withoutOverlapping()
+            ->everyFiveSeconds();
 
         $schedule->command(RunHealthChecks::class)
             ->everyMinute();

@@ -32,7 +32,8 @@
         "spatie/laravel-queueable-action": "^2.14",
         "spatie/laravel-ray": "^1.32",
         "symfony/yaml": "^6.3",
-        "wireui/wireui": "^1.17"
+        "wireui/wireui": "^1.17",
+        "ext-curl": "*"
     },
     "require-dev": {
         "fakerphp/faker": "^1.9.1",
