@@ -45,7 +45,7 @@ class Kernel extends ConsoleKernel
 
         $schedule->command(MonitorRecordings::class)
             ->runInBackground()
-            ->withoutOverlapping()
+            ->withoutOverlapping(1)
             ->everyFiveSeconds();
 
         $schedule->command(RunHealthChecks::class)
