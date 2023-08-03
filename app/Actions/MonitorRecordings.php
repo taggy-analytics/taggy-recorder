@@ -16,7 +16,7 @@ class MonitorRecordings
             }
 
             // Abort recordings when camera is not available anymore
-            if(!$recording->camera->type->isAvailable($recording->camera)) {
+            if(!$this->cameraIsAvailable($recording)) {
                 $recording->camera->stopRecording();
                 $recording->update([
                     'aborted_at' => now(),
@@ -26,9 +26,14 @@ class MonitorRecordings
 
         // Restart recordings that have been aborted recently
         foreach(Recording::freshlyAborted()->get() as $recording) {
-            if($recording->camera->type->isAvailable($recording->camera)) {
+            if($this->cameraIsAvailable($recording)) {
                 $recording->restart();
             }
         }
+    }
+
+    private function cameraIsAvailable(Recording $recording)
+    {
+        return $recording->camera->getType()->isAvailable($recording->camera);
     }
 }
