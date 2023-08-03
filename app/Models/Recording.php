@@ -134,15 +134,17 @@ class Recording extends Model
     public function restart()
     {
         $newRecording = $this->camera->startRecording();
-        $newRecording->data = [
-            'assigned_container' => [
-                'eid' => Arr::get($this->data, 'assigned_container.eid'),
-                'uuid' => Arr::get($this->data, 'assigned_container.uuid'),
-                'name' => Arr::get($this->data, 'assigned_container.name'),
-                'startTime' => Arr::get($this->data, 'assigned_container.startTime'),
-                'subType' => Arr::get($this->data, 'assigned_container.subType'),
+        $newRecording->update([
+            'data' => [
+                'assigned_container' => [
+                    'eid' => Arr::get($this->data, 'assigned_container.eid'),
+                    'uuid' => Arr::get($this->data, 'assigned_container.uuid'),
+                    'name' => Arr::get($this->data, 'assigned_container.name'),
+                    'startTime' => Arr::get($this->data, 'assigned_container.startTime'),
+                    'subType' => Arr::get($this->data, 'assigned_container.subType'),
+                ],
             ],
-        ];
+        ]);
         $this->update(['restart_recording_id' => $newRecording->id]);
         return $newRecording;
     }
