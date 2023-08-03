@@ -22,7 +22,7 @@ abstract class RtspCamera extends CameraType
 
         curl_close($ch);
 
-        return $curlResult;
+        return $curlResult !== false;
     }
 
     public function startRecording(Camera $camera, Recording $recording)
