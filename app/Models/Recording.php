@@ -8,9 +8,8 @@ use App\Models\Traits\HasUuid;
 use App\Models\Traits\IsReportedToMothership;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\File;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
@@ -135,6 +134,15 @@ class Recording extends Model
     public function restart()
     {
         $newRecording = $this->camera->startRecording();
+        $newRecording->data = [
+            'assigned_container' => [
+                'eid' => Arr::get($this->data, 'assigned_container.eid'),
+                'uuid' => Arr::get($this->data, 'assigned_container.uuid'),
+                'name' => Arr::get($this->data, 'assigned_container.name'),
+                'startTime' => Arr::get($this->data, 'assigned_container.startTime'),
+                'subType' => Arr::get($this->data, 'assigned_container.subType'),
+            ],
+        ];
         $this->update(['restart_recording_id' => $newRecording->id]);
         return $newRecording;
     }
