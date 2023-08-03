@@ -56,6 +56,7 @@ class UpdateSoftware
             symlink($releasePath, $releasePath . '/../../current');
 
             Process::run('php artisan cache:clear');
+            Process::run('php artisan schedule:clear-cache');
             Process::run('php artisan storage:link');
             Process::run('php artisan horizon:terminate');
             Process::run('php artisan taggy:delete-old-releases');
