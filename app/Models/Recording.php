@@ -141,6 +141,7 @@ class Recording extends Model
                     'uuid' => Arr::get($this->data, 'assigned_container.uuid'),
                     'name' => Arr::get($this->data, 'assigned_container.name'),
                     'startTime' => Arr::get($this->data, 'assigned_container.startTime'),
+                    'type' => Arr::get($this->data, 'assigned_container.type'),
                     'subType' => Arr::get($this->data, 'assigned_container.subType'),
                 ],
             ],
