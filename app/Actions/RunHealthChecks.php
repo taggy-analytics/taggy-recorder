@@ -9,5 +9,6 @@ class RunHealthChecks
     public function execute()
     {
         app(Rtc::class)->execute();
+        app(EnsureNetworkIsSetup::class)->execute();
     }
 }

@@ -13,7 +13,7 @@ trait IsReportedToMothership
         });
 
         static::deleting(function ($model) {
-            $model->mothershipReport->delete();
+            $model->mothershipReport?->delete();
         });
     }
 
