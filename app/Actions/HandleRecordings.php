@@ -83,8 +83,8 @@ class HandleRecordings
         if(Camera::noCameraIsRecording()) {
             foreach(Recording::withStatus(RecordingStatus::CREATED_RECORDING_FILES_IN_DB) as $recording) {
                 $recording->setStatus(RecordingStatus::READY_FOR_REPORTING_TO_MOTHERSHIP);
-                $userToken = $recording->hasRestartedRecording?->mothershipReport->user_token;
                 $recording->reportToMothership($userToken);
+                $userToken = $recording->fresh()->hasRestartedRecording?->mothershipReport->user_token;
             }
         }
     }
