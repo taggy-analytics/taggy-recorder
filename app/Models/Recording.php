@@ -119,6 +119,11 @@ class Recording extends Model
         }
     }
 
+    public function hasRestartedRecording()
+    {
+        return $this->hasOne(Recording::class, 'restart_recording_id');
+    }
+
     public function addM3u8EndTag()
     {
         $m3u8 = Storage::disk('public')
