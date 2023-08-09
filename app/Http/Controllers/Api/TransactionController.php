@@ -8,8 +8,6 @@ use App\Models\ModelTransaction;
 
 class TransactionController extends Controller
 {
-    public const HASH_SUBSTRING_LENGTH = 3;
-
     public function status(TransactionsStatusRequest $request)
     {
         $uuids = ModelTransaction::query()
@@ -17,13 +15,13 @@ class TransactionController extends Controller
             ->pluck('uuid');
 
         $uuidsConcatenated = $uuids
-            ->map(fn($uuid) => substr($uuid, 0, self::HASH_SUBSTRING_LENGTH))
+            ->map(fn($uuid) => substr($uuid, 0, $request->hash_substring_length))
             ->implode('');
 
         $lastUuidInSync = null;
 
         foreach($request->hashs as $index => $hash) {
-            if($hash !== crc32(substr($uuidsConcatenated, 0, self::HASH_SUBSTRING_LENGTH * ($index + 1)))) {
+            if($hash !== crc32(substr($uuidsConcatenated, 0, $request->hash_substring_length * ($index + 1)))) {
                 return [
                     'transactions_in_sync' => false,
                     'last_transaction_in_sync' => filled($lastUuidInSync) ? $uuids[$lastUuidInSync] : null,

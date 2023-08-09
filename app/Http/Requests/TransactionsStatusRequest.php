@@ -22,8 +22,9 @@ class TransactionsStatusRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'entityId' => 'required|int',
+            'entity_id' => 'required|int',
             'hashs' => 'required|array',
+            'hash_substring_length' => 'required|int',
         ];
     }
 }
