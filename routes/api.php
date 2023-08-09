@@ -43,6 +43,7 @@ Route::get('recordings/{recording}', [\App\Http\Controllers\Api\RecordingControl
 Route::put('recordings/{recording}', [\App\Http\Controllers\Api\RecordingController::class, 'update']);
 
 Route::post('transactions/status', [\App\Http\Controllers\Api\TransactionController::class, 'status']);
+Route::post('transactions', [\App\Http\Controllers\Api\TransactionController::class, 'store']);
 
 
 /*

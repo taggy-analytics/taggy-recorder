@@ -12,6 +12,7 @@ return new class extends Migration
             $table->id();
             $table->uuid()->index();
             $table->unsignedBigInteger('entity_id')->index();
+            $table->unsignedBigInteger('user_id')->index();
             $table->uuidMorphs('model');
             $table->string('action');
             $table->string('property')->nullable()->index();

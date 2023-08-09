@@ -2,17 +2,19 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Actions\CleanTransactions;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\StoreTransactionsRequest;
 use App\Http\Requests\TransactionsStatusRequest;
+use App\Http\Resources\ModelTransactionResource;
 use App\Models\ModelTransaction;
+use Carbon\Carbon;
 
 class TransactionController extends Controller
 {
     public function status(TransactionsStatusRequest $request)
     {
-        $uuids = ModelTransaction::query()
-            ->where('entity_id', $request->entityId)
-            ->pluck('uuid');
+        $uuids = $this->getUuids($request->entity_id);
 
         $uuidsConcatenated = $uuids
             ->map(fn($uuid) => substr($uuid, 0, $request->hash_substring_length))
@@ -34,5 +36,43 @@ class TransactionController extends Controller
         return [
             'transactions_in_sync' => true,
         ];
+    }
+
+    public function store(StoreTransactionsRequest $request)
+    {
+        if($request->trigger_cleanup) {
+            $newTransactions = collect($request->transactions)
+                ->whereNotIn('uuid', $this->getUuids($request->entity_id))
+                ->map(function ($transaction) {
+                    $transaction['value'] = json_encode($transaction['value']);
+                    $transaction['created_at'] = Carbon::parse($transaction['created_at'])
+                        ->toDateTimeString('milliseconds');
+                    return $transaction;
+                })
+                ->toArray();
+
+            ModelTransaction::insert($newTransactions);
+
+            $transactions = app(CleanTransactions::class)
+                ->execute($request->entity_id);
+        }
+        else {
+            $transactions = [];
+            foreach($request->transactions as $transaction) {
+                $transactions[] = ModelTransaction::create($transaction);
+            }
+
+        }
+
+        return [
+            'transactions' => ModelTransactionResource::collection($transactions),
+        ];
+    }
+
+    private function getUuids($entity)
+    {
+        return ModelTransaction::query()
+            ->where('entity_id', $entity)
+            ->pluck('uuid');
     }
 }
