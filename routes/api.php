@@ -42,6 +42,10 @@ Route::get('recordings', [\App\Http\Controllers\Api\RecordingController::class, 
 Route::get('recordings/{recording}', [\App\Http\Controllers\Api\RecordingController::class, 'show']);
 Route::put('recordings/{recording}', [\App\Http\Controllers\Api\RecordingController::class, 'update']);
 
+Route::post('transactions/status', [\App\Http\Controllers\Api\TransactionController::class, 'status']);
+
+
+/*
 Route::get('scene-containers', [\App\Http\Controllers\Api\SceneContainerController::class, 'index']);
 Route::post('scene-containers', [\App\Http\Controllers\Api\SceneContainerController::class, 'store']);
 Route::get('scene-containers/{sceneContainer}', [\App\Http\Controllers\Api\SceneContainerController::class, 'show']);
@@ -52,6 +56,7 @@ Route::get('scenes/{scene}', [\App\Http\Controllers\Api\SceneController::class, 
 Route::put('scenes/{scene}', [\App\Http\Controllers\Api\SceneController::class, 'update']);
 Route::delete('scenes/{scene}', [\App\Http\Controllers\Api\SceneController::class, 'delete']);
 Route::get('scenes/{scene}/recordings/{recording}/video.mp4', [\App\Http\Controllers\Api\SceneController::class, 'download'])->name('scenes.download');
+*/
 
 /*
 Route::get('wifis', [\App\Http\Controllers\Api\WifiController::class, 'index']);

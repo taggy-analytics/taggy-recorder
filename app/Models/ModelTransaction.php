@@ -21,7 +21,7 @@ class ModelTransaction extends Model
     protected static function booted(): void
     {
         static::addGlobalScope('orderByCreatedAt', function (Builder $builder) {
-            $builder->orderByDesc('created_at');
+            $builder->orderBy('created_at');
         });
     }
 
