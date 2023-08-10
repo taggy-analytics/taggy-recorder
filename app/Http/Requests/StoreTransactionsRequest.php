@@ -23,7 +23,6 @@ class StoreTransactionsRequest extends FormRequest
      */
     public function rules(): array
     {
-        ray(debug_backtrace());
         $rules = [
             // A requestor ID that the consumer may select.
             // It will be utilized in websocket events to allow the consumer to determine if they were the origin.

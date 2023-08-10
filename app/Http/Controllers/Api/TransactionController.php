@@ -8,6 +8,7 @@ use App\Http\Requests\StoreTransactionsRequest;
 use App\Http\Requests\TransactionsStatusRequest;
 use App\Http\Resources\ModelTransactionResource;
 use App\Models\ModelTransaction;
+use App\Models\UserToken;
 use Carbon\Carbon;
 
 class TransactionController extends Controller
@@ -40,10 +41,18 @@ class TransactionController extends Controller
 
     public function store(StoreTransactionsRequest $request)
     {
+        $token = cache()->get('user-token');
+        $userToken = UserToken::firstOrCreate([
+            'user_id' => explode('|', $token)[0],
+        ], [
+            'token' => $token,
+        ]);
+
         if($request->trigger_cleanup) {
             $newTransactions = collect($request->transactions)
                 ->whereNotIn('uuid', $this->getUuids($request->entity_id))
-                ->map(function ($transaction) {
+                ->map(function ($transaction) use ($userToken) {
+                    $transaction['user_token_id'] = $userToken->id;
                     $transaction['value'] = json_encode($transaction['value']);
                     $transaction['created_at'] = Carbon::parse($transaction['created_at'])
                         ->toDateTimeString('milliseconds');
@@ -59,9 +68,9 @@ class TransactionController extends Controller
         else {
             $transactions = [];
             foreach($request->transactions as $transaction) {
+                $transaction['user_token_id'] = $userToken->id;
                 $transactions[] = ModelTransaction::create($transaction);
             }
-
         }
 
         return [
