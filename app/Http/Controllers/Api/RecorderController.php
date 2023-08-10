@@ -26,7 +26,7 @@ class RecorderController extends Controller
     public function installationFinished()
     {
         if(!Recorder::make()->installationIsFinished()) {
-            Storage::touch(Recorder::INSTALLATION_FINISHED_FILENAME);
+            Storage::put(Recorder::INSTALLATION_FINISHED_FILENAME, '');
         }
     }
 
