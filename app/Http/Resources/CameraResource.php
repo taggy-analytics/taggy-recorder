@@ -18,7 +18,7 @@ class CameraResource extends JsonResource
             'id' => $this->id,
             'identifier' => $this->identifier,
             'status' => $this->status,
-            'type' => (new \ReflectionClass($this->type))->getShortName(),
+            'type' => $this->getType(),
             'name' => $this->name,
             'credentials' => $this->credentials,
             'recording_mode' => $this->recording_mode,

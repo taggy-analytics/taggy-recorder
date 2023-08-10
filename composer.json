@@ -18,6 +18,8 @@
         "ext-zip": "*",
         "chillerlan/php-qrcode": "^4.3",
         "chrisyue/php-m3u8": "^4",
+        "dedoc/scramble": "^0.8.2",
+        "doctrine/dbal": "^3.6",
         "guzzlehttp/guzzle": "^7.2",
         "jackiedo/dotenv-editor": "^2.1",
         "laravel/framework": "^10.0",
