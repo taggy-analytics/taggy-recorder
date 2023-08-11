@@ -9,6 +9,8 @@ class RouterController extends Controller
 {
     public function getPassword()
     {
-        return Recorder::make()->getRouterPassword();
+        return [
+            'password' => Recorder::make()->getRouterPassword(),
+        ];
     }
 }
