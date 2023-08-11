@@ -13,6 +13,7 @@ class UpdateSoftware
 {
     public function execute()
     {
+        /*
         if(!Recorder::make()->installationIsFinished()) {
             return [
                 'updated' => false,
@@ -20,6 +21,7 @@ class UpdateSoftware
                 'message' => 'Base installation is not finished yet.',
             ];
         }
+        */
 
         $mothership = Mothership::make($this->getTokenForSoftwareUpdate());
 

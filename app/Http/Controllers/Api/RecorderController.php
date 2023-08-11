@@ -14,7 +14,9 @@ class RecorderController extends Controller
 {
     public function systemId()
     {
-        return json_encode(Recorder::make()->getSystemId());
+        return [
+            'system_id' => Recorder::make()->getSystemId(),
+        ];
     }
 
     public function updateSoftware()
@@ -28,11 +30,19 @@ class RecorderController extends Controller
         if(!Recorder::make()->installationIsFinished()) {
             Storage::put(Recorder::INSTALLATION_FINISHED_FILENAME, '');
         }
+
+        return [
+            'status' => 'OK',
+        ];
     }
 
     public function refreshAppKey()
     {
-        app(EnsureAppKeyIsSet::class)->execute();
+        $appKeyWasSet = app(EnsureAppKeyIsSet::class)->execute();
+
+        return [
+            'app_key_refreshed' => !$appKeyWasSet,
+        ];
     }
 
     public function vpnStatus()
@@ -47,6 +57,10 @@ class RecorderController extends Controller
     public function setVpnConfig(Request $request)
     {
         Process::run('sudo -S bash -c \'echo "' . $request->get('config') . '" > /etc/wireguard/wg0.conf\'');
+
+        return [
+            'status' => 'OK',
+        ];
     }
 
     public function startVpn()

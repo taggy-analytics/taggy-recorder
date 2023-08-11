@@ -29,9 +29,6 @@ class StoreTransactionsRequest extends FormRequest
             'requestor' => 'required|string',
             'entity_id' => 'required|int',
             'transactions' => 'required|array',
-            // If set to true, a cleanup process is initiated, which may take some time. This is suitable for initial synchronization requests.
-            // If set to false, transactions are simply appended to the end of the transactions list, making it suitable for handling "real-time" transactions.
-            'trigger_cleanup' => 'required|bool',
         ];
 
         if(debug_backtrace()[1]['class'] == FormRequestRulesExtractor::class) {
