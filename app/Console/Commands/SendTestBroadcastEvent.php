@@ -12,7 +12,7 @@ class SendTestBroadcastEvent extends Command
      *
      * @var string
      */
-    protected $signature = 'app:send-test-broadcast-event';
+    protected $signature = 'taggy:send-test-broadcast-event {entityId=1}';
 
     /**
      * The console command description.
@@ -26,6 +26,6 @@ class SendTestBroadcastEvent extends Command
      */
     public function handle()
     {
-        TransactionsRecalculated::dispatch();
+        TransactionsRecalculated::dispatch($this->argument('entityId'));
     }
 }
