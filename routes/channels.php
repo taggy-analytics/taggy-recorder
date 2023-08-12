@@ -13,6 +13,6 @@ use Illuminate\Support\Facades\Broadcast;
 |
 */
 
-Broadcast::channel('entities.{id}', function ($user = null, $id = null) {
+Broadcast::channel('entities', function (?\App\Models\User $user = null, $id = null) {
     return true;
 });
