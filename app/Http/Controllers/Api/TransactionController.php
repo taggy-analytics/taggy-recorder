@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Api;
 
 use App\Actions\CleanTransactions;
+use App\Events\TransactionsAdded;
+use App\Events\TransactionsRecalculated;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreTransactionsRequest;
 use App\Http\Requests\TransactionsStatusRequest;
@@ -71,13 +73,19 @@ class TransactionController extends Controller
             $transactions = app(CleanTransactions::class)
                 ->execute($request->entity_id);
 
-            //dispatch()
+            if(count($newTransactions) > 0) {
+                TransactionsAdded::dispatch($request->entity_id, $newTransactions);
+                TransactionsRecalculated::dispatch($request->entity_id);
+            }
         }
         else {
             $transactions = [];
             foreach($request->transactions as $transaction) {
                 $transaction['user_token_id'] = $userToken->id;
                 $transactions[] = ModelTransaction::create($transaction);
+            }
+            if(count($transactions) > 0) {
+                TransactionsAdded::dispatch($request->entity_id, $transactions);
             }
 
             $transactions = null;

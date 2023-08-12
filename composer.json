@@ -28,6 +28,7 @@
         "laravel/tinker": "^2.7",
         "livewire/livewire": "^2.12",
         "pbmedia/laravel-ffmpeg": "^8.1",
+        "pusher/pusher-php-server": "^7.2",
         "saloonphp/laravel-http-sender": "^1.2",
         "sammyjo20/saloon-laravel": "^2.0",
         "spatie/image": "^2.2",
