@@ -21,7 +21,7 @@ abstract class EntityBroadcastEvent implements ShouldBroadcast
     public function broadcastOn(): array
     {
         return [
-            new PrivateChannel('entitiy.' . $this->entityId),
+            new PrivateChannel('entities.' . $this->entityId),
         ];
     }
 }
