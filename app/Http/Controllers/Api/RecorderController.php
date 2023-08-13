@@ -45,6 +45,15 @@ class RecorderController extends Controller
         ];
     }
 
+    public function networkStatus()
+    {
+        return [
+            'vpn' => $this->isServerReachable('10.0.0.1'),
+            'mothership' => $this->isServerReachable('mothership.taggy.cam'),
+            'api' => $this->isServerReachable('api-v2.taggy.cam'),
+        ];
+    }
+
     public function vpnStatus()
     {
         $output = Process::run("ip link show wg0 2>&1")->output();
@@ -73,5 +82,12 @@ class RecorderController extends Controller
     {
         Process::run('sudo wg-quick down wg0');
         return $this->vpnStatus();
+    }
+
+    private function isServerReachable($host, $timeout = 1)
+    {
+        exec(sprintf('ping -c 1 -W %d %s', $timeout, escapeshellarg($host)), $output, $status);
+
+        return $status === 0;
     }
 }

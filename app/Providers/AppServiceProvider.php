@@ -2,10 +2,12 @@
 
 namespace App\Providers;
 
+use App\Models\User;
 use App\Support\Mothership;
 use App\Support\Recorder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\ServiceProvider;
 use Spatie\LaravelIgnition\Facades\Flare;
 
@@ -24,6 +26,8 @@ class AppServiceProvider extends ServiceProvider
 
         Model::unguard();
         JsonResource::withoutWrapping();
+
+
     }
 
     /**

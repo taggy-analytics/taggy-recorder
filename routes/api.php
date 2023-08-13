@@ -14,15 +14,11 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-/*
-Route::get('status', [\App\Http\Controllers\Api\StatusController::class, 'getStatus']);
-Route::get('cameras', [\App\Http\Controllers\Api\CameraController::class, 'index']);
-*/
-
 Route::get('recorder/system-id', [\App\Http\Controllers\Api\RecorderController::class, 'systemId']);
 Route::post('recorder/update-software', [\App\Http\Controllers\Api\RecorderController::class, 'updateSoftware']);
 Route::post('recorder/installation-finished', [\App\Http\Controllers\Api\RecorderController::class, 'installationFinished']);
 Route::post('recorder/refresh-app-key', [\App\Http\Controllers\Api\RecorderController::class, 'refreshAppKey']);
+Route::get('recorder/network-status', [\App\Http\Controllers\Api\RecorderController::class, 'networkStatus']);
 
 Route::get('recorder/vpn/status', [\App\Http\Controllers\Api\RecorderController::class, 'vpnStatus']);
 Route::post('recorder/vpn/config', [\App\Http\Controllers\Api\RecorderController::class, 'setVpnConfig']);
