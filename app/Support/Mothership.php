@@ -72,6 +72,23 @@ class Mothership
         ]);
     }
 
+    public function getTransactionsStatus($entityId, $hashs, $hashSubstringLength)
+    {
+        return $this->post('entities/' . $entityId . '/transactions/status', [
+            'hashs' => $hashs,
+            'hash_substring_length' => $hashSubstringLength,
+        ]);
+    }
+
+    public function sendTransactions($entityId, $transactions)
+    {
+        return $this->post('entities/' . $entityId . '/transactions', [
+            'requestor' => Recorder::make()->getSystemId(),
+            'transactions' => $transactions,
+        ]);
+    }
+
+    /*
     public function sendScene(Scene $scene)
     {
         return $this->post('scene-containers/' . $scene->container_uuid . '/scenes', [
@@ -83,7 +100,7 @@ class Mothership
         ]);
     }
 
-    /*
+
     public function deleteRecording(Camera $camera, $recordingId)
     {
         return $this->delete('cameras/' . $camera->identifier . '/recordings/' . $recordingId);

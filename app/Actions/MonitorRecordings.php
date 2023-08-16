@@ -13,6 +13,7 @@ class MonitorRecordings
             // Handle hard recorder shutoff without stopping recording before
             if(Recorder::make()->getUptime() < $recording->getDuration()) {
                 $recording->camera->stopRecording();
+                $recording->cleanup();
             }
 
             // Abort recordings when camera is not available anymore
@@ -21,6 +22,7 @@ class MonitorRecordings
                 $recording->update([
                     'aborted_at' => now(),
                 ]);
+                $recording->cleanup();
             }
         }
 

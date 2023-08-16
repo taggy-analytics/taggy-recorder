@@ -24,14 +24,9 @@ class RunMothershipActions
             return;
         }
 
+        $this->runAction(SyncTransactionsWithMothership::class);
         $this->runAction(SendLogToMothership::class);
-        // $this->runAction(CheckIfRecorderIsAssignedToOrganization::class);
         $this->runAction(SendReportablesToMothership::class);
-        // $this->runAction(HandleUploadRequests::class);
-        // $this->runAction(SendCamerasWithInvalidCredentialsToMothership::class);
-        // $this->runAction(SendDiscoveredCamerasToMothership::class);
-        // $this->runAction(ReportRecordingsToMothership::class);
-        // $this->runAction(GetCredentialsForUnauthenticatedCameras::class);
         // $this->runAction(CheckForDeletedRecordings::class);
     }
 

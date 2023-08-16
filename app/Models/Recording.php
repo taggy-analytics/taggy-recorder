@@ -124,6 +124,12 @@ class Recording extends Model
         return $this->hasOne(Recording::class, 'restart_recording_id');
     }
 
+    public function cleanup()
+    {
+        $this->addM3u8EndTag();
+        // ToDo: delete m4s files with filesize 0
+    }
+
     public function addM3u8EndTag()
     {
         $m3u8 = Storage::disk('public')

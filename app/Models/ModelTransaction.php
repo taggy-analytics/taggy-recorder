@@ -17,6 +17,7 @@ class ModelTransaction extends Model
         'value' => 'json',
         'created_at' => 'datetime',
         'error' => ModelTransitionError::class,
+        'reported_to_mothership' => 'boolean',
     ];
 
     protected static function booted(): void
@@ -29,5 +30,10 @@ class ModelTransaction extends Model
     public function model()
     {
         return $this->morphTo();
+    }
+
+    public function userToken()
+    {
+        return $this->belongsTo(UserToken::class);
     }
 }
