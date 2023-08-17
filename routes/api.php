@@ -25,6 +25,8 @@ Route::post('recorder/vpn/config', [\App\Http\Controllers\Api\RecorderController
 Route::post('recorder/vpn/start', [\App\Http\Controllers\Api\RecorderController::class, 'startVpn']);
 Route::post('recorder/vpn/stop', [\App\Http\Controllers\Api\RecorderController::class, 'stopVpn']);
 
+Route::post('recorder/tokens', [\App\Http\Controllers\Api\RecorderController::class, 'tokens']);
+
 Route::get('router/password', [\App\Http\Controllers\Api\RouterController::class, 'getPassword']);
 
 Route::get('cameras', [\App\Http\Controllers\Api\CameraController::class, 'index']);
@@ -37,6 +39,7 @@ Route::post('cameras/{camera}/recording/stop', [\App\Http\Controllers\Api\Camera
 Route::get('recordings', [\App\Http\Controllers\Api\RecordingController::class, 'index']);
 Route::get('recordings/{recording}', [\App\Http\Controllers\Api\RecordingController::class, 'show']);
 Route::put('recordings/{recording}', [\App\Http\Controllers\Api\RecordingController::class, 'update']);
+
 
 Route::post('transactions/status', [\App\Http\Controllers\Api\TransactionController::class, 'status']);
 Route::post('transactions', [\App\Http\Controllers\Api\TransactionController::class, 'store']);

@@ -282,7 +282,7 @@ class Mothership
             ->{$method}($url, $data);
 
         if($response->status() >= 400) {
-            throw new MothershipException($response, $method, $url);
+            throw new MothershipException($method, $url, $data, $response);
         }
 
         $this->headers = [

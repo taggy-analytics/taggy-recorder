@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Api;
 
 use App\Actions\EnsureAppKeyIsSet;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\StoreTokensRequest;
+use App\Models\UserToken;
 use App\Support\Recorder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Process;
@@ -82,6 +84,19 @@ class RecorderController extends Controller
     {
         Process::run('sudo wg-quick down wg0');
         return $this->vpnStatus();
+    }
+
+    public function tokens(StoreTokensRequest $request)
+    {
+        foreach($request->entities as $entity) {
+            UserToken::updateOrCreate([
+                'entity_id' => $entity['id'],
+                'user_id' => $request->user_id,
+            ], [
+                'token' => $request->token,
+                'last_used_successfully_at' => $request->last_used_successfully_at,
+            ]);
+        }
     }
 
     private function isServerReachable($host, $timeout = 1)
