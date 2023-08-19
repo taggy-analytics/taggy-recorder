@@ -16,6 +16,7 @@ abstract class EntityBroadcastEvent implements ShouldBroadcast
 
     public function __construct(
         protected $entityId,
+        public $origin,
     ){}
 
     public function broadcastOn(): array

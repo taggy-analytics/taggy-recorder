@@ -77,13 +77,13 @@ class TransactionController extends Controller
                 ->toArray();
 
             Transaction::insert($newTransactions);
-
+ray($newTransactions);
             $transactions = app(CleanTransactions::class)
                 ->execute($request->entity_id);
 
             if(count($newTransactions) > 0) {
-                TransactionsAdded::dispatch($request->entity_id, $newTransactions);
-                TransactionsRecalculated::dispatch($request->entity_id);
+                broadcast(new TransactionsAdded($request->entity_id, $request->origin, $newTransactions));
+                broadcast(new TransactionsRecalculated($request->entity_id, $request->origin));
             }
         }
         else {
@@ -93,7 +93,7 @@ class TransactionController extends Controller
                 $transactions[] = Transaction::create($transaction);
             }
             if(count($transactions) > 0) {
-                TransactionsAdded::dispatch($request->entity_id, $transactions);
+                broadcast(new TransactionsAdded($request->entity_id, $request->origin, $transactions));
             }
 
             $transactions = match($request->last_transaction_in_sync) {
@@ -125,7 +125,6 @@ class TransactionController extends Controller
             ->max('created_at');
 
         $newTransactionsDate = collect($transactions)->min('created_at');
-ray('Cleanup needed', $transactions, $existingTransactionsDate > $newTransactionsDate);
         return $existingTransactionsDate > $newTransactionsDate;
     }
 }

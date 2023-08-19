@@ -13,14 +13,14 @@ class Transaction extends Model
     public $timestamps = false;
     protected $dateFormat = 'Y-m-d H:i:s.v';
 
+    protected $keyType = 'string';
+    public $incrementing = false;
+
+
     protected static function booted(): void
     {
         static::addGlobalScope('order', function (Builder $builder) {
             $builder->orderBy('created_at');
-        });
-
-        static::creating(function (Transaction $transaction) {
-            $transaction->id = Str::uuid();
         });
     }
 
@@ -40,10 +40,5 @@ class Transaction extends Model
     public function userToken()
     {
         return $this->belongsTo(UserToken::class);
-    }
-
-    public function getKeyType()
-    {
-        return 'string';
     }
 }

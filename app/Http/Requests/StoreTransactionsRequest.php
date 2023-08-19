@@ -26,7 +26,7 @@ class StoreTransactionsRequest extends FormRequest
         $rules = [
             // A requestor ID that the consumer may select.
             // It will be utilized in websocket events to allow the consumer to determine if they were the origin.
-            'requestor' => 'required|string',
+            'origin' => 'required|int',
             'entity_id' => 'required|int',
             'transactions' => 'array',
             'last_transaction_in_sync' => 'nullable',
