@@ -67,7 +67,6 @@ class TransactionController extends Controller
             $newTransactions = collect($request->transactions)
                 ->whereNotIn('id', $this->getUuids($request->entity_id))
                 ->map(function ($transaction) use ($userToken) {
-                    ray($transaction);
                     $transaction['user_token_id'] = $userToken->id;
                     $transaction['value'] = json_encode(Arr::get($transaction, 'value'));
                     $transaction['created_at'] = Carbon::parse($transaction['created_at'])
@@ -77,7 +76,7 @@ class TransactionController extends Controller
                 ->toArray();
 
             Transaction::insert($newTransactions);
-ray($newTransactions);
+
             $transactions = app(CleanTransactions::class)
                 ->execute($request->entity_id);
 
@@ -90,9 +89,14 @@ ray($newTransactions);
             $transactions = [];
             foreach($request->transactions as $transaction) {
                 $transaction['user_token_id'] = $userToken->id;
-                $transactions[] = Transaction::create($transaction);
+                $transaction = Transaction::firstOrCreate(['id' => $transaction['id']], $transaction);
+                if($transaction->wasRecentlyCreated) {
+                    $transactions[] = $transaction;
+                }
             }
+
             if(count($transactions) > 0) {
+                ray(new TransactionsAdded($request->entity_id, $request->origin, $transactions));
                 broadcast(new TransactionsAdded($request->entity_id, $request->origin, $transactions));
             }
 
