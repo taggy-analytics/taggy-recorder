@@ -9,8 +9,7 @@ return new class extends Migration
     public function up()
     {
         Schema::create('model_transactions', function (Blueprint $table) {
-            $table->id();
-            $table->uuid()->index();
+            $table->uuid('id')->primary();
             $table->unsignedBigInteger('entity_id')->index();
             $table->unsignedBigInteger('user_id')->index();
             $table->uuidMorphs('model');

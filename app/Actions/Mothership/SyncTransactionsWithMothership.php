@@ -5,7 +5,7 @@ namespace App\Actions\Mothership;
 use App\Enums\RecordingFileStatus;
 use App\Enums\RecordingStatus;
 use App\Exceptions\MothershipException;
-use App\Models\ModelTransaction;
+use App\Models\Transaction;
 use App\Models\RecorderLog;
 use App\Models\Recording;
 use App\Models\RecordingFile;
@@ -25,7 +25,7 @@ class SyncTransactionsWithMothership
 
     public function execute()
     {
-        $entityTransactions = ModelTransaction::query()
+        $entityTransactions = Transaction::query()
             ->get()
             ->groupBy(['entity_id', 'user_token_id']);
 
@@ -61,7 +61,7 @@ class SyncTransactionsWithMothership
                         $transactions = $this->getQuery($entityId)
                             ->where('reported_to_mothership', false)
                             ->when(filled($checkSync['last_transaction_in_sync']),
-                                fn(Builder $query) => $query->where('created_at', '>', ModelTransaction::firstWhere('uuid', $checkSync['last_transaction_in_sync'])->created_at))
+                                fn(Builder $query) => $query->where('created_at', '>', Transaction::firstWhere('uuid', $checkSync['last_transaction_in_sync'])->created_at))
                             ->get(['uuid', 'entity_id', 'user_id', 'model_type', 'model_id', 'action', 'property', 'value', 'created_at']);
 
                         $cleanedTransactions = collect(Mothership::make(UserToken::find($userTokenId)->token)
@@ -87,10 +87,10 @@ class SyncTransactionsWithMothership
                                     'value' => json_encode($transaction['value']),
                                     'created_at' => Carbon::parse($transaction['created_at'])->toDateTimeString('millisecond'),
                                 ])->toArray();
-                                ModelTransaction::insert($data);
+                                Transaction::insert($data);
                             });
 
-                            ModelTransaction::whereIn('uuid', $uuidsInDatabaseButNotInCleanedTransactions)->delete();
+                            Transaction::whereIn('uuid', $uuidsInDatabaseButNotInCleanedTransactions)->delete();
                         }
                     }
                 }
@@ -134,7 +134,7 @@ class SyncTransactionsWithMothership
 
     private function getQuery($entityId)
     {
-        return ModelTransaction::query()
+        return Transaction::query()
             ->where('entity_id', $entityId);
     }
 }

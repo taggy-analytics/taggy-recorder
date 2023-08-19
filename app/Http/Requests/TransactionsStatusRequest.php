@@ -25,7 +25,7 @@ class TransactionsStatusRequest extends FormRequest
             'entity_id' => 'required|int',
             // Hashes are posted in the format: [position => crc32 hash of all transaction UUIDs up to this position]
             // @example {"2030": 363340319, "3634": 716678960}
-            'hashs' => 'required|array',
+            'hashs' => 'array',
             'hashs.*' => 'required|integer',
             // It is sufficiently safe to use only parts of the UUID, rather than the whole, for the calculation of the hash.
             // This parameter defines the number of characters from the UUID that are to be used for the calculation.

@@ -28,7 +28,8 @@ class StoreTransactionsRequest extends FormRequest
             // It will be utilized in websocket events to allow the consumer to determine if they were the origin.
             'requestor' => 'required|string',
             'entity_id' => 'required|int',
-            'transactions' => 'required|array',
+            'transactions' => 'array',
+            'last_transaction_in_sync' => 'nullable',
         ];
 
         if(debug_backtrace()[1]['class'] == FormRequestRulesExtractor::class) {

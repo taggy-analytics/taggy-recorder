@@ -6,11 +6,23 @@ use App\Enums\ModelTransactionAction;
 use App\Enums\ModelTransitionError;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Str;
 
-class ModelTransaction extends Model
+class Transaction extends Model
 {
     public $timestamps = false;
     protected $dateFormat = 'Y-m-d H:i:s.v';
+
+    protected static function booted(): void
+    {
+        static::addGlobalScope('order', function (Builder $builder) {
+            $builder->orderBy('created_at');
+        });
+
+        static::creating(function (Transaction $transaction) {
+            $transaction->id = Str::uuid();
+        });
+    }
 
     protected $casts = [
         'action' => ModelTransactionAction::class,
@@ -20,13 +32,6 @@ class ModelTransaction extends Model
         'reported_to_mothership' => 'boolean',
     ];
 
-    protected static function booted(): void
-    {
-        static::addGlobalScope('orderByCreatedAt', function (Builder $builder) {
-            $builder->orderBy('created_at');
-        });
-    }
-
     public function model()
     {
         return $this->morphTo();
@@ -35,5 +40,10 @@ class ModelTransaction extends Model
     public function userToken()
     {
         return $this->belongsTo(UserToken::class);
+    }
+
+    public function getKeyType()
+    {
+        return 'string';
     }
 }

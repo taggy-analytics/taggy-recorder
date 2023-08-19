@@ -14,6 +14,11 @@ use Illuminate\Support\Str;
 
 class RecorderController extends Controller
 {
+    public function iAmHere()
+    {
+        return 'OK';
+    }
+
     public function systemId()
     {
         return [

@@ -8,8 +8,8 @@ use App\Events\TransactionsRecalculated;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreTransactionsRequest;
 use App\Http\Requests\TransactionsStatusRequest;
-use App\Http\Resources\ModelTransactionResource;
-use App\Models\ModelTransaction;
+use App\Http\Resources\TransactionResource;
+use App\Models\Transaction;
 use App\Models\UserToken;
 use Carbon\Carbon;
 use Illuminate\Support\Arr;
@@ -25,6 +25,13 @@ class TransactionController extends Controller
             ->implode('');
 
         $lastUuidInSync = -1;
+
+        if(empty($request->transactions)) {
+            return [
+                'transactions_in_sync' => false,
+                'last_transaction_in_sync' => null,
+            ];
+        }
 
         foreach($request->hashs as $index => $hash) {
             $offset = $request->hash_substring_length * ($lastUuidInSync + 1);
@@ -48,27 +55,28 @@ class TransactionController extends Controller
     public function store(StoreTransactionsRequest $request)
     {
         $token = cache()->get('user-token');
+
         $userToken = UserToken::firstOrCreate([
+            'entity_id' => $request->entity_id,
             'user_id' => explode('|', $token)[0],
         ], [
             'token' => $token,
         ]);
 
-        // ToDo: selbst entscheiden, ob Cleanup nötig ist
-
-        if($this->cleanupNeeded($request->transactions)) {
+        if($this->cleanupNeeded($request->entity_id, $request->transactions)) {
             $newTransactions = collect($request->transactions)
-                ->whereNotIn('uuid', $this->getUuids($request->entity_id))
+                ->whereNotIn('id', $this->getUuids($request->entity_id))
                 ->map(function ($transaction) use ($userToken) {
+                    ray($transaction);
                     $transaction['user_token_id'] = $userToken->id;
-                    $transaction['value'] = json_encode($transaction['value']);
+                    $transaction['value'] = json_encode(Arr::get($transaction, 'value'));
                     $transaction['created_at'] = Carbon::parse($transaction['created_at'])
                         ->toDateTimeString('milliseconds');
                     return $transaction;
                 })
                 ->toArray();
 
-            ModelTransaction::insert($newTransactions);
+            Transaction::insert($newTransactions);
 
             $transactions = app(CleanTransactions::class)
                 ->execute($request->entity_id);
@@ -82,35 +90,42 @@ class TransactionController extends Controller
             $transactions = [];
             foreach($request->transactions as $transaction) {
                 $transaction['user_token_id'] = $userToken->id;
-                $transactions[] = ModelTransaction::create($transaction);
+                $transactions[] = Transaction::create($transaction);
             }
             if(count($transactions) > 0) {
                 TransactionsAdded::dispatch($request->entity_id, $transactions);
             }
 
-            $transactions = null;
+            $transactions = match($request->last_transaction_in_sync) {
+                true => [],
+                null => Transaction::where('entity_id', $request->entity_id)->get(),
+                default => Transaction::query()
+                    ->where('entity_id', $request->entity_id)
+                    ->where('created_at', '>=', Transaction::find($request->last_transaction_in_sync)->created_at)
+                    ->get(),
+            };
         }
 
         return [
-            'transactions' => ModelTransactionResource::collection($transactions),
+            'transactions' => TransactionResource::collection($transactions),
         ];
     }
 
     private function getUuids($entity)
     {
-        return ModelTransaction::query()
+        return Transaction::query()
             ->where('entity_id', $entity)
-            ->pluck('uuid');
+            ->pluck('id');
     }
 
-    private function cleanupNeeded($transactions)
+    private function cleanupNeeded($entityId, $transactions)
     {
         // Check if the youngest existing transaction is older than the oldest new transaction
-        $existingTransactionsDate = ModelTransaction::where('entity_id', Arr::first($transactions)['entity_id'])
+        $existingTransactionsDate = Transaction::where('entity_id', $entityId)
             ->max('created_at');
 
         $newTransactionsDate = collect($transactions)->min('created_at');
-
+ray('Cleanup needed', $transactions, $existingTransactionsDate > $newTransactionsDate);
         return $existingTransactionsDate > $newTransactionsDate;
     }
 }

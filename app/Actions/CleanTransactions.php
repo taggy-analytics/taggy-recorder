@@ -3,26 +3,26 @@
 namespace App\Actions;
 
 use App\Enums\ModelTransactionAction;
-use App\Models\ModelTransaction;
+use App\Models\Transaction;
 use Illuminate\Support\Arr;
 
 class CleanTransactions
 {
     public function execute($entityId)
     {
-        $modalTransactions = ModelTransaction::where('entity_id', $entityId)->get();
+        $modalTransactions = Transaction::where('entity_id', $entityId)->get();
 
         $cleanedTransactions = [];
 
         $modalTransactions
             ->where('action', ModelTransactionAction::DELETE)
-            ->each(function (ModelTransaction $deleteTransaction) use (&$cleanedTransactions) {
+            ->each(function (Transaction $deleteTransaction) use (&$cleanedTransactions) {
                 $cleanedTransactions[$deleteTransaction->model_type][$deleteTransaction->model_id]['delete'] = $deleteTransaction;
             });
 
         $modalTransactions
             ->where('action', '<>', ModelTransactionAction::DELETE)
-            ->each(function (ModelTransaction $transaction) use (&$cleanedTransactions) {
+            ->each(function (Transaction $transaction) use (&$cleanedTransactions) {
                 if(Arr::has($cleanedTransactions, $transaction->model_type . '.' . $transaction->model_id . '.delete')) {
                     return;
                 }
@@ -39,7 +39,7 @@ class CleanTransactions
 
         $cleanedTransactions = Arr::flatten($cleanedTransactions);
 
-        ModelTransaction::whereNotIn('uuid', Arr::pluck($cleanedTransactions, 'uuid'))
+        Transaction::whereNotIn('id', Arr::pluck($cleanedTransactions, 'id'))
             ->delete();
 
         return $cleanedTransactions;

@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+Route::get('recorder/i-am-here', [\App\Http\Controllers\Api\RecorderController::class, 'iAmHere']);
 Route::get('recorder/system-id', [\App\Http\Controllers\Api\RecorderController::class, 'systemId']);
 Route::post('recorder/update-software', [\App\Http\Controllers\Api\RecorderController::class, 'updateSoftware']);
 Route::post('recorder/installation-finished', [\App\Http\Controllers\Api\RecorderController::class, 'installationFinished']);
