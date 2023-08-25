@@ -13,11 +13,13 @@ use Illuminate\Support\Facades\Broadcast;
 |
 */
 
-Broadcast::channel('recorder.entities.{id}', function (?\App\Models\User $user = null, $id = null) {
+Broadcast::channel('entities.{id}', function (?\App\Models\User $user = null, $id = null) {
     return true;
 });
 
+/*
 // ToDo: change auth endpoint to mothership
 Broadcast::channel('mothership.entities.{id}', function (?\App\Models\User $user = null, $id = null) {
     return true;
 });
+*/

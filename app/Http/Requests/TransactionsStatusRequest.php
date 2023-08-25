@@ -11,7 +11,7 @@ class TransactionsStatusRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return true;
+        return auth()->check();
     }
 
     /**
@@ -22,7 +22,6 @@ class TransactionsStatusRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'entity_id' => 'required|int',
             // Hashes are posted in the format: [position => crc32 hash of all transaction UUIDs up to this position]
             // @example {"2030": 363340319, "3634": 716678960}
             'hashs' => 'array',

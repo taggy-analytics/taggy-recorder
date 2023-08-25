@@ -2,7 +2,7 @@
 
 namespace App\Actions;
 
-use App\Enums\ModelTransactionAction;
+use App\Enums\TransactionAction;
 use App\Models\Transaction;
 use Illuminate\Support\Arr;
 
@@ -15,21 +15,21 @@ class CleanTransactions
         $cleanedTransactions = [];
 
         $modalTransactions
-            ->where('action', ModelTransactionAction::DELETE)
+            ->where('action', TransactionAction::DELETE)
             ->each(function (Transaction $deleteTransaction) use (&$cleanedTransactions) {
                 $cleanedTransactions[$deleteTransaction->model_type][$deleteTransaction->model_id]['delete'] = $deleteTransaction;
             });
 
         $modalTransactions
-            ->where('action', '<>', ModelTransactionAction::DELETE)
+            ->where('action', '<>', TransactionAction::DELETE)
             ->each(function (Transaction $transaction) use (&$cleanedTransactions) {
                 if(Arr::has($cleanedTransactions, $transaction->model_type . '.' . $transaction->model_id . '.delete')) {
                     return;
                 }
-                elseif($transaction->action == ModelTransactionAction::CREATE) {
+                elseif($transaction->action == TransactionAction::CREATE) {
                     $cleanedTransactions[$transaction->model_type][$transaction->model_id]['create'] = $transaction;
                 }
-                elseif($transaction->action == ModelTransactionAction::UPDATE) {
+                elseif($transaction->action == TransactionAction::UPDATE) {
                     $cleanedTransactions[$transaction->model_type][$transaction->model_id]['update'][$transaction->property] = $transaction;
                 }
                 else {

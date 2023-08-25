@@ -13,7 +13,7 @@ class StoreTransactionsRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return true;
+        return auth()->check();
     }
 
     /**
@@ -26,8 +26,7 @@ class StoreTransactionsRequest extends FormRequest
         $rules = [
             // A requestor ID that the consumer may select.
             // It will be utilized in websocket events to allow the consumer to determine if they were the origin.
-            'origin' => 'required|int',
-            'entity_id' => 'required|int',
+            'origin' => 'required',
             'transactions' => 'array',
             'last_transaction_in_sync' => 'nullable',
         ];

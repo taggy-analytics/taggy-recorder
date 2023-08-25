@@ -14,4 +14,9 @@ class TransactionsAdded extends EntityBroadcastEvent
         $this->transactions = Arr::map($this->transactions, fn($transaction) => Arr::except($transaction, 'user_token_id'));
         parent::__construct($entityId, $origin);
     }
+
+    public function broadcastAs()
+    {
+        return 'TransactionsAdded';
+    }
 }

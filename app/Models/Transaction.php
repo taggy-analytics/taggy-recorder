@@ -2,20 +2,19 @@
 
 namespace App\Models;
 
-use App\Enums\ModelTransactionAction;
-use App\Enums\ModelTransitionError;
+use App\Enums\TransactionAction;
+use App\Enums\TransitionError;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
 
 class Transaction extends Model
 {
+    use HasUuids;
+
     public $timestamps = false;
     protected $dateFormat = 'Y-m-d H:i:s.v';
-
-    protected $keyType = 'string';
-    public $incrementing = false;
-
 
     protected static function booted(): void
     {
@@ -25,11 +24,10 @@ class Transaction extends Model
     }
 
     protected $casts = [
-        'action' => ModelTransactionAction::class,
+        'action' => TransactionAction::class,
         'value' => 'json',
         'created_at' => 'datetime',
-        'error' => ModelTransitionError::class,
-        'reported_to_mothership' => 'boolean',
+        'error' => TransitionError::class,
     ];
 
     public function model()

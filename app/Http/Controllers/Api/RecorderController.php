@@ -99,7 +99,7 @@ class RecorderController extends Controller
                 'user_id' => $request->user_id,
             ], [
                 'token' => $request->token,
-                'last_used_successfully_at' => $request->last_used_successfully_at,
+                'last_successfully_used_at' => $entity['last_successfully_used_at'],
             ]);
         }
     }

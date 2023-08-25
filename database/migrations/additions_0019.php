@@ -10,7 +10,7 @@ return new class extends Migration
     {
         Schema::table('user_tokens', function (Blueprint $table) {
             $table->unsignedBigInteger('entity_id')->index()->after('id');
-            $table->dateTime('last_used_successfully_at')->nullable()->after('token');
+            $table->dateTime('last_successfully_used_at')->nullable()->after('token');
         });
     }
 };

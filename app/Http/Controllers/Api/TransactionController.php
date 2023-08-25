@@ -11,14 +11,15 @@ use App\Http\Requests\TransactionsStatusRequest;
 use App\Http\Resources\TransactionResource;
 use App\Models\Transaction;
 use App\Models\UserToken;
+use App\Support\Mothership;
 use Carbon\Carbon;
 use Illuminate\Support\Arr;
 
 class TransactionController extends Controller
 {
-    public function status(TransactionsStatusRequest $request)
+    public function status($entityId, TransactionsStatusRequest $request)
     {
-        $uuids = $this->getUuids($request->entity_id);
+        $uuids = $this->getUuids($entityId);
 
         $uuidsConcatenated = $uuids
             ->map(fn($uuid) => substr($uuid, 0, $request->hash_substring_length))
@@ -47,25 +48,41 @@ class TransactionController extends Controller
             $lastUuidInSync = $index;
         }
 
+        if($lastUuidInSync == -1) {
+            return [
+                'transactions_in_sync' => false,
+                'last_transaction_in_sync' => null,
+            ];
+        }
+
+        if(count($uuids) > $lastUuidInSync) {
+            return [
+                'transactions_in_sync' => false,
+                'last_transaction_in_sync' => $uuids[$lastUuidInSync],
+            ];
+        }
+
         return [
             'transactions_in_sync' => true,
         ];
     }
 
-    public function store(StoreTransactionsRequest $request)
+    public function store($entityId, StoreTransactionsRequest $request)
     {
         $token = cache()->get('user-token');
 
         $userToken = UserToken::firstOrCreate([
-            'entity_id' => $request->entity_id,
-            'user_id' => explode('|', $token)[0],
+            'entity_id' => $entityId,
+            'user_id' => $request->user()->id,
         ], [
             'token' => $token,
         ]);
 
-        if($this->cleanupNeeded($request->entity_id, $request->transactions)) {
+        $mothership = Mothership::make($userToken->token);
+
+        if($this->cleanupNeeded($entityId, $request->transactions)) {
             $newTransactions = collect($request->transactions)
-                ->whereNotIn('id', $this->getUuids($request->entity_id))
+                ->whereNotIn('id', $this->getUuids($entityId))
                 ->map(function ($transaction) use ($userToken) {
                     $transaction['user_token_id'] = $userToken->id;
                     $transaction['value'] = json_encode(Arr::get($transaction, 'value'));
@@ -78,12 +95,18 @@ class TransactionController extends Controller
             Transaction::insert($newTransactions);
 
             $transactions = app(CleanTransactions::class)
-                ->execute($request->entity_id);
+                ->execute($entityId);
 
             if(count($newTransactions) > 0) {
-                broadcast(new TransactionsAdded($request->entity_id, $request->origin, $newTransactions));
-                broadcast(new TransactionsRecalculated($request->entity_id, $request->origin));
+                broadcast(new TransactionsAdded($entityId, $request->origin, $newTransactions));
+                broadcast(new TransactionsRecalculated($entityId, $request->origin));
+
+                if($mothership->isOnline()) {
+                    $mothership->reportTransactions($entityId, $newTransactions);
+                }
             }
+
+            $content = 'all-transactions';
         }
         else {
             $transactions = [];
@@ -96,22 +119,27 @@ class TransactionController extends Controller
             }
 
             if(count($transactions) > 0) {
-                ray(new TransactionsAdded($request->entity_id, $request->origin, $transactions));
-                broadcast(new TransactionsAdded($request->entity_id, $request->origin, $transactions));
+                broadcast(new TransactionsAdded($entityId, $request->origin, $transactions));
+
+                if($mothership->isOnline()) {
+                    $mothership->reportTransactions($entityId, $transactions);
+                }
             }
 
             $transactions = match($request->last_transaction_in_sync) {
                 true => [],
-                null => Transaction::where('entity_id', $request->entity_id)->get(),
+                null => Transaction::where('entity_id', $entityId)->get(),
                 default => Transaction::query()
-                    ->where('entity_id', $request->entity_id)
+                    ->where('entity_id', $entityId)
                     ->where('created_at', '>=', Transaction::find($request->last_transaction_in_sync)->created_at)
                     ->get(),
             };
+            $content = 'new-transactions';
         }
 
         return [
             'transactions' => TransactionResource::collection($transactions),
+            'content' => $content,
         ];
     }
 

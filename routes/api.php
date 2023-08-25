@@ -14,6 +14,8 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+Route::post('testing/connected-to-mothership', [\App\Http\Controllers\Api\TestingController::class, 'connectedToMothership']);
+
 Route::get('recorder/i-am-here', [\App\Http\Controllers\Api\RecorderController::class, 'iAmHere']);
 Route::get('recorder/system-id', [\App\Http\Controllers\Api\RecorderController::class, 'systemId']);
 Route::post('recorder/update-software', [\App\Http\Controllers\Api\RecorderController::class, 'updateSoftware']);
@@ -42,8 +44,8 @@ Route::get('recordings/{recording}', [\App\Http\Controllers\Api\RecordingControl
 Route::put('recordings/{recording}', [\App\Http\Controllers\Api\RecordingController::class, 'update']);
 
 
-Route::post('transactions/status', [\App\Http\Controllers\Api\TransactionController::class, 'status']);
-Route::post('transactions', [\App\Http\Controllers\Api\TransactionController::class, 'store']);
+Route::post('entities/{entityId}/transactions/status', [\App\Http\Controllers\Api\TransactionController::class, 'status']);
+Route::post('entities/{entityId}/transactions', [\App\Http\Controllers\Api\TransactionController::class, 'store']);
 
 /*
 Route::get('wifis', [\App\Http\Controllers\Api\WifiController::class, 'index']);

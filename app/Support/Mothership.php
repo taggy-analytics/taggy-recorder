@@ -6,10 +6,13 @@ use App\Exceptions\MothershipException;
 use App\Models\Recording;
 use App\Models\RecordingFile;
 use App\Models\Scene;
+use App\Models\User;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
+use Spatie\Crypto\Rsa\Exceptions\CouldNotDecryptData;
+use Spatie\Crypto\Rsa\PublicKey;
 
 class Mothership
 {
@@ -31,32 +34,6 @@ class Mothership
     {
         return new self($userToken);
     }
-
-    /*
-    public function getCameras()
-    {
-        return $this->get('cameras');
-    }
-    */
-
-    /*
-    public function reportDiscoveredCamera(Camera $camera)
-    {
-        return $this->post('cameras', CameraResource::make($camera));
-    }
-    */
-
-    /*
-    public function reportRecording(Camera $camera, $filename, $duration, $screenshot)
-    {
-        return $this->post('cameras/' . $camera->identifier . '/recordings', [
-            'recorder' => Recorder::make()->getSystemId(),
-            'filename' => $filename,
-            'duration' => $duration,
-            'screenshot' => $screenshot,
-        ]);
-    }
-    */
 
     public function reportRecording(Recording $recording)
     {
@@ -80,127 +57,14 @@ class Mothership
         ]);
     }
 
-    public function sendTransactions($entityId, $transactions)
+    public function reportTransactions($entityId, $transactions, $lastTransactionInSync = null)
     {
         return $this->post('entities/' . $entityId . '/transactions', [
-            'requestor' => Recorder::make()->getSystemId(),
+            'origin' => Recorder::make()->getSystemId(),
             'transactions' => $transactions,
+            'last_transaction_in_sync' => $lastTransactionInSync,
         ]);
     }
-
-    /*
-    public function sendScene(Scene $scene)
-    {
-        return $this->post('scene-containers/' . $scene->container_uuid . '/scenes', [
-            'uuid' => $scene->uuid,
-            'name' => $scene->data['name'],
-            'tags' => $scene->data['tag_ids'],
-            'startTime' => $scene->start_time,
-            'duration' => $scene->duration,
-        ]);
-    }
-
-
-    public function deleteRecording(Camera $camera, $recordingId)
-    {
-        return $this->delete('cameras/' . $camera->identifier . '/recordings/' . $recordingId);
-    }
-    */
-
-    /*
-    public function getCameraCredentials(Camera $camera)
-    {
-        return $this->get('cameras/' . $camera->identifier . '/credentials');
-    }
-    */
-
-    /*
-    public function reportInvalidCameraCredentials(Camera $camera)
-    {
-        return $this->post('cameras/' . $camera->identifier . '/invalid-credentials');
-    }
-    */
-
-    /*
-    public function getUploadRecordingRequests()
-    {
-        try {
-            return $this->get('recorders/' . Recorder::make()->getSystemId() . '/upload-requests');
-        }
-        catch(MothershipException $e) {
-            // mothership returns 404
-            return [];
-        }
-    }
-    */
-
-    /*
-    public function confirmRecordingUploadRequest($videoId, $totalSegments, $thumbnail, $totalVideoDuration)
-    {
-        return $this->post('videos/' . $videoId . '/confirm-recording-upload-request', [
-            'totalSegments' => $totalSegments,
-            'thumbnail' => base64_encode(Storage::get($thumbnail)),
-            'duration' => $totalVideoDuration,
-        ]);
-    }
-    */
-
-    /*
-    public function getDeleteRecordingRequests()
-    {
-        return $this->get('recorders/' . Recorder::make()->getSystemId() . '/delete-requests');
-    }
-    */
-
-    /*
-    public function confirmDeleteRequest(Recording $recording)
-    {
-        return $this->delete('cameras/' . $recording->camera->id . '/recordings/' . $recording->id);
-    }
-    */
-
-    /*
-    public function sendRecordingThumbnails(Recording $recording)
-    {
-        $this->client->timeout(600);
-
-        try {
-            $this->post('cameras/' . $recording->camera->identifier . '/recordings', [
-                'recorder' => Recorder::make()->getSystemId(),
-                'thumbnails' => base64_encode(Storage::get("recordings/{$recording->id}/thumbnails.zip")),
-            ]);
-
-            return true;
-        }
-        catch(Exception $e) {
-            throw $e;
-            return false;
-        }
-    }
-    */
-
-    /*
-    public function sendRecordingThumbnailsMovie(Recording $recording)
-    {
-        $this->client->timeout(600);
-
-        try {
-            $this->post('cameras/' . $recording->camera->identifier . '/recordings/thumbnails-movie', [
-                'recorder' => Recorder::make()->getSystemId(),
-                'recording_id' => $recording->id,
-                'movie' => base64_encode(Storage::disk('public')->get($recording->thumbnailsMoviePath())),
-                'thumbnail' => $recording->getThumbnail() ? base64_encode(Storage::disk('public')->get($recording->getThumbnail())) : null,
-                'start_time' => $recording->started_at,
-                'duration' => $recording->getDuration(),
-            ]);
-
-            return true;
-        }
-        catch(Exception $e) {
-            throw $e;
-        }
-    }
-    */
 
     public function sendRecordingFile(RecordingFile $file)
     {
@@ -221,6 +85,11 @@ class Mothership
 
     public function isOnline()
     {
+        // App simulator testing
+        if(cache()->has('connectedToMothership')) {
+            return cache()->get('connectedToMothership');
+        }
+
         try {
             return $this->checkStatus()->status() == 200;
         }
@@ -291,31 +160,4 @@ class Mothership
 
         return $type == 'json' ? $response->json() : $response->body();
     }
-
-    /*
-    public static function getToken()
-    {
-        $privateKey = PrivateKey::fromString(Recorder::make()->getPrivateKey());
-
-        if(!Storage::has(self::MOTHERSHIP_TOKEN_FILENAME)) {
-            // ToDo: not really nice. See https://trello.com/c/QkQq9zXD
-            $getTokenResponse = Http::baseUrl(config('services.mothership.endpoint'))
-                ->acceptJson()
-                ->get('recorders/' . Recorder::make()->getSystemId() . '/token');
-
-            if($getTokenResponse->status() == 422) {
-                throw new RecorderNotAssociatedException();
-            }
-
-            $token = $getTokenResponse->json('token');
-
-            // try if token can be decrypted (throws CouldNotDecryptData exception)
-            $privateKey->decrypt(base64_decode($token));
-
-            Storage::put(self::MOTHERSHIP_TOKEN_FILENAME, $token);
-        }
-
-        return $privateKey->decrypt(base64_decode(Storage::get(self::MOTHERSHIP_TOKEN_FILENAME)));
-    }
-    */
 }
