@@ -24,7 +24,8 @@ class RunMothershipActions
             return;
         }
 
-        $this->runAction(SyncTransactionsWithMothership::class);
+        // $this->runAction(SyncTransactionsWithMothership::class);
+        $this->runAction(ManageWebsocketsConnection::class);
         $this->runAction(SendLogToMothership::class);
         $this->runAction(SendReportablesToMothership::class);
         // $this->runAction(CheckForDeletedRecordings::class);

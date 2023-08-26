@@ -3,10 +3,8 @@ const Echo = require('laravel-echo').default;
 const Pusher = require('pusher-js');
 const { exec } = require('child_process');
 
-
 global.Pusher = Pusher;
 
-// Check command line arguments
 if (process.argv.length < 4) {
     console.error('Please provide an entity and user token. Usage: node echo.js [entity] [userToken]');
     process.exit(1);
@@ -28,6 +26,9 @@ const connectToPusher = () => {
         auth: {
             headers: {
                 Authorization: `Bearer ${userToken}`,
+                // We have to fake an AJAX request so that Laravel doesn't redirect to the login page
+                // Using "Accept: application/json" does not work because Echo sets a "Accept: */*" header
+                "X-Requested-With": "XMLHttpRequest"
             },
         },
     });
@@ -41,31 +42,20 @@ const connectToPusher = () => {
     };
 
     echo.private(`entities.${entity}`)
-        .listen('.TransactionsAdded', e => {
-            handleEvent('TransactionsAdded', entity, e);
-        })
-        .listen('.TransactionsUpdated', e => {
-            handleEvent('TransactionsUpdated', entity, e);
-        })
-        .listen('.TransactionsDeleted', e => {
-            handleEvent('TransactionsDeleted', entity, e);
-        })
+        .listen('.TransactionsAdded', e => handleEvent('TransactionsAdded', entity, e))
+        .subscribed(() => { handleEvent('SubscriptionSucceeded', entity)})
         .error((error) => {
             handleEvent('SubscriptionFailed', entity);
-            process.exit(1); // Exit the script with an error code.
+            process.exit(1);
         });
 
-    echo.connector.pusher.connection.bind('state_change', function(states) {
-        if (states.current === 'connected') {
-            console.log('Connection state changed from ' + states.previous + ' to ' + states.current);
-            handleEvent('ServerOnline', entity, { message: 'Server is online' });
-        } else if (states.current === 'unavailable') {
-            console.log('Connection state changed from ' + states.previous + ' to ' + states.current);
-            handleEvent('ServerOffline', entity, { message: 'Server is offline' });
-        } else {
-            console.log('Connection state changed from ' + states.previous + ' to ' + states.current);
+    echo.connector.pusher.connection.bind('state_change', (states) => {
+        if (states.current === "disconnected" || states.current === "unavailable" || states.current === "connecting") {
+            subscriptionSuccessful = false;
+            handleEvent('Disconnected', entity, { message: 'Server is offline' });
         }
     });
+
 };
 
 const attemptReconnect = () => {
@@ -76,21 +66,17 @@ const attemptReconnect = () => {
     const intervalId = setInterval(() => {
         if (retryCount >= maxRetries) {
             clearInterval(intervalId);
-            console.error('Max reconnect attempts reached. Exiting...');
             process.exit(1);
             return;
         }
 
-        console.log(`Attempt #${retryCount + 1} to reconnect...`);
         try {
             connectToPusher();
-            clearInterval(intervalId);  // If successful, clear the interval
+            clearInterval(intervalId);
         } catch (err) {
             retryCount++;
-            console.error('Error reconnecting:', err);
         }
     }, delay);
 };
 
-// Initially, try connecting to Pusher
 connectToPusher();
