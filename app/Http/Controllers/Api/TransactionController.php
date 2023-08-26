@@ -83,11 +83,9 @@ class TransactionController extends Controller
         if($this->cleanupNeeded($entityId, $request->transactions)) {
             $newTransactions = collect($request->transactions)
                 ->whereNotIn('id', $this->getUuids($entityId))
+                ->hydrateTransactions()
                 ->map(function ($transaction) use ($userToken) {
                     $transaction['user_token_id'] = $userToken->id;
-                    $transaction['value'] = json_encode(Arr::get($transaction, 'value'));
-                    $transaction['created_at'] = Carbon::parse($transaction['created_at'])
-                        ->toDateTimeString('milliseconds');
                     return $transaction;
                 })
                 ->toArray();
