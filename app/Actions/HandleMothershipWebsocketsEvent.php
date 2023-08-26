@@ -2,6 +2,7 @@
 
 namespace App\Actions;
 
+use App\Actions\Mothership\SyncTransactionsWithMothership;
 use App\Enums\WebsocketEventType;
 use App\Events\TransactionsAdded;
 use App\Models\Transaction;
@@ -13,10 +14,16 @@ class HandleMothershipWebsocketsEvent
     public function execute(WebsocketEventType $eventType, $entityId, $data)
     {
         $method = 'run' . Str::studly(strtolower($eventType->name));
-        ray($method);
+
         if(method_exists($this, $method)) {
             $this->$method($entityId, $data);
         }
+    }
+
+    private function runSubscriptionSucceeded()
+    {
+        app(SyncTransactionsWithMothership::class)
+            ->execute();
     }
 
     private function runTransactionsAdded($entityId, $data)

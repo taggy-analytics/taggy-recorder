@@ -29,13 +29,7 @@ class SyncTransactionsWithMothership
             ->get()
             ->groupBy(['entity_id', 'user_token_id']);
 
-        $entities = UserToken::query()
-            ->where('last_successfully_used_at', '>', now()->subDays(30))
-            ->orWhereNull('last_successfully_used_at')
-            ->orderByDesc('last_successfully_used_at')
-            ->orderByDesc('updated_at')
-            ->get()
-            ->groupBy('entity_id');
+        $entities = UserToken::perEntity();
 
         foreach($entities->keys() as $entityId) {
             $userTokenTransactions = Arr::get($entityTransactions, $entityId, []);
@@ -92,47 +86,8 @@ class SyncTransactionsWithMothership
                                 ->whereIn('id', $uuidsInDatabaseButNotInCleanedTransactions)
                                 ->delete();
                         }
-
-
-                        /*
-                        $cleanedTransactions = collect(Mothership::make(UserToken::find($userTokenId)->token)
-                            ->sendTransactions($entityId, $transactions)['transactions']);
-
-                        if($cleanedTransactions) {
-                            $databaseUuids = $this->getQuery($entityId)->pluck('id');
-                            $cleanedTransactionsUuids = $cleanedTransactions->pluck('id');
-
-                            // $uuidsInCleanedTransactionsButNotInDatabase = $cleanedTransactionsUuids->diff($databaseUuids);
-                            $uuidsInDatabaseButNotInCleanedTransactions = $databaseUuids->diff($cleanedTransactionsUuids);
-
-                            // $cleanedTransactions->whereIn('id', $uuidsInCleanedTransactionsButNotInDatabase);
-                            $cleanedTransactions->chunk(1000)->each(function ($chunk) {
-                                $data = $chunk->map(fn($transaction) => [
-                                    'id' => $transaction['id'],
-                                    'entity_id' => $transaction['entity_id'],
-                                    'user_id' => $transaction['user_id'],
-                                    'model_type' => $transaction['model_type'],
-                                    'model_id' => $transaction['model_id'],
-                                    'action' => $transaction['action'],
-                                    'property' => $transaction['property'],
-                                    'value' => json_encode($transaction['value']),
-                                    'created_at' => Carbon::parse($transaction['created_at'])->toDateTimeString('millisecond'),
-                                ])->toArray();
-
-                                Transaction::insert($data);
-                            });
-
-                            Transaction::whereIn('id', $uuidsInDatabaseButNotInCleanedTransactions)->delete();
-                        }
-                        */
                     }
                 }
-
-                /*
-                $this->getQuery($entityId)->update([
-                    'reported_to_mothership' => true,
-                ]);
-                */
             }
             catch(MothershipException $exception) {
                 report($exception);
