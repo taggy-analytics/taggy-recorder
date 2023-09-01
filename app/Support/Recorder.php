@@ -17,6 +17,7 @@ class Recorder
 {
     public const INSTALLATION_FINISHED_FILENAME = 'installation-finished.txt';
     public const RUNNING_UPLOAD_FILENAME = 'running-upload.txt';
+    public const CURRENT_LEDS_FILENAME = 'current-leds.txt';
 
     public static function make()
     {
@@ -65,17 +66,32 @@ class Recorder
 
     public function led(LedColor $color, $interval = null)
     {
-        foreach($this->getRunningProcesses('taggy:led') as $process) {
-            posix_kill($process['processId'], 9);
-        }
+        $status = [$color, $interval];
 
-        $command = "php artisan taggy:led {$color->value}" . ($interval ? " {$interval}" : "") . " > /dev/null 2>&1 &";
-        shell_exec($command);
+        if($this->currentLeds() != $status) {
+            foreach($this->getRunningProcesses('taggy:led') as $process) {
+                posix_kill($process['processId'], 9);
+            }
+
+            $command = "php artisan taggy:led {$color->value}" . ($interval ? " {$interval}" : "") . " > /dev/null 2>&1 &";
+            shell_exec($command);
+
+            $this->currentLeds($status);
+        }
     }
 
     public function installationIsFinished()
     {
         return Storage::exists(self::INSTALLATION_FINISHED_FILENAME);
+    }
+
+    private function currentLeds($leds = null)
+    {
+        if(is_null($leds)) {
+            return Storage::get(json_decode(self::CURRENT_LEDS_FILENAME, true));
+        }
+
+        Storage::put(self::CURRENT_LEDS_FILENAME, json_encode($leds));
     }
 
     public function isUploading($uploading = null)

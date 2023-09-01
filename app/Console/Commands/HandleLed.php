@@ -36,7 +36,7 @@ class HandleLed extends Command
 
         $pins = $colors[$this->argument('color')];
 
-        $this->deluminate(Arr::flatten($colors));
+        $this->deluminate(collect($colors)->flatten()->diff($pins));
         $this->illuminate($pins);
 
         if($interval = $this->argument('interval')) {
@@ -46,7 +46,6 @@ class HandleLed extends Command
                 usleep($interval * 1000);
                 $this->illuminate($pins);
             } while(true);
-
         }
 
         return 0;

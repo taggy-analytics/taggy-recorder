@@ -54,6 +54,7 @@ class Camera extends Model
             // }
 
             if($this->wasChanged('status')) {
+                app(CalculateLed::class)->execute();
                 info('Camera #' . $this->id . ' changed status: ' . $oldStatus->value . ' --> ' . $this->status->value);
             }
         }
