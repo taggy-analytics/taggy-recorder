@@ -66,7 +66,7 @@ class Recorder
 
     public function led(LedColor $color, $interval = null)
     {
-        $status = [$color, $interval];
+        $status = [$color->value, $interval];
 
         if($this->currentLeds() != $status) {
             foreach($this->getRunningProcesses('taggy:led') as $process) {
@@ -88,7 +88,7 @@ class Recorder
     private function currentLeds($leds = null)
     {
         if(is_null($leds)) {
-            return Storage::get(json_decode(self::CURRENT_LEDS_FILENAME, true));
+            return json_decode(Storage::get(self::CURRENT_LEDS_FILENAME), true);
         }
 
         Storage::put(self::CURRENT_LEDS_FILENAME, json_encode($leds));
