@@ -7,6 +7,7 @@ use Illuminate\Console\Command;
 
 abstract class PseudoDaemon extends Command
 {
+    protected $description = 'Run corresponding action';
     /**
      * Execute the console command.
      *

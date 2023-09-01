@@ -6,6 +6,7 @@ use App\Console\Commands\CalculateLed;
 use App\Console\Commands\HandleCameras;
 use App\Console\Commands\HandleRecordings;
 use App\Console\Commands\HandleUploads;
+use App\Console\Commands\MeasureTemperature;
 use App\Console\Commands\MonitorRecordings;
 use App\Console\Commands\RunHealthChecks;
 use App\Console\Commands\RunMothershipActions;
@@ -55,6 +56,9 @@ class Kernel extends ConsoleKernel
 
         $schedule->command(RunHealthChecks::class)
             ->everyMinute();
+
+        $schedule->command(MeasureTemperature::class)
+            ->everyFifteenSeconds();
     }
 
     /**

@@ -7,6 +7,7 @@ use App\Enums\LedColor;
 use App\Enums\LogMessageType;
 use App\Models\RecorderLog;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Process;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
@@ -90,6 +91,11 @@ class Recorder
         }
 
         app(CalculateLed::class)->execute();
+    }
+
+    public function logMeasure($type, $message)
+    {
+        File::append(storage_path('logs/' . $type . '.log'), now()->toDateString() . ' ' . $message);
     }
 
     public function getUptime()
