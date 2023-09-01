@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Actions\CalculateLed;
 use App\CameraTypes\CameraType;
 use App\Data\CredentialsStatusData;
 use App\Enums\CameraStatus;
@@ -80,6 +81,8 @@ class Camera extends Model
         $this->getType()->startRecording($this, $recording);
         $recording->update(['started_at' => now()->subMilliseconds($this->getType()->getRecordingStartDelay())]);
 
+        app(CalculateLed::class)->execute();
+
         return $recording;
     }
 
@@ -102,6 +105,8 @@ class Camera extends Model
 
             return $recording;
         }
+
+        app(CalculateLed::class)->execute();
 
         return false;
     }
