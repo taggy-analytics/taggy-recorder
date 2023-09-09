@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Enums\RecordingMode;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\StartRecordingRequest;
 use App\Http\Resources\CameraResource;
 use App\Http\Resources\RecordingResource;
 use App\Models\Camera;
@@ -34,13 +35,13 @@ class CameraController extends Controller
         return CameraResource::make($camera);
     }
 
-    public function startRecording(Camera $camera)
+    public function startRecording(Camera $camera, StartRecordingRequest $request)
     {
         if($camera->isRecording()) {
             abort(409, 'Camera is already recording.');
         }
 
-        return RecordingResource::make($camera->startRecording());
+        return RecordingResource::make($camera->startRecording($request->data));
     }
 
     public function stopRecording(Camera $camera)

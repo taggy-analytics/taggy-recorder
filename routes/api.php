@@ -41,7 +41,6 @@ Route::post('cameras/{camera}/recording/stop', [\App\Http\Controllers\Api\Camera
 
 Route::get('recordings', [\App\Http\Controllers\Api\RecordingController::class, 'index']);
 Route::get('recordings/{recording}', [\App\Http\Controllers\Api\RecordingController::class, 'show']);
-Route::put('recordings/{recording}', [\App\Http\Controllers\Api\RecordingController::class, 'update']);
 
 
 Route::post('entities/{entityId}/transactions/status', [\App\Http\Controllers\Api\TransactionController::class, 'status']);

@@ -111,7 +111,7 @@ class Recorder
 
     public function logMeasure($type, $message)
     {
-        File::append(storage_path('logs/' . $type . '.log'), now()->toDateString() . ' ' . $message);
+        File::append(storage_path('logs/' . $type . '.log'), now()->toDateTimeString() . ' ' . $message . PHP_EOL);
     }
 
     public function getUptime()

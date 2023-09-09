@@ -10,8 +10,6 @@ use App\Enums\RecordingMode;
 use Illuminate\Database\Eloquent\Casts\AsCollection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\File;
-use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Str;
 
 class Camera extends Model
 {
@@ -67,7 +65,7 @@ class Camera extends Model
         return $this->getType()->isRecording($this);
     }
 
-    public function startRecording()
+    public function startRecording($data)
     {
         if(!File::exists($this->storagePath())) {
             File::makeDirectory($this->storagePath(), recursive: true);
@@ -75,6 +73,7 @@ class Camera extends Model
 
         $recording = $this->recordings()->create([
             'name' => now()->toDateTimeLocalString(),
+            'data' => $data,
         ]);
 
         info('Starting recording # ' . $recording->id . ' for camera #' . $this->id);

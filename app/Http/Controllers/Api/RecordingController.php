@@ -21,13 +21,6 @@ class RecordingController extends Controller
         return RecordingResource::make($recording);
     }
 
-    public function update(Recording $recording, Request $request)
-    {
-        $recording->update($request->only(['data']));
-
-        return RecordingResource::make($recording);
-    }
-
     public function videoVod(Recording $recording, $key)
     {
         $m3u8 = Storage::disk('public')

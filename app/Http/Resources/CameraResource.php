@@ -3,6 +3,7 @@
 namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Support\Arr;
 
 class CameraResource extends JsonResource
 {
@@ -18,7 +19,7 @@ class CameraResource extends JsonResource
             'id' => $this->id,
             'identifier' => $this->identifier,
             'status' => $this->status,
-            'type' => $this->getType(),
+            'type' => Arr::last(explode('\\', $this->type)),
             'name' => $this->name,
             'credentials' => $this->credentials,
             'recording_mode' => $this->recording_mode,
