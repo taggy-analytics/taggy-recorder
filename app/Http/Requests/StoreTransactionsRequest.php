@@ -36,7 +36,6 @@ class StoreTransactionsRequest extends FormRequest
             // We only show it in the docs.
 
             $rules = array_merge($rules, [
-                'entity_id' => 'required|int',
                 'transactions' => 'required|array',
                 'transactions.*.uuid' => 'required|uuid',
                 'transactions.*.user_id' => 'required|int',
