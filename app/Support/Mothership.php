@@ -5,14 +5,11 @@ namespace App\Support;
 use App\Exceptions\MothershipException;
 use App\Models\Recording;
 use App\Models\RecordingFile;
-use App\Models\Scene;
-use App\Models\User;
+use App\Models\UserToken;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
-use Spatie\Crypto\Rsa\Exceptions\CouldNotDecryptData;
-use Spatie\Crypto\Rsa\PublicKey;
 
 class Mothership
 {
@@ -21,16 +18,16 @@ class Mothership
 
     public const CURRENT_SOFTWARE_VERSION_FILENAME = 'software-version.txt';
 
-    public function __construct($userToken)
+    public function __construct(UserToken $userToken = null)
     {
-        $this->client = Http::baseUrl(config('services.mothership.endpoint'))
+        $this->client = Http::baseUrl($this->getEndpoint($userToken))
             ->acceptJson()
             ->withHeaders([
                 'Recorder-Id' => Recorder::make()->getSystemId(),
             ])
             ->withToken($userToken);
     }
-    public static function make($userToken = null)
+    public static function make(UserToken $userToken = null)
     {
         return new self($userToken);
     }
@@ -143,6 +140,15 @@ class Mothership
     private function delete($url)
     {
         return $this->request('delete', $url);
+    }
+
+    private function getEndpoint(UserToken $userToken = null)
+    {
+        if($userToken) {
+            return $userToken?->endpoint . '/api/v1';
+        }
+
+        return config('services.mothership.endpoint');
     }
 
     private function request($method, $url, $data = null, $type = 'json')

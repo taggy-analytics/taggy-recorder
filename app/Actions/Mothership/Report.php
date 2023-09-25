@@ -11,7 +11,7 @@ abstract class Report
     public function execute($model)
     {
         try {
-            $this->mothership = Mothership::make($model->mothershipReport->user_token);
+            $this->mothership = Mothership::make($model->mothershipReport->userToken);
             if($this->executeReport($model)) {
                 $model->mothershipReport->update(['processed_at' => now()]);
             }

@@ -2,6 +2,7 @@
 
 namespace App\Actions;
 
+use App\Models\UserToken;
 use App\Support\Mothership;
 use App\Support\Recorder;
 use Illuminate\Support\Facades\File;
@@ -86,6 +87,6 @@ class UpdateSoftware
     {
         // ToDo: entweder Token bei API Aufruf nehmen und speichern - oder bei Update über GUI mit eingeloggtem User
         // jetzt mal quick n dirty ersteres
-        return cache()->get('user-token');
+        return UserToken::firstWhere('token', cache()->get('user-token'));
     }
 }

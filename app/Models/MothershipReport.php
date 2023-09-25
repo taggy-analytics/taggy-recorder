@@ -18,6 +18,11 @@ class MothershipReport extends Model
         return $this->morphTo();
     }
 
+    public function userToken()
+    {
+        return $this->belongsTo(UserToken::class);
+    }
+
     public static function unreported()
     {
         return self::query()

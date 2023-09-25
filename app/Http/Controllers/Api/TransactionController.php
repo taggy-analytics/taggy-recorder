@@ -74,11 +74,12 @@ class TransactionController extends Controller
         $userToken = UserToken::firstOrCreate([
             'entity_id' => $entityId,
             'user_id' => $request->user()->id,
+            'endpoint' => cache()->get('mothership-endpoint'),
         ], [
             'token' => $token,
         ]);
 
-        $mothership = Mothership::make($userToken->token);
+        $mothership = Mothership::make($userToken);
 
         if($this->cleanupNeeded($entityId, $request->transactions)) {
             $newTransactions = collect($request->transactions)

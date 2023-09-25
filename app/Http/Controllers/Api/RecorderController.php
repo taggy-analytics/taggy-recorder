@@ -97,6 +97,7 @@ class RecorderController extends Controller
             UserToken::updateOrCreate([
                 'entity_id' => $entity['id'],
                 'user_id' => $request->user_id,
+                'endpoint' => $request->header('Mothership-Endpoint'),
             ], [
                 'token' => $request->token,
                 'last_successfully_used_at' => $entity['last_successfully_used_at'],
