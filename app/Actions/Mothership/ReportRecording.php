@@ -19,6 +19,13 @@ class ReportRecording extends Report
             return false;
         }
 
+        // Just to make sure that the mothership knows about the container,
+        // we will sync the transactions. It should not take too long
+        // because they should already have been synced when the websocket
+        // reconnected (echo.js: php ./artisan taggy:handle-mothership-websockets-event).
+        // Maybe we have an issue when two syncs run in parallel?! Should not hurt.
+        app(SyncTransactionsWithMothership::class)->execute();
+
         if($video = $this->mothership->reportRecording($recording)) {
             $recording->files()->update([
                 'video_id' => $video['id'],

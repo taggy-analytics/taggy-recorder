@@ -2,6 +2,7 @@
 
 namespace App\Actions\Mothership;
 
+use App\Enums\LogMessageType;
 use App\Enums\RecordingFileStatus;
 use App\Enums\RecordingStatus;
 use App\Exceptions\MothershipException;
@@ -25,6 +26,11 @@ class SyncTransactionsWithMothership
 
     public function execute()
     {
+        if(blink()->get('sync-transactions-running')) {
+            Recorder::make()->log(LogMessageType::SYNC_TRANSACTIONS_ALREADY_RUNNING);
+        }
+
+        blink()->put('sync-transactions-running', true);
         $entityTransactions = Transaction::query()
             ->get()
             ->groupBy(['entity_id', 'user_token_id']);
@@ -95,10 +101,12 @@ class SyncTransactionsWithMothership
                     // ToDo: what to do in this case!?
                     info('Not authorized to sync transactions for entity ' . $entityId);
                 }
-
+                blink()->forget('sync-transactions-running');
                 throw $exception;
             }
         }
+
+        blink()->forget('sync-transactions-running');
     }
 
     private function getSegmentsHash($array, $factor, $minSize) {
