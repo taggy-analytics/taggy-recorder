@@ -3,6 +3,7 @@
 namespace App\Http\Resources;
 
 use App\Enums\RecordingStatus;
+use App\Enums\RecordingType;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class RecordingResource extends JsonResource
@@ -12,7 +13,7 @@ class RecordingResource extends JsonResource
         return [
             'id' => $this->id,
             'uuid' => $this->uuid,
-            'type' => is_null($this->stopped_at) ? 'live' : 'finished',
+            'type' => is_null($this->stopped_at) ? RecordingType::LIVE->value : RecordingType::FINISHED->value,
             'start_time' => $this->started_at,
             'duration' => $this->getDuration(),
             'data' => $this->data,
