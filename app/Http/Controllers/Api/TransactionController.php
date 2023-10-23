@@ -27,7 +27,7 @@ class TransactionController extends Controller
 
         $lastUuidInSync = -1;
 
-        foreach($request->hashs as $index => $hash) {
+        foreach($request->hashes as $index => $hash) {
             $offset = $request->hash_substring_length * ($lastUuidInSync + 1);
             $length = $request->hash_substring_length * ($index - $lastUuidInSync);
 
@@ -90,7 +90,7 @@ class TransactionController extends Controller
                 ->execute($entityId);
 
             if(count($newTransactions) > 0) {
-                broadcast(new TransactionsAdded($entityId, $request->origin, $newTransactions));
+                broadcast(new TransactionsAdded($entityId, $newTransactions, $request->origin));
                 broadcast(new TransactionsRecalculated($entityId, $request->origin));
 
                 if($mothership->isOnline()) {
@@ -102,7 +102,7 @@ class TransactionController extends Controller
         }
         else {
             $transactions = [];
-            foreach($request->transactions as $transaction) {
+            foreach($request->transactions ?? [] as $transaction) {
                 $transaction['user_token_id'] = $userToken->id;
                 $transaction = Transaction::firstOrCreate(['id' => $transaction['id']], $transaction);
                 if($transaction->wasRecentlyCreated) {
@@ -111,7 +111,7 @@ class TransactionController extends Controller
             }
 
             if(count($transactions) > 0) {
-                broadcast(new TransactionsAdded($entityId, $request->origin, $transactions));
+                broadcast(new TransactionsAdded($entityId, $transactions, $request->origin));
 
                 if($mothership->isOnline()) {
                     $mothership->reportTransactions($entityId, $transactions);
@@ -130,7 +130,7 @@ class TransactionController extends Controller
         }
 
         return [
-            'transactions' => TransactionResource::collection($transactions),
+            'transactions' => TransactionResource::collection($transactions->sortBy('created_at')),
             'content' => $content,
         ];
     }
@@ -144,6 +144,10 @@ class TransactionController extends Controller
 
     private function cleanupNeeded($entityId, $transactions)
     {
+        if(is_null($transactions) || count($transactions) == 0) {
+            return false;
+        }
+
         // Check if the youngest existing transaction is older than the oldest new transaction
         $existingTransactionsDate = Transaction::where('entity_id', $entityId)
             ->max('created_at');

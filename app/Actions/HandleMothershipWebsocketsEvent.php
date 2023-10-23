@@ -36,7 +36,7 @@ class HandleMothershipWebsocketsEvent
         if(count($newTransactions) > 0) {
             Transaction::insert($newTransactions);
 
-            broadcast(new TransactionsAdded($entityId, Recorder::make()->getSystemId(), $newTransactions));
+            broadcast(new TransactionsAdded($entityId, $newTransactions, Recorder::make()->getSystemId()));
         }
     }
 
