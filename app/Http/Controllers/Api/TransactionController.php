@@ -27,13 +27,6 @@ class TransactionController extends Controller
 
         $lastUuidInSync = -1;
 
-        if(empty($request->transactions)) {
-            return [
-                'transactions_in_sync' => false,
-                'last_transaction_in_sync' => null,
-            ];
-        }
-
         foreach($request->hashs as $index => $hash) {
             $offset = $request->hash_substring_length * ($lastUuidInSync + 1);
             $length = $request->hash_substring_length * ($index - $lastUuidInSync);
@@ -55,7 +48,7 @@ class TransactionController extends Controller
             ];
         }
 
-        if(count($uuids) > $lastUuidInSync) {
+        if(count($uuids) > $lastUuidInSync + 1) {
             return [
                 'transactions_in_sync' => false,
                 'last_transaction_in_sync' => $uuids[$lastUuidInSync],
