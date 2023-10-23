@@ -14,10 +14,13 @@ class ReportRecording extends Report
 {
     public function executeReport(Recording $recording): bool
     {
+        /*
+        // This check is not needed anymore - we use user token authorization.
         if(!Arr::has($recording->data, 'assigned_container.eid')) {
             info('Recording #' . $recording->id . ' has no entity ID.');
             return false;
         }
+        */
 
         // Just to make sure that the mothership knows about the container,
         // we will sync the transactions. It should not take too long

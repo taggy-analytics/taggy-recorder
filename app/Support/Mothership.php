@@ -40,7 +40,8 @@ class Mothership
             'cameraId' => $recording->camera_id,
             'key' => $recording->key,
             'totalSegments' => $recording->files()->count(),
-            'sceneContainer' => Arr::get($recording->data, 'assigned_container'),
+            'sessionUuid' => Arr::get($recording->data, 'session_uuid'),
+            'entityId' => Arr::get($recording->data, 'entity_id'),
             'startTime' => $recording->started_at,
             'duration' => $recording->getDuration(),
         ]);
