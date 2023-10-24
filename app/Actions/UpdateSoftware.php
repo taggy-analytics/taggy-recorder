@@ -24,7 +24,7 @@ class UpdateSoftware
         }
         */
 
-        $mothership = Mothership::make($this->getTokenForSoftwareUpdate());
+        $mothership = Mothership::make();
 
         $newVersion = $mothership->checkForUpdateFile();
 
@@ -81,10 +81,5 @@ class UpdateSoftware
                 'message' => 'Recorder is already running on latest software (' . Recorder::make()->currentSoftwareVersion() . ').',
             ];
         }
-    }
-
-    private function getTokenForSoftwareUpdate(): UserToken
-    {
-        return UserToken::lastSuccessfullyUsed()->first();
     }
 }

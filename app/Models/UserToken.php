@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class UserToken extends Model
 {
     protected $casts = [
+        'token' => 'encrypted',
         'last_successfully_used_at' => 'datetime',
         'last_rejected_at' => 'datetime',
     ];

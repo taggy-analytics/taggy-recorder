@@ -16,7 +16,7 @@ class Mothership
     private $client;
     private $headers;
 
-    public function __construct(UserToken $userToken = null)
+    public function __construct(UserToken $userToken)
     {
         $this->client = Http::baseUrl($this->getEndpoint($userToken))
             ->acceptJson()
@@ -27,7 +27,7 @@ class Mothership
     }
     public static function make(UserToken $userToken = null)
     {
-        return new self($userToken);
+        return new self($userToken ?? UserToken::lastSuccessfullyUsed());
     }
 
     public function reportRecording(Recording $recording)
