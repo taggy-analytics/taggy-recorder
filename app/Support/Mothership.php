@@ -18,6 +18,10 @@ class Mothership
 
     public function __construct(UserToken $userToken = null)
     {
+        if(empty($userToken)) {
+            throw new \Exception('No valid user token found.');
+        }
+
         $this->client = Http::baseUrl($this->getEndpoint($userToken))
             ->acceptJson()
             ->withHeaders([

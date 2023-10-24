@@ -102,6 +102,7 @@ class RecorderController extends Controller
             ], [
                 'token' => $request->token,
                 'last_successfully_used_at' => $entity['last_successfully_used_at'],
+                'last_rejected_at' => null,
             ]);
         }
     }

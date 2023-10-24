@@ -60,7 +60,7 @@ class ManageWebsocketsConnection
     private function getProcesses()
     {
         $output = [];
-        exec('ps aux |grep echo', $output);
+        exec('ps aux |grep "node echo.js"', $output);
 
         $processes = [];
 
