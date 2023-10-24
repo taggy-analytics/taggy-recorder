@@ -8,8 +8,6 @@ use Spatie\QueueableAction\QueueableAction;
 
 class ReportRecordingFile extends Report
 {
-    use QueueableAction;
-
     public function executeReport(RecordingFile $recordingFile): bool
     {
         $this->mothership->sendRecordingFile($recordingFile);

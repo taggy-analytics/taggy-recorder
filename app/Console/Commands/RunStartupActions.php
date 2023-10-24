@@ -4,6 +4,7 @@ namespace App\Console\Commands;
 
 use App\Actions\EnsureAppKeyIsSet;
 use App\Actions\EnsureNetworkIsSetup;
+use App\Support\Recorder;
 use Illuminate\Console\Command;
 use Illuminate\Console\Scheduling\Schedule;
 
@@ -14,6 +15,8 @@ class RunStartupActions extends Command
 
     public function handle(Schedule $schedule)
     {
+        Recorder::make()->waitUntilAllNeededServicesAreUpAndRunning();
+
         info('Running startup actions');
         $this->call('cache:clear');
         //$this->call('schedule:clear-cache');

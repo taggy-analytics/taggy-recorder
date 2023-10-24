@@ -2,8 +2,10 @@
 
 namespace App\Console\Commands;
 
+use App\Actions\CheckIfAllNeededServicesAreUpAndRunning;
 use App\Support\Recorder;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\DB;
 
 abstract class PseudoDaemon extends Command
 {
@@ -15,14 +17,16 @@ abstract class PseudoDaemon extends Command
      */
     public function handle()
     {
-        if(Recorder::make()->installationIsFinished()) {
-            try {
-                app($this->action)
-                    ->execute();
-            }
-            catch(\Exception $exception) {
-                report($exception);
-            }
+        if(!Recorder::make()->allNeededServicesAreUpAndRunning()) {
+            return 1;
+        }
+
+        try {
+            app($this->action)
+                ->execute();
+        }
+        catch(\Exception $exception) {
+            report($exception);
         }
     }
 }

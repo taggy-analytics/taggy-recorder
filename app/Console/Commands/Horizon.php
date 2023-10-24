@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use App\Support\Recorder;
 use Illuminate\Console\Command;
 use Laravel\Horizon\Console\HorizonCommand;
 
@@ -12,9 +13,8 @@ class Horizon extends Command
 
     public function handle()
     {
-        sleep(10);
-        retry(100, function () {
-            $this->call(HorizonCommand::class);
-        }, 5000);
+        Recorder::make()->waitUntilAllNeededServicesAreUpAndRunning();
+
+        $this->call(HorizonCommand::class);
     }
 }

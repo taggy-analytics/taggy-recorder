@@ -3,6 +3,7 @@
 namespace App\Support;
 
 use App\Actions\CalculateLed;
+use App\Actions\CheckIfAllNeededServicesAreUpAndRunning;
 use App\Enums\LedColor;
 use App\Enums\LogMessageType;
 use App\Models\RecorderLog;
@@ -83,6 +84,18 @@ class Recorder
     public function installationIsFinished()
     {
         return Storage::exists(self::INSTALLATION_FINISHED_FILENAME);
+    }
+
+    public function allNeededServicesAreUpAndRunning()
+    {
+        return app(CheckIfAllNeededServicesAreUpAndRunning::class)->execute();
+    }
+
+    public function waitUntilAllNeededServicesAreUpAndRunning()
+    {
+        while(!Recorder::make()->allNeededServicesAreUpAndRunning()) {
+            sleep(5);
+        };
     }
 
     private function currentLeds($leds = null)
