@@ -22,17 +22,20 @@ class ManageWebsocketsConnection
             ->whereNull('last_rejected_at');
 
         foreach($entities as $entityId => $userTokens) {
-            // dump($entityId, $this->entityHasRunningProcess($entityId), $this->entityHasRunningProcess($entityId));
+            info($entityId);
             if(!$this->entityHasRunningProcess($entityId)) {
                 foreach ($userTokens as $userToken) {
+                    info($userToken);
                     $command = "node echo.js {$entityId} '{$userToken->token}' > /dev/null 2>&1 &";
                     exec($command);
 
                     sleep(2);
                     if ($this->entityHasRunningProcess($entityId)) {
+                        info('jau');
                         $userToken->update(['last_successfully_used_at' => now()]);
                         continue(2);
                     } else {
+                        info('nö');
                         $userToken->update(['last_rejected_at' => now()]);
                     }
                 }

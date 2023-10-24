@@ -42,7 +42,7 @@ class ReportRecording extends Report
                 ->whereIn('model_id', $recording->files()->pluck('id'))
                 ->update([
                     'ready_to_send' => true,
-                    'user_token' => $recording->mothershipReport->getAttributes()['user_token'],
+                    'user_token_id' => $recording->mothershipReport->user_token_id,
                     'updated_at' => $currentTime,
                 ]);
 
