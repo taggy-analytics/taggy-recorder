@@ -45,6 +45,7 @@ trait IsReportedToMothership
         MothershipReport::updateOrCreate([
             'model_type' => $this::class,
             'model_id' => $this->id,
+            'endpoint' => str_replace('/api/v1', '', config('services.mothership.endpoint')),
         ],[
             'ready_to_send' => false,
         ]);
