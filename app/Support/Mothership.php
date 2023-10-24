@@ -23,7 +23,7 @@ class Mothership
             ->withHeaders([
                 'Recorder-Id' => Recorder::make()->getSystemId(),
             ])
-            ->withToken($userToken);
+            ->withToken($userToken->token);
     }
     public static function make(UserToken $userToken = null)
     {
