@@ -15,6 +15,9 @@ class Horizon extends Command
     {
         Recorder::make()->waitUntilAllNeededServicesAreUpAndRunning();
 
-        $this->call(HorizonCommand::class);
+        sleep(10);
+        retry(100, function () {
+            $this->call(HorizonCommand::class);
+        }, 5000);
     }
 }
