@@ -27,7 +27,7 @@ class StoreTokensRequest extends FormRequest
             'entities' => 'required|array',
             'entities.*.id' => 'required|int',
             // The date/time the token was last used successfully with the Taggy API
-            'entities.*.last_used_successfully_at' => 'date',
+            'entities.*.last_successfully_used_at' => 'date',
         ];
     }
 }
