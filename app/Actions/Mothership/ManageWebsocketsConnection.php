@@ -2,17 +2,9 @@
 
 namespace App\Actions\Mothership;
 
-use App\Enums\RecordingFileStatus;
-use App\Enums\RecordingStatus;
-use App\Models\RecorderLog;
-use App\Models\Recording;
-use App\Models\RecordingFile;
 use App\Models\UserToken;
-use App\Support\Mothership;
-use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Process;
-use Illuminate\Support\Str;
 
 class ManageWebsocketsConnection
 {
@@ -22,21 +14,15 @@ class ManageWebsocketsConnection
             ->whereNull('last_rejected_at');
 
         foreach($entities as $entityId => $userTokens) {
-            info($entityId);
             if(!$this->entityHasRunningProcess($entityId)) {
                 foreach ($userTokens as $userToken) {
-                    info($userToken);
                     $command = "node echo.js {$entityId} '{$userToken->token}' > /dev/null 2>&1 &";
                     exec($command);
 
                     sleep(2);
                     if ($this->entityHasRunningProcess($entityId)) {
-                        info('jau');
                         $userToken->update(['last_successfully_used_at' => now()]);
                         continue(2);
-                    } else {
-                        info('nö');
-                        $userToken->update(['last_rejected_at' => now()]);
                     }
                 }
             }
@@ -53,14 +39,13 @@ class ManageWebsocketsConnection
     private function entitiesWithRunningProcess(): Collection
     {
         return collect($this->getProcesses())
-            ->filter(fn($process) => Str::contains($process['command'], 'node echo.js'))
-            ->map(fn($process) => explode(' ', $process['command'])[2]);
+            ->filter(fn($process) => preg_match('/node echo\.js \d+ \w+/', $process['command']))
+            ->map(fn($process) => (int) explode(' ', $process['command'])[2]);
     }
 
     private function getProcesses()
     {
-        $output = [];
-        exec('ps aux |grep "node echo.js"', $output);
+        $output = explode(PHP_EOL, Process::run('ps aux |grep "node echo.js"')->output());
 
         $processes = [];
 
