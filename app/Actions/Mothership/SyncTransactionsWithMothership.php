@@ -45,7 +45,7 @@ class SyncTransactionsWithMothership
                 ->pluck('id')
                 ->toArray();
 
-            $hashs = $this->getSegmentsHash($uuids, self::SEGMENT_SIZE_FACTOR, self::SEGMENT_MIN_SIZE);
+            $hashes = $this->getSegmentsHash($uuids, self::SEGMENT_SIZE_FACTOR, self::SEGMENT_MIN_SIZE);
 
             try {
                 // Let's make sure we have a valid user token
@@ -54,7 +54,7 @@ class SyncTransactionsWithMothership
                 $userToken = $entities[$entityId]->first();
 
                 $checkSync = Mothership::make($userToken)
-                    ->getTransactionsStatus($entityId, $hashs, self::HASH_SUBSTRING_LENGTH);
+                    ->getTransactionsStatus($entityId, $hashes, self::HASH_SUBSTRING_LENGTH);
 
                 if(!$checkSync['transactions_in_sync']) {
                     foreach($userTokenTransactions as $userTokenId => $transactions) {
