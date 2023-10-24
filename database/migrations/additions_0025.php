@@ -8,7 +8,7 @@ return new class extends Migration
 {
     public function up()
     {
-        Schema::table('user_tokens', function (Blueprint $table) {
+        Schema::table('mothership_reports', function (Blueprint $table) {
             $table->unsignedBigInteger('user_token_id')->nullable()->after('processed_at');
             $table->dropColumn('user_token');
         });
