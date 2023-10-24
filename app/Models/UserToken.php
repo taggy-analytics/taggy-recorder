@@ -7,7 +7,6 @@ use Illuminate\Database\Eloquent\Model;
 class UserToken extends Model
 {
     protected $casts = [
-        'token' => 'encrypted',
         'last_successfully_used_at' => 'datetime',
         'last_rejected_at' => 'datetime',
     ];
@@ -18,7 +17,7 @@ class UserToken extends Model
             ->groupBy('entity_id');
     }
 
-    public static function lastSuccessfullyUsed(): UserToken
+    public static function lastSuccessfullyUsed()
     {
         return self::query()
             ->where('last_successfully_used_at', '>', now()->subDays(30))

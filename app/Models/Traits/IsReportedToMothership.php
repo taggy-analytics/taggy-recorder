@@ -46,7 +46,7 @@ trait IsReportedToMothership
             'model_type' => $this::class,
             'model_id' => $this->id,
         ],[
-            'user_token' => request()->header('User-Token'),
+            'user_token_id' => UserToken::firstWhere('token', request()->header('User-Token'))->id,
             'ready_to_send' => false,
         ]);
     }
