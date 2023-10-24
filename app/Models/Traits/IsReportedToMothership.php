@@ -3,6 +3,7 @@
 namespace App\Models\Traits;
 
 use App\Models\MothershipReport;
+use App\Models\UserToken;
 
 trait IsReportedToMothership
 {
@@ -22,12 +23,12 @@ trait IsReportedToMothership
         return $this->morphOne(MothershipReport::class, 'model');
     }
 
-    public function reportToMothership($userToken = null)
+    public function reportToMothership(UserToken $userToken = null)
     {
         $data['ready_to_send'] = true;
 
         if($userToken) {
-            $data['user_token'] = $userToken;
+            $data['user_token_id'] = $userToken->id;
         }
 
         if(!$this->mothershipReport) {
