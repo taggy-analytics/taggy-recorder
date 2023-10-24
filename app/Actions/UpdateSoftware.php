@@ -83,10 +83,8 @@ class UpdateSoftware
         }
     }
 
-    private function getTokenForSoftwareUpdate()
+    private function getTokenForSoftwareUpdate(): UserToken
     {
-        // ToDo: entweder Token bei API Aufruf nehmen und speichern - oder bei Update über GUI mit eingeloggtem User
-        // jetzt mal quick n dirty ersteres
-        return UserToken::firstWhere('token', cache()->get('user-token'));
+        return UserToken::lastSuccessfullyUsed()->first();
     }
 }
