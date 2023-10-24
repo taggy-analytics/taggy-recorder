@@ -9,6 +9,7 @@ use App\Models\Camera;
 use App\Models\MothershipReport;
 use App\Models\Recording;
 use App\Models\RecordingFile;
+use App\Models\UserToken;
 use Chrisyue\PhpM3u8\Facade\ParserFacade;
 use Chrisyue\PhpM3u8\Stream\TextStream;
 use Illuminate\Support\Arr;
@@ -83,7 +84,7 @@ class HandleRecordings
         if(Camera::noCameraIsRecording()) {
             foreach(Recording::withStatus(RecordingStatus::CREATED_RECORDING_FILES_IN_DB) as $recording) {
                 $recording->setStatus(RecordingStatus::READY_FOR_REPORTING_TO_MOTHERSHIP);
-                $userToken = $recording->hasRestartedRecording?->mothershipReport->userToken;
+                $userToken = Arr::first(UserToken::perEntity()[$recording->data['entity_id']]);
                 $recording->reportToMothership($userToken);
             }
         }

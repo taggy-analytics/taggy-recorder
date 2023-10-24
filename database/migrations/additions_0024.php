@@ -9,7 +9,7 @@ return new class extends Migration
     public function up()
     {
         Schema::table('user_tokens', function (Blueprint $table) {
-            $table->string('endpoint')->nullable()->after('user_id');
+            $table->string('endpoint')->nullable()->index()->after('user_id');
         });
 
         Schema::table('mothership_reports', function (Blueprint $table) {
