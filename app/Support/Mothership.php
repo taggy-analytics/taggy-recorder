@@ -48,7 +48,7 @@ class Mothership
     public function getTransactionsStatus($entityId, $hashes, $hashSubstringLength)
     {
         return $this->post('entities/' . $entityId . '/transactions/status', [
-            'hashs' => $hashes ?? [],
+            'hashes' => $hashes ?? [],
             'hash_substring_length' => $hashSubstringLength,
         ]);
     }
