@@ -8,13 +8,13 @@ use App\Enums\LogMessageType;
 use App\Models\RecorderLog;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\File;
-use Illuminate\Support\Facades\Process;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Jackiedo\DotenvEditor\Facades\DotenvEditor;
 
 class Recorder
 {
+    public const CURRENT_SOFTWARE_VERSION_FILENAME = 'software-version.txt';
     public const INSTALLATION_FINISHED_FILENAME = 'installation-finished.txt';
     public const RUNNING_UPLOAD_FILENAME = 'running-upload.txt';
     public const CURRENT_LEDS_FILENAME = 'current-leds.txt';
@@ -124,5 +124,11 @@ class Recorder
     public function log(LogMessageType $type, $message = '', $data = [])
     {
         RecorderLog::firstOrCreate(compact('type', 'message'), compact('data'));
+    }
+
+
+    public function currentSoftwareVersion()
+    {
+        return Storage::get(self::CURRENT_SOFTWARE_VERSION_FILENAME);
     }
 }

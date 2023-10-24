@@ -23,7 +23,7 @@ class AppServiceProvider extends ServiceProvider
     public function register()
     {
         Flare::determineVersionUsing(function() {
-            return Mothership::make()->currentSoftwareVersion();
+            return Recorder::make()->currentSoftwareVersion();
         });
 
         Model::unguard();
@@ -46,6 +46,6 @@ class AppServiceProvider extends ServiceProvider
     public function boot()
     {
         Flare::context('Recorder ID', Recorder::make()->getSystemId());
-        Flare::context('Taggy Version', Mothership::make()->currentSoftwareVersion());
+        Flare::context('Taggy Version', Recorder::make()->currentSoftwareVersion());
     }
 }

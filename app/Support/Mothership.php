@@ -16,8 +16,6 @@ class Mothership
     private $client;
     private $headers;
 
-    public const CURRENT_SOFTWARE_VERSION_FILENAME = 'software-version.txt';
-
     public function __construct(UserToken $userToken = null)
     {
         $this->client = Http::baseUrl($this->getEndpoint($userToken))
@@ -105,7 +103,7 @@ class Mothership
 
     public function checkForUpdateFile()
     {
-        $file = $this->get('recorders/' . Recorder::make()->getSystemId() . '/update/' . $this->currentSoftwareVersion(), 'body');
+        $file = $this->get('recorders/' . Recorder::make()->getSystemId() . '/update/' . Recorder::make()->currentSoftwareVersion(), 'body');
 
         if($file) {
             $filename = trim(explode('=', $this->headers[ "content-disposition"])[1]);
@@ -121,11 +119,6 @@ class Mothership
     public function log($data)
     {
         return $this->post('recorders/' . Recorder::make()->getSystemId() . '/log?key=' . config('taggy-recorder.mothership-logging-key'), $data, 'raw');
-    }
-
-    public function currentSoftwareVersion()
-    {
-        return Storage::get(self::CURRENT_SOFTWARE_VERSION_FILENAME);
     }
 
     private function get($url, $type = 'json')

@@ -19,10 +19,11 @@ class RecorderController extends Controller
         return 'OK';
     }
 
-    public function systemId()
+    public function info()
     {
         return [
             'system_id' => Recorder::make()->getSystemId(),
+            'software_version' => Recorder::make()->currentSoftwareVersion(),
         ];
     }
 

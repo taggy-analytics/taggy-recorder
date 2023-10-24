@@ -64,7 +64,7 @@ class UpdateSoftware
             Process::run('php artisan horizon:terminate');
             Process::run('php artisan taggy:delete-old-releases');
 
-            Storage::put(Mothership::CURRENT_SOFTWARE_VERSION_FILENAME, $newVersion['version']);
+            Storage::put(Recorder::CURRENT_SOFTWARE_VERSION_FILENAME, $newVersion['version']);
 
             info('Updated software to ' . $newVersion['version']);
 
@@ -77,8 +77,8 @@ class UpdateSoftware
         else {
             return [
                 'updated' => false,
-                'version' => $mothership->currentSoftwareVersion(),
-                'message' => 'Recorder is already running on latest software (' . $mothership->currentSoftwareVersion() . ').',
+                'version' => Recorder::make()->currentSoftwareVersion(),
+                'message' => 'Recorder is already running on latest software (' . Recorder::make()->currentSoftwareVersion() . ').',
             ];
         }
     }

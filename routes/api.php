@@ -17,7 +17,7 @@ use Illuminate\Support\Facades\Route;
 Route::post('testing/connected-to-mothership', [\App\Http\Controllers\Api\TestingController::class, 'connectedToMothership']);
 
 Route::get('recorder/i-am-here', [\App\Http\Controllers\Api\RecorderController::class, 'iAmHere']);
-Route::get('recorder/system-id', [\App\Http\Controllers\Api\RecorderController::class, 'systemId']);
+Route::get('recorder/info', [\App\Http\Controllers\Api\RecorderController::class, 'info']);
 Route::post('recorder/update-software', [\App\Http\Controllers\Api\RecorderController::class, 'updateSoftware']);
 Route::post('recorder/installation-finished', [\App\Http\Controllers\Api\RecorderController::class, 'installationFinished']);
 Route::post('recorder/refresh-app-key', [\App\Http\Controllers\Api\RecorderController::class, 'refreshAppKey']);
