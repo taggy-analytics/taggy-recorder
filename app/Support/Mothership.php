@@ -2,6 +2,7 @@
 
 namespace App\Support;
 
+use App\Enums\RecordingStatus;
 use App\Exceptions\MothershipException;
 use App\Models\Recording;
 use App\Models\RecordingFile;
@@ -36,17 +37,23 @@ class Mothership
 
     public function reportRecording(Recording $recording)
     {
-        return $this->post('recordings/to-video', [
-            'uuid' => $recording->uuid,
-            'recorderSystemId' => Recorder::make()->getSystemId(),
-            'cameraId' => $recording->camera_id,
-            'key' => $recording->key,
-            'totalSegments' => $recording->files()->count(),
-            'sessionUuid' => Arr::get($recording->data, 'session_uuid'),
-            'entityId' => Arr::get($recording->data, 'entity_id'),
-            'startTime' => $recording->started_at,
-            'duration' => $recording->getDuration(),
-        ]);
+        try {
+            return $this->post('recordings/to-video', [
+                'uuid' => $recording->uuid,
+                'recorderSystemId' => Recorder::make()->getSystemId(),
+                'cameraId' => $recording->camera_id,
+                'key' => $recording->key,
+                'totalSegments' => $recording->files()->count(),
+                'sessionUuid' => Arr::get($recording->data, 'session_uuid'),
+                'entityId' => Arr::get($recording->data, 'entity_id'),
+                'startTime' => $recording->started_at,
+                'duration' => $recording->getDuration(),
+            ]);
+        }
+        catch(\Exception $exception) {
+            return RecordingStatus::SESSION_NOT_FOUND;
+        }
+
     }
 
     public function getTransactionsStatus($entityId, $hashes, $hashSubstringLength)

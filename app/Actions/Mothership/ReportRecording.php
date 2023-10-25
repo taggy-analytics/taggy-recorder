@@ -14,14 +14,6 @@ class ReportRecording extends Report
 {
     public function executeReport(Recording $recording): bool
     {
-        /*
-        // This check is not needed anymore - we use user token authorization.
-        if(!Arr::has($recording->data, 'assigned_container.eid')) {
-            info('Recording #' . $recording->id . ' has no entity ID.');
-            return false;
-        }
-        */
-
         // Just to make sure that the mothership knows about the container,
         // we will sync the transactions. It should not take too long
         // because they should already have been synced when the websocket
@@ -30,27 +22,32 @@ class ReportRecording extends Report
         app(SyncTransactionsWithMothership::class)->execute();
 
         if($video = $this->mothership->reportRecording($recording)) {
-            $recording->files()->update([
-                'video_id' => $video['id'],
-                'status' => RecordingFileStatus::TO_BE_UPLOADED,
-            ]);
-
-            $currentTime = now()->toDateTimeString();
-
-            MothershipReport::query()
-                ->where('model_type', RecordingFile::class)
-                ->whereIn('model_id', $recording->files()->pluck('id'))
-                ->update([
-                    'ready_to_send' => true,
-                    'user_token_id' => $recording->mothershipReport->user_token_id,
-                    'updated_at' => $currentTime,
+            if($video == RecordingStatus::SESSION_NOT_FOUND) {
+                $recording->setStatus(RecordingStatus::SESSION_NOT_FOUND);
+            }
+            else {
+                $recording->files()->update([
+                    'video_id' => $video['id'],
+                    'status' => RecordingFileStatus::TO_BE_UPLOADED,
                 ]);
 
-            $recording->addM3u8EndTag();
-            $playlist = Storage::disk('public')
-                ->get($recording->getPath('video/video.m3u8'));
-            $this->mothership->sendPlaylist($video['id'], $playlist);
-            $recording->setStatus(RecordingStatus::REPORTED_TO_MOTHERSHIP);
+                $currentTime = now()->toDateTimeString();
+
+                MothershipReport::query()
+                    ->where('model_type', RecordingFile::class)
+                    ->whereIn('model_id', $recording->files()->pluck('id'))
+                    ->update([
+                        'ready_to_send' => true,
+                        'user_token_id' => $recording->mothershipReport->user_token_id,
+                        'updated_at' => $currentTime,
+                    ]);
+
+                $recording->addM3u8EndTag();
+                $playlist = Storage::disk('public')
+                    ->get($recording->getPath('video/video.m3u8'));
+                $this->mothership->sendPlaylist($video['id'], $playlist);
+                $recording->setStatus(RecordingStatus::REPORTED_TO_MOTHERSHIP);
+            }
 
             return true;
         }

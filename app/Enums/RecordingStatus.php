@@ -17,6 +17,7 @@ enum RecordingStatus: string
     case TO_BE_DELETED = 'to-be-deleted';
     case READY_FOR_REPORTING_TO_MOTHERSHIP = 'ready-for-reporting-to-mothership';
     case REPORTED_TO_MOTHERSHIP = 'reported-to-mothership';
+    case SESSION_NOT_FOUND = 'session-not-found';
 
     public static function default()
     {
