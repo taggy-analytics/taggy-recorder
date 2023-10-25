@@ -51,7 +51,11 @@ class Mothership
             ]);
         }
         catch(\Exception $exception) {
-            return RecordingStatus::SESSION_NOT_FOUND;
+            return match(blink()->get('response-status')) {
+                404 => RecordingStatus::RECORDER_NOT_FOUND_ON_MOTHERSHIP,
+                410 => RecordingStatus::SESSION_NOT_FOUND_ON_MOTHERSHIP,
+                default => RecordingStatus::UNKNOWN_MOTHERSHIP_ERROR,
+            };
         }
 
     }
@@ -162,6 +166,7 @@ class Mothership
             ->{$method}($url, $data);
 
         if($response->status() >= 400) {
+            blink('response-status', $response->status());
             throw new MothershipException($method, $url, $data, $response);
         }
 

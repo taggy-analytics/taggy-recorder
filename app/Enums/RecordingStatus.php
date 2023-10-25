@@ -17,7 +17,9 @@ enum RecordingStatus: string
     case TO_BE_DELETED = 'to-be-deleted';
     case READY_FOR_REPORTING_TO_MOTHERSHIP = 'ready-for-reporting-to-mothership';
     case REPORTED_TO_MOTHERSHIP = 'reported-to-mothership';
-    case SESSION_NOT_FOUND = 'session-not-found';
+    case SESSION_NOT_FOUND_ON_MOTHERSHIP = 'session-not-found-on-mothership';
+    case RECORDER_NOT_FOUND_ON_MOTHERSHIP = 'recorder-not-found-on-mothership';
+    case UNKNOWN_MOTHERSHIP_ERROR = 'unknown-mothership-error';
 
     public static function default()
     {

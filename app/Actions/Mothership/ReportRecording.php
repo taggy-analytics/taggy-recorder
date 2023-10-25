@@ -22,8 +22,14 @@ class ReportRecording extends Report
         app(SyncTransactionsWithMothership::class)->execute();
 
         if($video = $this->mothership->reportRecording($recording)) {
-            if($video == RecordingStatus::SESSION_NOT_FOUND) {
-                $recording->setStatus(RecordingStatus::SESSION_NOT_FOUND);
+            if($video == RecordingStatus::SESSION_NOT_FOUND_ON_MOTHERSHIP) {
+                $recording->setStatus(RecordingStatus::SESSION_NOT_FOUND_ON_MOTHERSHIP);
+            }
+            elseif($video == RecordingStatus::RECORDER_NOT_FOUND_ON_MOTHERSHIP) {
+                $recording->setStatus(RecordingStatus::RECORDER_NOT_FOUND_ON_MOTHERSHIP);
+            }
+            elseif($video == RecordingStatus::UNKNOWN_MOTHERSHIP_ERROR) {
+                $recording->setStatus(RecordingStatus::UNKNOWN_MOTHERSHIP_ERROR);
             }
             else {
                 $recording->files()->update([
