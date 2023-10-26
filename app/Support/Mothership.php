@@ -17,10 +17,10 @@ class Mothership
     private $client;
     private $headers;
 
-    public function __construct(UserToken $userToken = null)
+    public function __construct(private ?UserToken $userToken = null)
     {
-        if(empty($userToken)) {
-            throw new \Exception('No valid user token found.');
+        if($userToken?->isRevoked()) {
+            throw new \Exception('User token is revoked.');
         }
 
         $this->client = Http::baseUrl($this->getEndpoint($userToken))
@@ -28,7 +28,7 @@ class Mothership
             ->withHeaders([
                 'Recorder-Id' => Recorder::make()->getSystemId(),
             ])
-            ->withToken($userToken->token);
+            ->withToken($userToken?->token);
     }
     public static function make(UserToken $userToken = null)
     {
@@ -50,8 +50,8 @@ class Mothership
                 'duration' => $recording->getDuration(),
             ]);
         }
-        catch(\Exception $exception) {
-            return match(blink()->get('response-status')) {
+        catch(MothershipException $exception) {
+            return match($exception->response->status()) {
                 404 => RecordingStatus::RECORDER_NOT_FOUND_ON_MOTHERSHIP,
                 410 => RecordingStatus::SESSION_NOT_FOUND_ON_MOTHERSHIP,
                 default => RecordingStatus::UNKNOWN_MOTHERSHIP_ERROR,
@@ -70,11 +70,16 @@ class Mothership
 
     public function reportTransactions($entityId, $transactions, $lastTransactionInSync = null)
     {
-        return $this->post('entities/' . $entityId . '/transactions', [
-            'origin' => Recorder::make()->getSystemId(),
-            'transactions' => $transactions,
-            'last_transaction_in_sync' => $lastTransactionInSync,
-        ]);
+        try {
+            return $this->post('entities/' . $entityId . '/transactions', [
+                'origin' => Recorder::make()->getSystemId(),
+                'transactions' => $transactions,
+                'last_transaction_in_sync' => $lastTransactionInSync,
+            ]);
+        }
+        catch(MothershipException $exception) {
+            return false;
+        }
     }
 
     public function sendRecordingFile(RecordingFile $file)
@@ -166,7 +171,9 @@ class Mothership
             ->{$method}($url, $data);
 
         if($response->status() >= 400) {
-            blink('response-status', $response->status());
+            if($response->status() == 401) {
+                $this->userToken?->revoke();
+            }
             throw new MothershipException($method, $url, $data, $response);
         }
 

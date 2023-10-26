@@ -2,6 +2,7 @@
 
 namespace App\Actions;
 
+use App\Exceptions\MothershipException;
 use App\Models\UserToken;
 use App\Support\Mothership;
 use App\Support\Recorder;
@@ -26,7 +27,16 @@ class UpdateSoftware
 
         $mothership = Mothership::make();
 
-        $newVersion = $mothership->checkForUpdateFile();
+        try {
+            $newVersion = $mothership->checkForUpdateFile();
+        }
+        catch(MothershipException $exception) {
+            return [
+                'updated' => false,
+                'version' => Recorder::make()->currentSoftwareVersion(),
+                'message' => 'Error while connecting to mothership: ' . $exception->getMessage(),
+            ];
+        }
 
         if($newVersion) {
             $releasePath = base_path('../' . Str::replace([':', ' '], '-', now()->toDateTimeString()));

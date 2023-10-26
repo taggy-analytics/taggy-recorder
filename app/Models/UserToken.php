@@ -12,6 +12,18 @@ class UserToken extends Model
         'last_rejected_at' => 'datetime',
     ];
 
+    public function revoke()
+    {
+        $this->update([
+            'last_rejected_at' => now(),
+        ]);
+    }
+
+    public function isRevoked()
+    {
+        return filled($this->last_rejected_at);
+    }
+
     public static function perEntity()
     {
         return self::lastSuccessfullyUsed()

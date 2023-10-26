@@ -5,7 +5,6 @@ namespace App\Console;
 use App\Console\Commands\CalculateLed;
 use App\Console\Commands\HandleCameras;
 use App\Console\Commands\HandleRecordings;
-use App\Console\Commands\HandleUploads;
 use App\Console\Commands\MeasureTemperature;
 use App\Console\Commands\MonitorRecordings;
 use App\Console\Commands\RunHealthChecks;
@@ -27,13 +26,6 @@ class Kernel extends ConsoleKernel
             ->runInBackground()
             ->withoutOverlapping(1)
             ->everyFiveSeconds();
-
-        /*
-        $schedule->command(HandleUploads::class)
-            ->runInBackground()
-            ->withoutOverlapping()
-            ->everyTwentySeconds();
-        */
 
         $schedule->command(HandleRecordings::class)
             ->runInBackground()
