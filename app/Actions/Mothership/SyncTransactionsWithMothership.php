@@ -24,14 +24,17 @@ class SyncTransactionsWithMothership
         }
 
         blink()->put('sync-transactions-running', true);
+
+        /*
         $entityTransactions = Transaction::query()
             ->get()
             ->groupBy(['entity_id', 'user_token_id']);
+        */
 
         $entities = UserToken::perEntity();
 
         foreach($entities->keys() as $entityId) {
-            $userTokenTransactions = Arr::get($entityTransactions, $entityId, []);
+            //$userTokenTransactions = Arr::get($entityTransactions, $entityId, []);
 
             $uuids = $this->getQuery($entityId)
                 ->orderBy('created_at')
@@ -50,14 +53,14 @@ class SyncTransactionsWithMothership
                     ->getTransactionsStatus($entityId, $hashes, self::HASH_SUBSTRING_LENGTH);
 
                 if(!$checkSync['transactions_in_sync']) {
-                    foreach($userTokenTransactions as $userTokenId => $transactions) {
+                    //foreach($userTokenTransactions as $userTokenId => $transactions) {
                         $transactions = $this->getQuery($entityId)
                             //->where('reported_to_mothership', false)
                             ->when(filled($checkSync['last_transaction_in_sync']),
                                 fn(Builder $query) => $query->where('created_at', '>', Transaction::firstWhere('id', $checkSync['last_transaction_in_sync'])->created_at))
                             ->get(['id', 'entity_id', 'user_id', 'parent_1', 'parent_2', 'model_type', 'model_id', 'action', 'property', 'value', 'created_at']);
 
-                        $reportResponse = Mothership::make(UserToken::find($userTokenId))
+                        $reportResponse = Mothership::make($userToken)
                             ->reportTransactions($entityId, $transactions, $checkSync['last_transaction_in_sync']);
 
                         if(count($reportResponse['transactions']) == 0) {
@@ -85,7 +88,7 @@ class SyncTransactionsWithMothership
                                 ->whereIn('id', $uuidsInDatabaseButNotInCleanedTransactions)
                                 ->delete();
                         }
-                    }
+                    //}
                 }
             }
             catch(MothershipException $exception) {

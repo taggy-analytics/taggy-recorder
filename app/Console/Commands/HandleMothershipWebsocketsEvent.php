@@ -33,7 +33,7 @@ class HandleMothershipWebsocketsEvent extends Command
         Log::channel('websocket')
             ->info(json_encode([
                 'eventType' => $this->argument('eventType'),
-                'entityId' => $this->argument('entityId'),
+                'entityId' => (int) $this->argument('entityId'),
                 'data' => $data,
             ], JSON_PRETTY_PRINT));
 
