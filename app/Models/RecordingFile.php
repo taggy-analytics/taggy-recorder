@@ -7,6 +7,7 @@ use App\Enums\RecordingFileType;
 use App\Models\Traits\HasStatus;
 use App\Models\Traits\IsReportedToMothership;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
 class RecordingFile extends Model
@@ -18,6 +19,13 @@ class RecordingFile extends Model
         'status' => RecordingFileStatus::class,
         'type' => RecordingFileType::class,
     ];
+
+    public static function booted(): void
+    {
+        static::deleting(function (RecordingFile $model) {
+            Storage::disk('public')->delete($model->videoPath());
+        });
+    }
 
     public function recording()
     {

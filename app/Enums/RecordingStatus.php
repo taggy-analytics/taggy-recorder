@@ -20,6 +20,7 @@ enum RecordingStatus: string
     case SESSION_NOT_FOUND_ON_MOTHERSHIP = 'session-not-found-on-mothership';
     case RECORDER_NOT_FOUND_ON_MOTHERSHIP = 'recorder-not-found-on-mothership';
     case UNKNOWN_MOTHERSHIP_ERROR = 'unknown-mothership-error';
+    case DELETING_FILES = 'deleting-files';
 
     public static function default()
     {

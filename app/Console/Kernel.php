@@ -3,6 +3,7 @@
 namespace App\Console;
 
 use App\Console\Commands\CalculateLed;
+use App\Console\Commands\FreeDiskSpace;
 use App\Console\Commands\HandleCameras;
 use App\Console\Commands\HandleRecordings;
 use App\Console\Commands\MeasureTemperature;
@@ -51,6 +52,10 @@ class Kernel extends ConsoleKernel
 
         $schedule->command(MeasureTemperature::class)
             ->everyFifteenSeconds();
+
+        $schedule->command(FreeDiskSpace::class)
+            ->withoutOverlapping(15)
+            ->everyFiveMinutes();
     }
 
     /**
