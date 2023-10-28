@@ -50,11 +50,6 @@ class ManageWebsocketsConnection
         $processes = [];
 
         foreach ($output as $index => $line) {
-            if ($index === 0) {
-                // Skip the header row
-                continue;
-            }
-
             // Parse each line into columns
             preg_match_all('/\S+/', $line, $columns);
 
