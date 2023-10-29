@@ -68,8 +68,14 @@ return [
         ],
 
         'websocket' => [
-            'driver' => 'single',
+            'level' => env('LOG_WEBSOCKETS', false) ? 'debug' : 'emergency',
             'path' => storage_path('logs/websocket.log'),
+        ],
+
+        'transactions' => [
+            'driver' => 'single',
+            'level' => env('LOG_TRANSACTIONS', false) ? 'debug' : 'emergency',
+            'path' => storage_path('logs/transactions.log'),
         ],
 
         'daily' => [

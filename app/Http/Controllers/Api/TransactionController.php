@@ -14,6 +14,7 @@ use App\Models\UserToken;
 use App\Support\Mothership;
 use Carbon\Carbon;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\Log;
 
 class TransactionController extends Controller
 {
@@ -27,9 +28,13 @@ class TransactionController extends Controller
 
         $lastUuidInSync = -1;
 
+        Log::channel('transactions')->info('UUIDs Concatenated', compact('uuids'));
+
         foreach($request->hashes as $index => $hash) {
             $offset = $request->hash_substring_length * ($lastUuidInSync + 1);
             $length = $request->hash_substring_length * ($index - $lastUuidInSync);
+            Log::channel('transactions')->info('Checking Hash', compact('index', 'hash', 'offset', 'length'));
+            Log::channel('transactions')->info('Calculated Hash', ['hash' => crc32(substr($uuidsConcatenated, $offset, $length))]);
 
             if($hash !== crc32(substr($uuidsConcatenated, $offset, $length))) {
                 return [
@@ -130,7 +135,7 @@ class TransactionController extends Controller
         }
 
         return [
-            'transactions' => TransactionResource::collection($transactions->sortBy('created_at')),
+            'transactions' => TransactionResource::collection(collect($transactions->sortBy('created_at'))),
             'content' => $content,
         ];
     }
