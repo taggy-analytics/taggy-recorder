@@ -139,6 +139,7 @@ class TransactionController extends Controller
     {
         return Transaction::query()
             ->where('entity_id', $entity)
+            ->orderBy('created_at')
             ->pluck('id');
     }
 
