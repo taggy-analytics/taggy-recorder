@@ -23,7 +23,7 @@ class TransactionController extends Controller
         $uuids = $this->getUuids($entityId);
 
         $uuidsConcatenated = $uuids
-            ->map(fn($uuid) => substr($uuid, 0, $request->hash_substring_length))
+            ->map(fn($uuid) => substr($uuid, -$request->hash_substring_length))
             ->implode('');
 
         $lastUuidInSync = -1;
