@@ -135,7 +135,7 @@ class TransactionController extends Controller
         }
 
         return [
-            'transactions' => TransactionResource::collection(collect($transactions->sortBy('created_at'))),
+            'transactions' => TransactionResource::collection(collect($transactions)->sortBy('created_at')),
             'content' => $content,
         ];
     }

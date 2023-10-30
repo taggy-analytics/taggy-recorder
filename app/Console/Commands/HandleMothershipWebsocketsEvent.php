@@ -27,8 +27,8 @@ class HandleMothershipWebsocketsEvent extends Command
      */
     public function handle()
     {
-        $dataJson = $this->option('data');
-        $data = json_decode($dataJson, true);
+        $dataJson = base64_decode($this->option('data'));
+        $data = json_decode(trim($dataJson), true);
 
         Log::channel('websocket')
             ->info(json_encode([

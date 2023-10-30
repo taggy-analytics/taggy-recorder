@@ -33,21 +33,21 @@ const connectToPusher = () => {
         },
     });
 
+    echo.private(`entities.${entity}`)
+        .subscribed(() => { handleEvent('SubscriptionSucceeded', entity)})
+        .listen('.TransactionsAdded', e => handleEvent('TransactionsAdded', entity, e))
+        .error((error) => {
+            handleEvent('SubscriptionFailed', entity);
+            process.exit(1);
+        });
+
     const handleEvent = (eventType, entityId, eventData = {}) => {
-        exec(`php ./artisan taggy:handle-mothership-websockets-event ${eventType} ${entityId} --data="${JSON.stringify(eventData).replace(/"/g, '\\"')}"`, (error, stdout, stderr) => {
+        exec(`php ./artisan taggy:handle-mothership-websockets-event ${eventType} ${entityId} --data="${btoa(JSON.stringify(eventData))}"`, (error, stdout, stderr) => {
             if (error) {
                 console.error(`Error running the Laravel command for ${eventType}:`, error.message);
             }
         });
     };
-
-    echo.private(`entities.${entity}`)
-        .listen('.TransactionsAdded', e => handleEvent('TransactionsAdded', entity, e))
-        .subscribed(() => { handleEvent('SubscriptionSucceeded', entity)})
-        .error((error) => {
-            handleEvent('SubscriptionFailed', entity);
-            process.exit(1);
-        });
 
     echo.connector.pusher.connection.bind('state_change', (states) => {
         if (states.current === "disconnected" || states.current === "unavailable" || states.current === "connecting") {
