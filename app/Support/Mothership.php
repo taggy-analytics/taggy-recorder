@@ -24,6 +24,7 @@ class Mothership
         }
 
         $this->client = Http::baseUrl($this->getEndpoint($userToken))
+            ->withUserAgent('TaggyRecorder/' . Recorder::make()->currentSoftwareVersion())
             ->acceptJson()
             ->withHeaders([
                 'Recorder-Id' => Recorder::make()->getSystemId(),
