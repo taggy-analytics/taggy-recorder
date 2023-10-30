@@ -73,7 +73,7 @@ class Mothership
         try {
             return $this->post('entities/' . $entityId . '/transactions', [
                 'origin' => Recorder::make()->getSystemId(),
-                'transactions' => $transactions,
+                'transactions' => Arr::except($transactions, 'user_token_id'),
                 'last_transaction_in_sync' => $lastTransactionInSync,
             ]);
         }
