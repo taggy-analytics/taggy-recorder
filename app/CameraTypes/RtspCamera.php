@@ -50,6 +50,8 @@ abstract class RtspCamera extends CameraType
     public function isRecording(Camera $camera)
     {
         if($camera->process_id && !file_exists( "/proc/{$camera->process_id}")) {
+            $backtrace = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 10);
+            info('I just killed the recording with process ID ' . $camera->process_id . ':', ['backtrace' => $backtrace]);
             $camera->update(['process_id' => null]);
         }
 

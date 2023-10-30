@@ -11,6 +11,7 @@ use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
+use Spatie\LaravelIgnition\Facades\Flare;
 
 class Mothership
 {
@@ -79,6 +80,7 @@ class Mothership
             ]);
         }
         catch(MothershipException $exception) {
+            Flare::context('reportTransactionsException', $exception);
             return false;
         }
     }
