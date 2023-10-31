@@ -63,6 +63,15 @@ class SyncTransactionsWithMothership
                         $reportResponse = Mothership::make($userToken)
                             ->reportTransactions($entityId, $transactions, $checkSync['last_transaction_in_sync']);
 
+                        if(!$reportResponse) {
+                            Recorder::make()->log(LogMessageType::REPORTING_TRANSACTIONS_FAILED, 'Reporting failed', [
+                                'entity' => $entityId,
+                                'transactions' => $transactions,
+                                'lastTransactionInSync' => $checkSync['last_transaction_in_sync'],
+                            ]);
+                            return;
+                        }
+
                         if(count($reportResponse['transactions']) == 0) {
                             return;
                         }
