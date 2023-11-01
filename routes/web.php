@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Api\RecordingController;
 use App\Http\Controllers\EnableApiController;
+use App\Http\Controllers\ImageController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -20,3 +21,5 @@ use Illuminate\Support\Facades\Route;
 Route::get('storage/recordings/{recording}/{key}/video/video-vod.m3u8', [RecordingController::class, 'videoVod'])->name('recording.video-vod');
 
 Route::get('docs/api/enable/{key}', EnableApiController::class);
+
+Route::get('images/{image}', ImageController::class)->name('image');
