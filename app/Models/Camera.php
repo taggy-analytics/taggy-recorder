@@ -7,12 +7,15 @@ use App\CameraTypes\CameraType;
 use App\Data\CredentialsStatusData;
 use App\Enums\CameraStatus;
 use App\Enums\RecordingMode;
+use App\Models\Traits\BroadcastsEvents;
 use Illuminate\Database\Eloquent\Casts\AsCollection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\File;
 
 class Camera extends Model
 {
+    use BroadcastsEvents;
+
     protected $casts = [
         'sent_to_mothership_at' => 'datetime',
         'status' => CameraStatus::class,

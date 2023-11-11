@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Enums\RecordingStatus;
+use App\Models\Traits\BroadcastsEvents;
 use App\Models\Traits\HasStatus;
 use App\Models\Traits\HasUuid;
 use App\Models\Traits\IsReportedToMothership;
@@ -18,6 +19,7 @@ class Recording extends Model
     use HasStatus;
     use HasUuid;
     use IsReportedToMothership;
+    use BroadcastsEvents;
 
     protected $dateFormat = 'Y-m-d H:i:s.v';
 
