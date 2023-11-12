@@ -10,11 +10,14 @@ use App\Enums\RecordingMode;
 use App\Models\Traits\BroadcastsEvents;
 use Illuminate\Database\Eloquent\Casts\AsCollection;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\File;
 
 class Camera extends Model
 {
     use BroadcastsEvents;
+
+    protected $broadcastAttributes = ['id', 'name', 'status', 'ip_address'];
 
     protected $casts = [
         'sent_to_mothership_at' => 'datetime',

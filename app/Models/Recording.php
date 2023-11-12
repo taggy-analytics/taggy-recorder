@@ -21,6 +21,8 @@ class Recording extends Model
     use IsReportedToMothership;
     use BroadcastsEvents;
 
+    protected $broadcastAttributes = ['id', 'name', 'status', 'started_at', 'stopped_at'];
+
     protected $dateFormat = 'Y-m-d H:i:s.v';
 
     protected $casts = [
