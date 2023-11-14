@@ -49,8 +49,13 @@ class CameraController extends Controller
         if(!$camera->isRecording()) {
             abort(409, 'Camera is not recording.');
         }
+        $recording = $camera->stopRecording();
 
-        return RecordingResource::make($camera->stopRecording());
+        if(!$recording) {
+            abort(422, 'Recording could not be stopped.');
+        }
+
+        return $recording;
     }
 
     public function currentRecording(Camera $camera)
