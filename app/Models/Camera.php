@@ -49,15 +49,10 @@ class Camera extends Model
     {
         if($refresh) {
             $oldStatus = $this->status;
-            $newStatus = $this->getType()->getStatus($this);
+            $this->status = $this->getType()->getStatus($this);
 
-            // if($newStatus !== CameraStatus::UNKNOWN_ERROR) {
-                $this->update([
-                    'status' => $newStatus,
-                ]);
-            // }
-
-            if($this->wasChanged('status')) {
+            if($this->isDirty('status')) {
+                $this->save();
                 app(CalculateLed::class)->execute();
                 info('Camera #' . $this->id . ' changed status: ' . $oldStatus->value . ' --> ' . $this->status->value);
             }
@@ -108,6 +103,7 @@ class Camera extends Model
             $recording = $this->recordings()->latest()->first();
             $recording->update(['stopped_at' => now()]);
             $recording->addM3u8EndTag();
+            app(CalculateLed::class)->execute();
 
             return $recording;
         }
