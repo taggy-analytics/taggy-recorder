@@ -30,7 +30,7 @@ class Kernel extends ConsoleKernel
 
         $schedule->command(HandleRecordings::class)
             ->runInBackground()
-            ->withoutOverlapping(5)
+            ->withoutOverlapping()
             ->everyTwentySeconds();
 
         $schedule->command(RunMothershipActions::class)

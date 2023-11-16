@@ -45,6 +45,7 @@ class HandleRecordings
     {
         if(Camera::noCameraIsRecording()) {
             foreach(Recording::withStatus(RecordingStatus::PREPARING_PREPROCESSING) as $recording) {
+                $recording->files()->delete();
                 $parser = new ParserFacade();
 
                 $currentTime = now()->toDateTimeString();
