@@ -16,6 +16,6 @@ trait BroadcastsEvents
     public function broadcastWith(string $event): array
     {
         $resource = 'App\\Http\\Resources\\' . (new \ReflectionClass($this))->getShortName() . 'Resource';
-        return $resource::make($this);
+        return json_decode(json_encode($resource::make($this)), true);
     }
 }
