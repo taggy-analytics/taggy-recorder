@@ -17,7 +17,7 @@ class Camera extends Model
 {
     use BroadcastsEvents;
 
-    protected $broadcastAttributes = ['id', 'name', 'status', 'ip_address'];
+    protected $broadcastAttributes = ['id', 'name', 'status', 'ip_address', 'process_id'];
 
     protected $casts = [
         'sent_to_mothership_at' => 'datetime',
