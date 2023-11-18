@@ -16,7 +16,7 @@ trait BroadcastsEvents
 
     public function broadcastWith(string $event): array
     {
-        if(Arr::wrap($this->broadcastAttributes) == '*') {
+        if(Arr::wrap($this->broadcastAttributes) == ['*']) {
             return $this->toArray();
         }
 
