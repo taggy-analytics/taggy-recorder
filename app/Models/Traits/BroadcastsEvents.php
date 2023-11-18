@@ -2,6 +2,9 @@
 
 namespace App\Models\Traits;
 
+use App\Http\Resources\CameraResource;
+use App\Models\Camera;
+use App\Models\Recording;
 use Illuminate\Broadcasting\PrivateChannel;
 use Illuminate\Support\Arr;
 
@@ -16,10 +19,7 @@ trait BroadcastsEvents
 
     public function broadcastWith(string $event): array
     {
-        if(Arr::wrap($this->broadcastAttributes) == ['*']) {
-            return $this->toArray();
-        }
-
-        return Arr::only($this->toArray(), $this->broadcastAttributes);
+        $resource = 'App\\Http\\Resources\\' . (new \ReflectionClass($this))->getShortName() . 'Resource';
+        return $resource::make($this);
     }
 }
