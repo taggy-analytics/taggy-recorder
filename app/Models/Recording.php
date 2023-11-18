@@ -20,9 +20,7 @@ class Recording extends Model
     use HasUuid;
     use IsReportedToMothership;
     use BroadcastsEvents;
-
-    protected $broadcastAttributes = '*';
-
+    
     protected $dateFormat = 'Y-m-d H:i:s.v';
 
     protected $casts = [

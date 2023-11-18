@@ -2,11 +2,7 @@
 
 namespace App\Models\Traits;
 
-use App\Http\Resources\CameraResource;
-use App\Models\Camera;
-use App\Models\Recording;
 use Illuminate\Broadcasting\PrivateChannel;
-use Illuminate\Support\Arr;
 
 trait BroadcastsEvents
 {
