@@ -55,7 +55,7 @@ class CameraController extends Controller
             abort(422, 'Recording could not be stopped.');
         }
 
-        return $recording;
+        return RecordingResource::make($recording);
     }
 
     public function currentRecording(Camera $camera)
