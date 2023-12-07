@@ -9,7 +9,7 @@ return [
          * the specified amount of minutes will be deleted.
          */
 
-        \Illuminate\Support\Facades\Storage::path('scenes') => [
+        storage_path('app/scenes') => [
             'deleteAllOlderThanMinutes' => 120,
         ],
     ],
