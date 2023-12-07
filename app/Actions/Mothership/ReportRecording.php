@@ -50,7 +50,7 @@ class ReportRecording extends Report
 
                 $recording->addM3u8EndTag();
                 $playlist = Storage::disk('public')
-                    ->get($recording->getPath('video/video.m3u8'));
+                    ->get($recording->getM3u8Path());
                 $this->mothership->sendPlaylist($video['id'], $playlist);
                 $recording->setStatus(RecordingStatus::REPORTED_TO_MOTHERSHIP);
             }

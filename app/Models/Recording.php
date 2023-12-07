@@ -20,7 +20,7 @@ class Recording extends Model
     use HasUuid;
     use IsReportedToMothership;
     use BroadcastsEvents;
-    
+
     protected $dateFormat = 'Y-m-d H:i:s.v';
 
     protected $casts = [
@@ -104,7 +104,7 @@ class Recording extends Model
     public function getUrl()
     {
         return Storage::disk('public')
-            ->url($this->getPath('video/video.m3u8'));
+            ->url($this->getM3u8Path());
     }
 
     public function getEndTime()
@@ -132,16 +132,26 @@ class Recording extends Model
         // ToDo: delete m4s files with filesize 0
     }
 
+    public function getM3u8Path()
+    {
+        return $this->getPath('video/video.m3u8');
+    }
+
     public function addM3u8EndTag()
     {
         $m3u8 = Storage::disk('public')
-            ->get($this->getPath('video/video.m3u8'));
+            ->get($this->getM3u8Path());
 
         if(!Str::contains($m3u8, '#EXT-X-ENDLIST')) {
             $m3u8 .= PHP_EOL . '#EXT-X-ENDLIST';
             Storage::disk('public')
-                ->put($this->getPath('video/video.m3u8'), $m3u8);
+                ->put($this->getM3u8Path(), $m3u8);
         }
+    }
+
+    public function sceneFilename($startTime, $duration)
+    {
+        return md5(json_encode([$this->key, $startTime, $duration])) . '.mp4';
     }
 
     public function restart()
@@ -158,14 +168,14 @@ class Recording extends Model
 
     private function calculateStoppedAt()
     {
-        $duration = exec('ffprobe ' . $this->getPath('video/video.m3u8') . ' -show_entries format=duration -v quiet -of csv="p=0"');
+        $duration = exec('ffprobe ' . $this->getM3u8Path() . ' -show_entries format=duration -v quiet -of csv="p=0"');
 
         if(!is_numeric($duration)) {
-            if(!Storage::disk('public')->exists($this->getPath('video/video.m3u8'))) {
+            if(!Storage::disk('public')->exists($this->getM3u8Path())) {
                 $duration = 0;
             }
             else {
-                $lastModified = Carbon::parse(Storage::disk('public')->lastModified($this->getPath('video/video.m3u8')));
+                $lastModified = Carbon::parse(Storage::disk('public')->lastModified($this->getM3u8Path()));
                 $duration = $this->started_at->diffInSeconds($lastModified);
             }
         }

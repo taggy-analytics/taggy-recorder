@@ -50,7 +50,7 @@ class HandleRecordings
 
                 $currentTime = now()->toDateTimeString();
 
-                $files = collect(Arr::get($parser->parse(new TextStream(Storage::disk('public')->get($recording->getPath('video/video.m3u8')))), 'mediaSegments'))
+                $files = collect(Arr::get($parser->parse(new TextStream(Storage::disk('public')->get($recording->getM3u8Path()))), 'mediaSegments'))
                     ->pluck('uri')
                     ->map(fn($file) => [
                         'recording_id' => $recording->id,

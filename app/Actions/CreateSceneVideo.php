@@ -3,51 +3,54 @@
 namespace App\Actions;
 
 use App\Models\Recording;
-use App\Models\Scene;
 use App\Support\FFMpegCommand;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Storage;
-use Spatie\QueueableAction\QueueableAction;
+use Illuminate\Support\Str;
 
 class CreateSceneVideo
 {
-    use QueueableAction;
-
-    public function execute(Scene $scene, Recording $recording)
+    public function execute(Recording $recording, $startTime, $duration)
     {
-        $filename = $scene->videoFilePath($recording);
+        $filename = $recording->sceneFilename($startTime, $duration);
+        $m3u8Path = $this->m3u8PathWithEndTag($recording, $filename);
 
-        Storage::makeDirectory(dirname($filename));
-
-        // ToDo: das muss besser gehen. Es muss sichergestellt werden, dass alle hls-Dateien für den Schnitt bereits vorhanden sind
-        if($scene->getEndTime()->diffInSeconds() < 5) {
-            sleep(5);
-        }
-
-        // FFmpeg doesn't like it if live HLS streams' m3u8s are used. So let's copy it first.
-        $m3u8Path = $recording->getPath('video/video-' . $scene->id . '.m3u8');
-        Storage::disk('public')
-            ->copy($recording->getPath('video/video.m3u8'), $m3u8Path);
-        Storage::disk('public')
-            ->append($m3u8Path, PHP_EOL . '#EXT-X-ENDLIST');
-
-        $start = $scene->start_time->diffInMilliseconds($recording->started_at) / 1000;
+        File::ensureDirectoryExists(Storage::path('scenes'));
 
         $command = [
-            '-ss', FFMpegCommand::convertSeconds($start - 3),
+            '-ss', FFMpegCommand::convertSeconds($startTime - 3),
             '-start_at_zero',
             '-i', Storage::disk('public')->path($m3u8Path),
             '-ss', 3,
-            '-t', FFMpegCommand::convertSeconds($scene->duration),
+            '-t', FFMpegCommand::convertSeconds($duration),
             '-c', 'copy',
             '-f', 'mp4',
-            Storage::path($filename),
+            Storage::path('scenes/' . $filename),
         ];
 
         FFMpegCommand::runRaw(implode(' ', $command), async: false);
-        Storage::put($scene->videoFilePath($recording, 'ready'), '');
 
         Storage::disk('public')->delete($m3u8Path);
 
         // ToDo: push video available event to clients
+    }
+
+    private function ensureScenesDirectoryExists()
+    {
+
+    }
+
+    private function m3u8PathWithEndTag(Recording $recording, $filename)
+    {
+        // FFmpeg doesn't like it if live HLS streams' m3u8s are used. So let's copy it first.
+        $m3u8Path = $recording->getPath('video/' . $filename . '.m3u8');
+
+        Storage::disk('public')
+            ->copy($recording->getM3u8Path(), $m3u8Path);
+
+        if(!Str::contains(Storage::disk('public')->get($m3u8Path), '#EXT-X-ENDLIST')) {
+            Storage::disk('public')->append($m3u8Path, PHP_EOL . '#EXT-X-ENDLIST');
+        }
+        return $m3u8Path;
     }
 }

@@ -19,6 +19,7 @@ use Illuminate\Support\Facades\Route;
 // Route::get('/', \App\Http\Livewire\Cameras::class);
 // Route::get('/qr', QrCodeController::class);
 Route::get('storage/recordings/{recording}/{key}/video/video-vod.m3u8', [RecordingController::class, 'videoVod'])->name('recording.video-vod');
+Route::get('storage/recordings/{recording}/{key}/scenes/{startTime}/{duration}/{name}', [RecordingController::class, 'downloadScene'])->name('recording.download-scene');
 
 Route::get('docs/api/enable/{key}', EnableApiController::class);
 

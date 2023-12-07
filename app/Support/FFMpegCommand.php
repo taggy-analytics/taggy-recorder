@@ -24,9 +24,9 @@ class FFMpegCommand
 
     public static function convertSeconds($originalSeconds)
     {
-        $hours = floor($originalSeconds / 3600);
-        $minutes = floor(($originalSeconds / 60) % 60);
-        $seconds = $originalSeconds % 60;
+        $hours = floor(floor($originalSeconds) / 3600);
+        $minutes = floor(floor(($originalSeconds / 60)) % 60);
+        $seconds = floor($originalSeconds) % 60;
         $milliseconds = floor(($originalSeconds - floor($originalSeconds)) * 1000);
 
         return sprintf('%02d:%02d:%02d.%03d', $hours, $minutes, $seconds, $milliseconds);
