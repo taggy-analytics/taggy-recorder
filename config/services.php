@@ -37,10 +37,6 @@ return [
         ],
     ],
 
-    'mothership' => [
-        'endpoint' => env('MOTHERSHIP_ENDPOINT'),
-    ],
-
     'reolink' => [
         'endpoint' => env('REOLINK_ENDPOINT'),
         'username' => env('REOLINK_USERNAME', 'admin'),
@@ -49,5 +45,5 @@ return [
 
     'glinet' => [
         'password' => env('GLINET_PASSWORD'),
-    ]
+    ],
 ];

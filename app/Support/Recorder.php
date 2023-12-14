@@ -35,18 +35,6 @@ class Recorder
         return DotenvEditor::getValue('SYSTEM_ID');
     }
 
-    public function getRouterPassword()
-    {
-        if(DotenvEditor::keyExists('GLINET_PASSWORD')) {
-            return false;
-        }
-        else {
-            $password = Str::random();
-            DotenvEditor::setKey('GLINET_PASSWORD', $password);
-            return $password;
-        }
-    }
-
     public function getRunningFfmpegProcesses()
     {
         return $this->getRunningProcesses('ffmpeg');

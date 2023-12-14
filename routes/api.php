@@ -23,14 +23,14 @@ Route::post('recorder/installation-finished', [\App\Http\Controllers\Api\Recorde
 Route::post('recorder/refresh-app-key', [\App\Http\Controllers\Api\RecorderController::class, 'refreshAppKey']);
 Route::get('recorder/network-status', [\App\Http\Controllers\Api\RecorderController::class, 'networkStatus']);
 
-Route::get('recorder/vpn/status', [\App\Http\Controllers\Api\RecorderController::class, 'vpnStatus']);
-Route::post('recorder/vpn/config', [\App\Http\Controllers\Api\RecorderController::class, 'setVpnConfig']);
-Route::post('recorder/vpn/start', [\App\Http\Controllers\Api\RecorderController::class, 'startVpn']);
-Route::post('recorder/vpn/stop', [\App\Http\Controllers\Api\RecorderController::class, 'stopVpn']);
+// Route::get('recorder/vpn/status', [\App\Http\Controllers\Api\RecorderController::class, 'vpnStatus']);
+// Route::post('recorder/vpn/config', [\App\Http\Controllers\Api\RecorderController::class, 'setVpnConfig']);
+// Route::post('recorder/vpn/start', [\App\Http\Controllers\Api\RecorderController::class, 'startVpn']);
+// Route::post('recorder/vpn/stop', [\App\Http\Controllers\Api\RecorderController::class, 'stopVpn']);
 
 Route::post('recorder/tokens', [\App\Http\Controllers\Api\RecorderController::class, 'tokens']);
 
-Route::get('router/password', [\App\Http\Controllers\Api\RouterController::class, 'getPassword']);
+Route::post('recorder/dot-env', [\App\Http\Controllers\Api\RecorderController::class, 'setDotEnv']);
 
 Route::get('cameras', [\App\Http\Controllers\Api\CameraController::class, 'index']);
 Route::get('cameras/{camera}', [\App\Http\Controllers\Api\CameraController::class, 'show']);

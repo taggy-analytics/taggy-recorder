@@ -2,14 +2,13 @@
 
 namespace App\Providers;
 
-// use Illuminate\Support\Facades\Gate;
 use App\Models\User;
+use App\Support\PublicKey;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Spatie\Crypto\Rsa\Exceptions\CouldNotDecryptData;
-use Spatie\Crypto\Rsa\PublicKey;
 
 class AuthServiceProvider extends ServiceProvider
 {
@@ -33,8 +32,7 @@ class AuthServiceProvider extends ServiceProvider
 
         Auth::viaRequest('mothership', function (Request $request) {
             try {
-                $userData = json_decode(PublicKey::fromFile(Storage::path('keys/mothership-' . config('app.env') . '-public.key'))
-                    ->decrypt(base64_decode($request->header('User-Data'))), true);
+                $userData = json_decode(PublicKey::get()->decrypt(base64_decode($request->header('User-Data'))), true);
             } catch (CouldNotDecryptData $exception) {
                 return null;
             }

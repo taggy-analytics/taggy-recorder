@@ -165,7 +165,7 @@ class Mothership
             return $userToken?->endpoint . '/api/v1';
         }
 
-        return config('services.mothership.endpoint');
+        return request()->header('Environment-Data')['urls']['mothership'] . '/api/v1';
     }
 
     private function request($method, $url, $data = null, $type = 'json')

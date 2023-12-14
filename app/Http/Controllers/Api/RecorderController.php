@@ -11,6 +11,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Process;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
+use Jackiedo\DotenvEditor\Facades\DotenvEditor;
 
 class RecorderController extends Controller
 {
@@ -62,6 +63,7 @@ class RecorderController extends Controller
         ];
     }
 
+    /*
     public function vpnStatus()
     {
         $output = Process::run("ip link show wg0 2>&1")->output();
@@ -90,6 +92,17 @@ class RecorderController extends Controller
     {
         Process::run('sudo wg-quick down wg0');
         return $this->vpnStatus();
+    }
+    */
+
+    public function setDotEnv(Request $request)
+    {
+        DotenvEditor::setKey($request->key, $request->value);
+        DotenvEditor::save();
+
+        return [
+            'status' => 'OK',
+        ];
     }
 
     public function tokens(StoreTokensRequest $request)
