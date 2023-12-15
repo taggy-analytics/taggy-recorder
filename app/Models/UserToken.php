@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Support\Mothership;
 use Illuminate\Database\Eloquent\Model;
 
 class UserToken extends Model
@@ -34,7 +35,7 @@ class UserToken extends Model
     {
         return self::query()
             ->where('last_successfully_used_at', '>', now()->subDays(30))
-            ->where('endpoint', request()->header('Environment-Data')['urls']['mothership'])
+            ->where('endpoint', Mothership::getEndpoint())
             ->orWhereNull('last_successfully_used_at')
             ->orderByDesc('last_successfully_used_at')
             ->orderByDesc('updated_at')

@@ -15,16 +15,6 @@ class UpdateSoftware
 {
     public function execute()
     {
-        /*
-        if(!Recorder::make()->installationIsFinished()) {
-            return [
-                'updated' => false,
-                'version' => '0',
-                'message' => 'Base installation is not finished yet.',
-            ];
-        }
-        */
-
         $mothership = Mothership::make();
 
         try {

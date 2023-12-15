@@ -4,6 +4,7 @@ namespace App\Models\Traits;
 
 use App\Models\MothershipReport;
 use App\Models\UserToken;
+use App\Support\Mothership;
 
 trait IsReportedToMothership
 {
@@ -45,7 +46,7 @@ trait IsReportedToMothership
         MothershipReport::updateOrCreate([
             'model_type' => $this::class,
             'model_id' => $this->id,
-            'endpoint' => request()->header('Enviroment-Data')['urls']['mothership'],
+            'endpoint' => Mothership::getEndpoint(),
         ],[
             'ready_to_send' => false,
         ]);

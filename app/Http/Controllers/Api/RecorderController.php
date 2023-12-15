@@ -6,6 +6,7 @@ use App\Actions\EnsureAppKeyIsSet;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreTokensRequest;
 use App\Models\UserToken;
+use App\Support\Mothership;
 use App\Support\Recorder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Process;
@@ -111,7 +112,7 @@ class RecorderController extends Controller
             UserToken::updateOrCreate([
                 'entity_id' => $entity['id'],
                 'user_id' => $request->user_id,
-                'endpoint' => $request->header('Mothership-Endpoint'),
+                'endpoint' => Mothership::getEndpoint(),
             ], [
                 'token' => $request->token,
                 'last_successfully_used_at' => $entity['last_successfully_used_at'],

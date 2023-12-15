@@ -159,13 +159,15 @@ class Mothership
         return $this->request('delete', $url);
     }
 
-    private function getEndpoint(UserToken $userToken = null)
+    public static function getEndpoint(UserToken $userToken = null)
     {
         if($userToken) {
             return $userToken?->endpoint . '/api/v1';
         }
 
-        return request()->header('Environment-Data')['urls']['mothership'] . '/api/v1';
+        $envData = json_decode(base64_decode(request()->header('Environment-Data')), true);
+
+        return $envData['urls']['mothership'] . '/api/v1';
     }
 
     private function request($method, $url, $data = null, $type = 'json')
