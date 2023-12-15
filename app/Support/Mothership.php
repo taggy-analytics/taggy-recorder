@@ -24,7 +24,7 @@ class Mothership
             throw new \Exception('User token is revoked.');
         }
 
-        $this->client = Http::baseUrl($this->getEndpoint($userToken))
+        $this->client = Http::baseUrl(self::getEndpoint($userToken))
             ->withUserAgent('TaggyRecorder/' . Recorder::make()->currentSoftwareVersion())
             ->acceptJson()
             ->withHeaders([

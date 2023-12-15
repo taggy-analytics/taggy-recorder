@@ -35,7 +35,7 @@ class UserToken extends Model
     {
         return self::query()
             ->where('last_successfully_used_at', '>', now()->subDays(30))
-            ->where('endpoint', Mothership::getEndpoint())
+            ->where('endpoint', str_replace('/api/v1', '', Mothership::getEndpoint()))
             ->orWhereNull('last_successfully_used_at')
             ->orderByDesc('last_successfully_used_at')
             ->orderByDesc('updated_at')
