@@ -24,7 +24,7 @@ class Mothership
             throw new \Exception('User token is revoked.');
         }
 
-        $this->client = Http::baseUrl(self::getEndpoint($userToken))
+        $this->client = Http::baseUrl(self::getEndpoint($userToken) . '/api/v1')
             ->withUserAgent('TaggyRecorder/' . Recorder::make()->currentSoftwareVersion())
             ->acceptJson()
             ->withHeaders([
@@ -162,7 +162,7 @@ class Mothership
     public static function getEndpoint(UserToken $userToken = null)
     {
         if($userToken) {
-            return $userToken?->endpoint . '/api/v1';
+            return $userToken?->endpoint;
         }
 
         $defaultEnvData = [
@@ -173,7 +173,7 @@ class Mothership
 
         $envData = json_decode(base64_decode(request()->header('Environment-Data')), true) ?? $defaultEnvData;
 
-        return $envData['urls']['mothership'] . '/api/v1';
+        return $envData['urls']['mothership'];
     }
 
     private function request($method, $url, $data = null, $type = 'json')
