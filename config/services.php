@@ -46,4 +46,19 @@ return [
     'glinet' => [
         'password' => env('GLINET_PASSWORD'),
     ],
+
+    'mothership' => [
+        'test' => [
+            'endpoint' => env('MOTHERSHIP_TEST_ENDPOINT'),
+        ],
+        'production' => [
+            'endpoint' => env('MOTHERSHIP_PRODUCTION_ENDPOINT'),
+        ],
+        'local' => [
+            'endpoint' => env('MOTHERSHIP_LOCAL_ENDPOINT'),
+        ],
+        'demo' => [
+            'endpoint' => env('MOTHERSHIP_DEMO_ENDPOINT'),
+        ],
+    ],
 ];

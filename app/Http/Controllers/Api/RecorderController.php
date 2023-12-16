@@ -119,6 +119,8 @@ class RecorderController extends Controller
                 'last_rejected_at' => null,
             ]);
         }
+
+        return ['status' => 'OK'];
     }
 
     private function isServerReachable($host, $timeout = 1)

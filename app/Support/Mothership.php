@@ -165,7 +165,13 @@ class Mothership
             return $userToken?->endpoint . '/api/v1';
         }
 
-        $envData = json_decode(base64_decode(request()->header('Environment-Data')), true);
+        $defaultEnvData = [
+            'urls' => [
+                'mothership' => config('services.mothership.' . config('app.env') . '.endpoint'),
+            ],
+        ];
+
+        $envData = json_decode(base64_decode(request()->header('Environment-Data')), true) ?? $defaultEnvData;
 
         return $envData['urls']['mothership'] . '/api/v1';
     }
