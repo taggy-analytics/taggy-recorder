@@ -9,7 +9,6 @@ use App\Models\Recording;
 use App\Services\GliNet;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\File;
-use Illuminate\Support\Facades\Process;
 use Illuminate\Support\Str;
 
 abstract class CameraType
@@ -75,7 +74,7 @@ abstract class CameraType
     {
         try {
             return GliNet::make()
-                ->clients()
+                ->getClients()
                 ->map(fn($client) => [
                     'identifier' => $client['mac'],
                     'name' => $client['name'],

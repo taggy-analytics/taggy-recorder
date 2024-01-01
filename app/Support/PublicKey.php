@@ -22,7 +22,7 @@ class PublicKey extends \Spatie\Crypto\Rsa\PublicKey
 
         if(!Storage::has($keyPath)) {
             Storage::put($keyPath, Http::baseUrl($environment['urls']['api'])
-                ->get('v1/public-key')['public_key']);
+                ->get('v1/public-key')->json('public_key'));
         }
 
         return self::fromFile(Storage::path($keyPath));

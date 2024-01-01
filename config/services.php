@@ -44,6 +44,7 @@ return [
     ],
 
     'glinet' => [
+        'username' => env('GLINET_USERNAME'),
         'password' => env('GLINET_PASSWORD'),
     ],
 
