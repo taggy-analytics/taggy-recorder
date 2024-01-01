@@ -13,6 +13,6 @@ class GliNet
 
     public function getClients()
     {
-        return GliNetApi::cloud()->getList();
+        return GliNetApi::client()->getList();
     }
 }
