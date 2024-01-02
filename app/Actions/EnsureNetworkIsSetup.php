@@ -3,6 +3,7 @@
 namespace App\Actions;
 
 use App\Enums\LogMessageType;
+use App\Services\GliNet;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Process;
 use Illuminate\Support\Str;
@@ -13,7 +14,7 @@ class EnsureNetworkIsSetup
     {
         $counter = 0;
 
-        while(!Str::startsWith(gethostbyname($this->getHostname()), '192.168.')) {
+        while(!$this->routerKnowsHostname()) {
             Process::run('sudo ip link set eth0 down');
             sleep(1);
             Process::run('sudo ip link set eth0 up');
@@ -27,8 +28,11 @@ class EnsureNetworkIsSetup
         }
     }
 
-    private function getHostname()
+    private function routerKnowsHostname()
     {
-        return parse_url(config('app.url'), PHP_URL_HOST);
+        return GliNet::make()
+            ->getClients()
+            ->pluck("name")
+            ->contains(gethostname());
     }
 }
