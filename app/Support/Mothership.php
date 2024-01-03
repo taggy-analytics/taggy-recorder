@@ -165,7 +165,8 @@ class Mothership
             return $userToken?->endpoint;
         }
 
-        return request()->environmentData()['urls']['mothership'];
+        $defaultEndpoint = config('services.mothership.' . config('app.env') . '.endpoint');
+        return Arr::get(request()->environmentData(), 'urls.mothership', $defaultEndpoint);
     }
 
     private function request($method, $url, $data = null, $type = 'json')
