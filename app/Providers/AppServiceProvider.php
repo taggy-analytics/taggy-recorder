@@ -36,7 +36,11 @@ class AppServiceProvider extends ServiceProvider
         });
 
         Request::macro('environmentData', function() {
-            return json_decode(base64_decode(request()->header('Environment-Data')), true);
+            if(request()->hasHeader('Environment-Data')) {
+                return json_decode(base64_decode(request()->header('Environment-Data')), true);
+            }
+
+            return null;
         });
     }
 
