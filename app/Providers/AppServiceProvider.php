@@ -2,14 +2,12 @@
 
 namespace App\Providers;
 
-use App\Models\User;
-use App\Support\Mothership;
 use App\Support\Recorder;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\ServiceProvider;
 use Spatie\LaravelIgnition\Facades\Flare;
 
@@ -35,6 +33,10 @@ class AppServiceProvider extends ServiceProvider
                 $transaction['value'] = json_encode($transaction['value']);
                 return $transaction;
             });
+        });
+
+        Request::macro('environmentData', function() {
+            return json_decode(base64_decode(request()->header('Environment-Data')), true);
         });
     }
 

@@ -41,7 +41,10 @@ class CameraController extends Controller
             abort(409, 'Camera is already recording.');
         }
 
-        return RecordingResource::make($camera->startRecording($request->data));
+        $data = $request->data;
+        $data['environment'] = $request->environmentData()['key'];
+
+        return RecordingResource::make($camera->startRecording($data));
     }
 
     public function stopRecording(Camera $camera)
