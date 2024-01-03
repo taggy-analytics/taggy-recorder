@@ -58,11 +58,11 @@ class Recorder
         $status = [$color->value, $interval];
 
         if($this->currentLeds() != $status) {
-            foreach($this->getRunningProcesses('taggy:led') as $process) {
+            foreach($this->getRunningProcesses('led.py') as $process) {
                 posix_kill($process['processId'], 9);
             }
 
-            $command = "php artisan taggy:led {$color->value}" . ($interval ? " {$interval}" : "") . " > /dev/null 2>&1 &";
+            $command = "python3 led.py {$color->value}" . ($interval ? " {$interval}" : "") . " > /dev/null 2>&1 &";
             shell_exec($command);
 
             $this->currentLeds($status);
