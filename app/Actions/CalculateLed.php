@@ -15,10 +15,10 @@ class CalculateLed
         $recorder = Recorder::make();
 
         if(!Camera::noCameraIsRecording()) {
-            $recorder->led(LedColor::RED, 500);
+            $recorder->led(LedColor::RED, 0.5);
         }
         elseif($recorder->isUploading()) {
-            $recorder->led(LedColor::BLUE, 500);
+            $recorder->led(LedColor::BLUE, 0.5);
         }
         elseif(Mothership::make()->isOnline()) {
             $recorder->led(LedColor::BLUE);
