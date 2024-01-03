@@ -42,7 +42,7 @@ class CameraController extends Controller
         }
 
         $data = $request->data;
-        $data['environment'] = $request->environmentData()['key'];
+        $data['endpoint'] = request()->environmentData()['urls']['mothership'];
 
         return RecordingResource::make($camera->startRecording($data));
     }

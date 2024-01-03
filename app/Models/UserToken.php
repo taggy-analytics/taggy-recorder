@@ -42,4 +42,14 @@ class UserToken extends Model
             ->get()
             ->whereNull('last_rejected_at');
     }
+
+    public static function forEndpointAndEntity($endpoint, $entityId)
+    {
+        return self::query()
+            ->where('endpoint', $endpoint)
+            ->where('entity_id', $entityId)
+            ->latest('last_successfully_used_at')
+            ->whereNull('last_rejected_at')
+            ->first();
+    }
 }
