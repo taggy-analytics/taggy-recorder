@@ -78,7 +78,7 @@ class LogRequestAndResponse
         $message     = str_replace('/', '_', trim($request->getPathInfo(), '/'));
 
         // log the gathered information
-        ray($message, $data);
+        ray($message, $data, $response);
 
         // return the response
         return $response;

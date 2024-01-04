@@ -28,13 +28,13 @@ class TransactionController extends Controller
 
         $lastUuidInSync = -1;
 
-        // Log::channel('transactions')->info('UUIDs Concatenated', compact('uuids'));
+        Log::channel('transactions')->info('UUIDs Concatenated', compact('uuids'));
 
         foreach($request->hashes as $index => $hash) {
             $offset = $request->hash_substring_length * ($lastUuidInSync + 1);
             $length = $request->hash_substring_length * ($index - $lastUuidInSync);
-            // Log::channel('transactions')->info('Checking Hash', compact('index', 'hash', 'offset', 'length'));
-            // Log::channel('transactions')->info('Calculated Hash', ['hash' => crc32(substr($uuidsConcatenated, $offset, $length))]);
+            Log::channel('transactions')->info('Checking Hash', compact('index', 'hash', 'offset', 'length'));
+            Log::channel('transactions')->info('Calculated Hash', ['hash' => crc32(substr($uuidsConcatenated, $offset, $length))]);
 
             if($hash !== crc32(substr($uuidsConcatenated, $offset, $length))) {
                 return [
