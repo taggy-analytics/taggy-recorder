@@ -30,6 +30,8 @@ class Camera extends Model
 
         static::creating(function(Camera $camera) {
             $camera->credentials_status = new CredentialsStatusData();
+            $camera->credentials = $camera->getType()->getDefaultCredentials();
+            $camera->status = $camera->status ?? CameraStatus::DISCOVERED;
         });
     }
 

@@ -34,28 +34,19 @@ abstract class CameraType
 
     public static function discoverCameras()
     {
-        $newCameras = collect();
-
-        $cameraIdentifiers = Camera::pluck('identifier');
-
         foreach(self::getCameraClasses() as $cameraClass) {
-            $newCamerasForClass = $cameraClass::discover()
-                ->filter(fn($newCamera) => !$cameraIdentifiers->contains($newCamera['identifier']));
+            $camerasForClass = $cameraClass::discover();
 
-            foreach($newCamerasForClass as $newCamera) {
-                $newCameras[] = Camera::create([
-                    'identifier' => $newCamera['identifier'],
+            foreach($camerasForClass as $aCamera) {
+                Camera::updateOrCreate([
                     'type' => $cameraClass::class,
-                    'name' => $newCamera['name'],
-                    'status' => CameraStatus::DISCOVERED,
-                    'ip_address' => $newCamera['ipAddress'],
-                    'credentials' => $cameraClass::getDefaultCredentials(),
-                    'credentials_status' => new CredentialsStatusData(),
+                    'identifier' => $aCamera['identifier'],
+                ],[
+                    'name' => $aCamera['name'],
+                    'ip_address' => $aCamera['ipAddress'],
                 ]);
             }
         }
-
-        return $newCameras;
     }
 
     private static function getCameraClasses()
