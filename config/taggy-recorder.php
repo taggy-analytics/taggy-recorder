@@ -13,4 +13,5 @@ return [
     'recording' => [
         'restart-aborted-recordings-timeout' => 15,
     ],
+    'log-requests' => env('LOG_REQUESTS', false),
 ];
