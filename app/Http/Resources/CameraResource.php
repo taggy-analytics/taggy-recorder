@@ -23,6 +23,7 @@ class CameraResource extends JsonResource
             'name' => $this->name,
             'credentials' => $this->credentials,
             'recording_mode' => $this->recording_mode,
+            'rotation' => $this->rotation,
             'is_recording' => $this->isRecording(),
             'streams' => $this->getStreams(),
         ];
