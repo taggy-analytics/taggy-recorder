@@ -18,6 +18,11 @@ class PublicKey extends \Spatie\Crypto\Rsa\PublicKey
     public static function get()
     {
         $environment = request()->environmentData();
+
+        if(empty($environment)) {
+            return null;
+        }
+        
         $keyPath = 'keys/mothership-' . $environment['key'] . '-public.key';
 
         if(!Storage::has($keyPath)) {
