@@ -45,7 +45,7 @@ class Kernel extends ConsoleKernel
 
         $schedule->command(CalculateLed::class)
             ->runInBackground()
-            ->everyFiveSeconds();
+            ->everyTwoSeconds();
 
         $schedule->command(RunHealthChecks::class)
             ->everyMinute();
