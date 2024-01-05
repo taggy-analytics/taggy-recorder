@@ -99,7 +99,7 @@ class Recorder
 
     public function isUpdatingFirmware()
     {
-        return $this->getRunningProcesses('taggy:update-software')->count() > 0;
+        return $this->getRunningProcesses('taggy:update-software')->count() > 1;
     }
 
     public function isUploading($uploading = null)
