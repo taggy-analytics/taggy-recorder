@@ -17,6 +17,8 @@ class Camera extends Model
 {
     use BroadcastsEvents;
 
+    public const DEFAULT_ROTATION = 1 / (60 * 4608);
+
     protected $casts = [
         'sent_to_mothership_at' => 'datetime',
         'status' => CameraStatus::class,
@@ -75,6 +77,7 @@ class Camera extends Model
         $recording = $this->recordings()->create([
             'name' => now()->toDateTimeLocalString(),
             'data' => $data,
+            'rotation' => $this->rotation,
         ]);
 
         info('Starting recording # ' . $recording->id . ' for camera #' . $this->id);

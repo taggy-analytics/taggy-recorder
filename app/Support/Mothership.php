@@ -50,6 +50,7 @@ class Mothership
                 'entityId' => Arr::get($recording->data, 'entity_id'),
                 'startTime' => $recording->started_at,
                 'duration' => $recording->getDuration(),
+                'rotation' => $recording->rotation,
             ]);
         }
         catch(MothershipException $exception) {

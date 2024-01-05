@@ -1,0 +1,20 @@
+<?php
+
+use App\Models\Camera;
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    public function up()
+    {
+        Schema::table('cameras', function (Blueprint $table) {
+            $table->float('rotation', 12, 9)->default(Camera::DEFAULT_ROTATION)->after('started_at');
+        });
+
+        Schema::table('recordings', function (Blueprint $table) {
+            $table->float('rotation', 12, 9)->nullable()->after('recording_mode');
+        });
+    }
+};
