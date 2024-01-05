@@ -28,9 +28,6 @@ class LogRequestAndResponse
 
         $contents = json_decode($response->getContent(), true, 512);
 
-        $headers  = $request->header();
-
-
         $dt = new Carbon();
         $data = [
             'path'         => $request->getPathInfo(),

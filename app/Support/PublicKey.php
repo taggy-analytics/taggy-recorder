@@ -22,7 +22,7 @@ class PublicKey extends \Spatie\Crypto\Rsa\PublicKey
         if(empty($environment)) {
             return null;
         }
-        
+
         $keyPath = 'keys/mothership-' . $environment['key'] . '-public.key';
 
         if(!Storage::has($keyPath)) {

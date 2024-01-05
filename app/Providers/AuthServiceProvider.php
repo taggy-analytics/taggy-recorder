@@ -32,7 +32,11 @@ class AuthServiceProvider extends ServiceProvider
 
         Auth::viaRequest('mothership', function (Request $request) {
             try {
-                $userData = json_decode(PublicKey::get()->decrypt(base64_decode($request->header('User-Data'))), true);
+                $userData = base64_decode($request->header('User-Data'));
+                if(empty($userData)) {
+                    return null;
+                }
+                $userData = json_decode(PublicKey::get()->decrypt($userData), true);
             } catch (CouldNotDecryptData $exception) {
                 return null;
             }
