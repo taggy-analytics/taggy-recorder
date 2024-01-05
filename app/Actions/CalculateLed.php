@@ -14,7 +14,10 @@ class CalculateLed
     {
         $recorder = Recorder::make();
 
-        if(!Camera::noCameraIsRecording()) {
+        if(!$recorder->isUpdatingFirmware()) {
+            $recorder->led(LedColor::GREEN, 0.5);
+        }
+        elseif(!Camera::noCameraIsRecording()) {
             $recorder->led(LedColor::RED, 0.5);
         }
         elseif($recorder->isUploading()) {

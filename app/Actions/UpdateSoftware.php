@@ -15,6 +15,8 @@ class UpdateSoftware
 {
     public function execute()
     {
+        app(CalculateLed::class)->execute();
+
         $mothership = Mothership::make();
 
         try {

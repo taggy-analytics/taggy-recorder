@@ -97,6 +97,11 @@ class Recorder
         Storage::put(self::CURRENT_LEDS_FILENAME, json_encode($leds));
     }
 
+    public function isUpdatingFirmware()
+    {
+        return $this->getRunningProcesses('taggy:update-software')->count() > 0;
+    }
+
     public function isUploading($uploading = null)
     {
         if(is_null($uploading)) {
