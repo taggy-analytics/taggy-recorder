@@ -59,7 +59,7 @@ class Recorder
 
         $status = [$colors, $interval];
 
-        if($this->currentLeds() != $status) {
+        if($this->currentLeds() != $status || count($this->getRunningProcesses('led.py')) == 1) {
             foreach($this->getRunningProcesses('led.py') as $process) {
                 posix_kill($process['processId'], 9);
             }

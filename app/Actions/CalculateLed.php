@@ -20,10 +20,10 @@ class CalculateLed
         elseif($recorder->isUploading()) {
             $recorder->led(LedColor::BLUE, 0.5);
         }
-        elseif(Mothership::make()->isOnline() && $this->cameraIsAvailable()) {
+        elseif(Mothership::make()->isOnline(4) && $this->cameraIsAvailable()) {
             $recorder->led([LedColor::BLUE, LedColor::RED], 1);
         }
-        elseif(Mothership::make()->isOnline()) {
+        elseif(Mothership::make()->isOnline(4)) {
             $recorder->led(LedColor::BLUE);
         }
         elseif($this->cameraIsAvailable()) {

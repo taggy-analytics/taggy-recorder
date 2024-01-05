@@ -102,25 +102,27 @@ class Mothership
         ]);
     }
 
-    public function isOnline()
+    public function isOnline($timeout = 3)
     {
         // App simulator testing
         if(cache()->has('connectedToMothership')) {
             return cache()->get('connectedToMothership');
         }
 
-        try {
-            return $this->checkStatus()->status() == 200;
-        }
-        catch(\Throwable $exception) {
-            return false;
-        }
+        return blink()->once('isOnline', function() use ($timeout) {
+            try {
+                return $this->checkStatus($timeout)->status() == 200;
+            }
+            catch(\Throwable $exception) {
+                return false;
+            }
+        });
     }
 
-    public function checkStatus()
+    public function checkStatus($timeout = 3)
     {
         return $this->client
-            ->timeout(3)
+            ->timeout($timeout)
             ->get('check-reachability');
     }
 

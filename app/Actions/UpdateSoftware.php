@@ -51,12 +51,6 @@ class UpdateSoftware
             Process::run('composer install');
             Process::run('php artisan migrate --force');
 
-            /*
-            // As long as we are not API exclusively
-            Process::run('npm install');
-            Process::run('npm run build');
-            */
-
             // Do final checks before activating new release
             if(!File::exists($releasePath . '/vendor')) {
                 throw new \Exception('Vendor directory does not exist.');
