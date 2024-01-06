@@ -18,13 +18,13 @@ class Mothership
     private $client;
     private $headers;
 
-    public function __construct(private ?UserToken $userToken = null)
+    public function __construct(private ?UserToken $userToken = null, $endpoint = null)
     {
         if($userToken?->isRevoked()) {
             throw new \Exception('User token is revoked.');
         }
 
-        $this->client = Http::baseUrl(self::getEndpoint($userToken) . '/api/v1')
+        $this->client = Http::baseUrl($endpoint ?? self::getEndpoint($userToken) . '/api/v1')
             ->withUserAgent('TaggyRecorder/' . Recorder::make()->currentSoftwareVersion())
             ->acceptJson()
             ->withHeaders([
@@ -32,9 +32,9 @@ class Mothership
             ])
             ->withToken($userToken?->token);
     }
-    public static function make(UserToken $userToken = null)
+    public static function make(UserToken $userToken = null, $endpoint = null)
     {
-        return new self($userToken ?? UserToken::lastSuccessfullyUsed()->first());
+        return new self($userToken ?? UserToken::lastSuccessfullyUsed()->first(), $endpoint);
     }
 
     public function reportRecording(Recording $recording)
@@ -145,6 +145,11 @@ class Mothership
     public function log($data)
     {
         return $this->post('recorders/' . Recorder::make()->getSystemId() . '/log?key=' . config('taggy-recorder.mothership-logging-key'), $data, 'raw');
+    }
+
+    public function sendTemperatureLog($data)
+    {
+        return $this->post('recorders/' . Recorder::make()->getSystemId() . '/temperature?key=' . config('taggy-recorder.mothership-logging-key'), $data, 'raw');
     }
 
     private function get($url, $type = 'json')

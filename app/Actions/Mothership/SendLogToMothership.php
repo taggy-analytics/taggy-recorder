@@ -10,7 +10,7 @@ class SendLogToMothership
 {
     public function execute()
     {
-        $mothership = Mothership::make();
+        $mothership = Mothership::make(endpoint: config('services.mothership.production.endpoint'));
 
         try {
             foreach(RecorderLog::whereNull('reported_at')->get() as $logEntry) {
