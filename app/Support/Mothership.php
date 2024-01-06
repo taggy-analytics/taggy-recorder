@@ -149,7 +149,7 @@ class Mothership
 
     public function sendTemperatureLog($data)
     {
-        return $this->post('recorders/' . Recorder::make()->getSystemId() . '/temperature?key=' . config('taggy-recorder.mothership-logging-key'), $data);
+        return $this->post('recorders/' . Recorder::make()->getSystemId() . '/temperature?key=' . config('taggy-recorder.mothership-logging-key'), ['measurements' => $data]);
     }
 
     private function get($url, $type = 'json')
