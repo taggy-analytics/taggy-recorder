@@ -55,6 +55,13 @@ class RecorderController extends Controller
         ];
     }
 
+    public function getPublicKey()
+    {
+        return [
+            'public_key' => Recorder::make()->getPublicKey(),
+        ];
+    }
+
     public function networkStatus()
     {
         return [

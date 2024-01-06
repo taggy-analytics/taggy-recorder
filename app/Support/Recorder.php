@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Jackiedo\DotenvEditor\Facades\DotenvEditor;
+use Spatie\Crypto\Rsa\KeyPair;
 
 class Recorder
 {
@@ -127,6 +128,17 @@ class Recorder
         $uptime = explode(' ', file_get_contents('/proc/uptime'));
         $uptime_seconds = floatval($uptime[0]);
         return $uptime_seconds;
+    }
+
+    public function getPublicKey()
+    {
+        $keysDirectory = storage_path('app/keys');
+
+        if(!File::exists($keysDirectory . '/public.key')) {
+            (new KeyPair())->generate($keysDirectory . '/private.key', $keysDirectory . '/public.key');
+        }
+
+        return File::get($keysDirectory . '/public.key');
     }
 
     public function log(LogMessageType $type, $message = '', $data = [])
