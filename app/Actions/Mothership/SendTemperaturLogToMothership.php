@@ -11,12 +11,14 @@ class SendTemperaturLogToMothership
 {
     public function execute()
     {
+        $logfile = 'logs/temperature.log';
+
         $mothership = Mothership::make(endpoint: config('services.mothership.production.endpoint'));
 
-        if(Storage::size('temperature.log') >= config('taggy-recorder.temperature-log-min-size')) {
-            $status = $mothership->sendTemperatureLog(Storage::get('temperature.log'));
+        if(Storage::exists($logfile) && Storage::size($logfile) >= config('taggy-recorder.temperature-log-min-size')) {
+            $status = $mothership->sendTemperatureLog(Storage::get($logfile));
             if($status == 'OK') {
-                Storage::delete('temperature.log');
+                Storage::delete($logfile);
             }
         }
     }
