@@ -14,7 +14,7 @@ class SendTemperaturLogToMothership
         $mothership = Mothership::make(endpoint: config('services.mothership.production.endpoint'));
 
         if(File::exists($logfile) && File::size($logfile) >= config('taggy-recorder.temperature-log-min-size')) {
-            $data = collect(explode(PHP_EOL, File::get($logfile)))
+            $data = collect(explode(PHP_EOL, trim(File::get($logfile))))
                 ->mapWithKeys(function($line) {
                     $parts = explode(' ', $line);
                     return [$parts[0] . ' ' . $parts[1] => $parts[2]];
