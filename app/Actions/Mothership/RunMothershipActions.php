@@ -27,7 +27,7 @@ class RunMothershipActions
         // $this->runAction(SyncTransactionsWithMothership::class);
         $this->runAction(ManageWebsocketsConnection::class);
         $this->runAction(SendLogToMothership::class);
-        $this->runAction(SendTemperaturLogToMothership::class);
+        $this->runAction(SendTemperatureLogToMothership::class);
         $this->runAction(SendReportablesToMothership::class);
         // $this->runAction(CheckForDeletedRecordings::class);
     }

@@ -18,6 +18,8 @@ class Mothership
     private $client;
     private $headers;
 
+    private const LAST_RESPONSE_STATUS_CACHE_KEY = 'lastMothershipResponseStatus';
+
     public function __construct(private ?UserToken $userToken = null, $endpoint = null)
     {
         if($userToken?->isRevoked()) {
@@ -35,6 +37,11 @@ class Mothership
     public static function make(UserToken $userToken = null, $endpoint = null)
     {
         return new self($userToken ?? UserToken::lastSuccessfullyUsed()->first(), $endpoint);
+    }
+
+    public function lastResponseStatus()
+    {
+        return blink()->get(self::LAST_RESPONSE_STATUS_CACHE_KEY);
     }
 
     public function reportRecording(Recording $recording)
@@ -182,7 +189,7 @@ class Mothership
         $response = $this->client
             ->{$method}($url, $data);
 
-        blink()->put('lastMothershipResponseStatus', $response->status());
+        blink()->put(self::LAST_RESPONSE_STATUS_CACHE_KEY, $response->status());
 
         if($response->status() >= 400) {
             if($response->status() == 401) {

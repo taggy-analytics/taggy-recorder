@@ -5,7 +5,7 @@ namespace App\Actions\Mothership;
 use App\Support\Mothership;
 use Illuminate\Support\Facades\File;
 
-class SendTemperaturLogToMothership
+class SendTemperatureLogToMothership
 {
     public function execute()
     {
@@ -22,7 +22,7 @@ class SendTemperaturLogToMothership
 
             $mothership->sendTemperatureLog($data);
 
-            if(blink()->get('lastMothershipResponseStatus') == 200) {
+            if($mothership->lastResponseStatus() == 200) {
                 File::delete($logfile);
             }
         }
