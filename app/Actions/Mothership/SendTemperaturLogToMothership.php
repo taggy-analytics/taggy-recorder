@@ -19,8 +19,10 @@ class SendTemperaturLogToMothership
                     $parts = explode(' ', $line);
                     return [$parts[0] . ' ' . $parts[1] => $parts[2]];
                 });
-            $status = $mothership->sendTemperatureLog($data);
-            if($status == 'OK') {
+
+            $mothership->sendTemperatureLog($data);
+
+            if(blink()->get('lastMothershipResponseStatus') == 200) {
                 File::delete($logfile);
             }
         }

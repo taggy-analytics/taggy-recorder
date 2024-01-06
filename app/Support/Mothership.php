@@ -182,6 +182,8 @@ class Mothership
         $response = $this->client
             ->{$method}($url, $data);
 
+        blink()->put('lastMothershipResponseStatus', $response->status());
+
         if($response->status() >= 400) {
             if($response->status() == 401) {
                 $this->userToken?->revoke();
