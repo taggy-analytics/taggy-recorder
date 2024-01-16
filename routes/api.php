@@ -21,7 +21,7 @@ Route::get('recorder/info', [\App\Http\Controllers\Api\RecorderController::class
 Route::post('recorder/update-software', [\App\Http\Controllers\Api\RecorderController::class, 'updateSoftware']);
 Route::post('recorder/installation-finished', [\App\Http\Controllers\Api\RecorderController::class, 'installationFinished']);
 Route::post('recorder/refresh-app-key', [\App\Http\Controllers\Api\RecorderController::class, 'refreshAppKey']);
-Route::post('recorder/get-public-key', [\App\Http\Controllers\Api\RecorderController::class, 'getPublicKey']);
+Route::get('recorder/get-public-key', [\App\Http\Controllers\Api\RecorderController::class, 'getPublicKey']);
 Route::get('recorder/network-status', [\App\Http\Controllers\Api\RecorderController::class, 'networkStatus']);
 
 // Route::get('recorder/vpn/status', [\App\Http\Controllers\Api\RecorderController::class, 'vpnStatus']);
