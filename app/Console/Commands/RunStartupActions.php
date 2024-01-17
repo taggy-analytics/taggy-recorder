@@ -4,6 +4,7 @@ namespace App\Console\Commands;
 
 use App\Actions\EnsureAppKeyIsSet;
 use App\Actions\EnsureNetworkIsSetup;
+use App\Actions\UpdateSoftware;
 use App\Support\Recorder;
 use Illuminate\Console\Command;
 use Illuminate\Console\Scheduling\Schedule;
@@ -40,5 +41,6 @@ class RunStartupActions extends Command
 
         app(EnsureNetworkIsSetup::class)->execute();
         app(EnsureAppKeyIsSet::class)->execute();
+        app(UpdateSoftware::class)->execute();
     }
 }

@@ -116,15 +116,17 @@ class RecorderController extends Controller
     public function tokens(StoreTokensRequest $request)
     {
         foreach($request->entities as $entity) {
-            UserToken::updateOrCreate([
-                'entity_id' => $entity['id'],
-                'user_id' => $request->user_id,
-                'endpoint' => Mothership::getEndpoint(),
-            ], [
-                'token' => $request->token,
-                'last_successfully_used_at' => $entity['last_successfully_used_at'],
-                'last_rejected_at' => null,
-            ]);
+            if($entity['id'] > 0) {
+                UserToken::updateOrCreate([
+                    'entity_id' => $entity['id'],
+                    'user_id' => $request->user_id,
+                    'endpoint' => Mothership::getEndpoint(),
+                ], [
+                    'token' => $request->token,
+                    'last_successfully_used_at' => $entity['last_successfully_used_at'],
+                    'last_rejected_at' => null,
+                ]);
+            }
         }
 
         return ['status' => 'OK'];

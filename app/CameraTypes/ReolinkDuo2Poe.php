@@ -23,8 +23,8 @@ class ReolinkDuo2Poe extends RtspCamera
     public static function getDefaultCredentials() : array
     {
         return [
-            'user' => 'admin',
-            'password' => ''
+            'user' => 'taggy',
+            'password' => 'taggy1234',
         ];
     }
 
