@@ -34,6 +34,7 @@ class UserToken extends Model
     public static function lastSuccessfullyUsed()
     {
         return self::query()
+            ->whereNot('entity_id', 0)
             ->where('last_successfully_used_at', '>', now()->subDays(30))
             ->where('endpoint', Mothership::getEndpoint())
             ->orWhereNull('last_successfully_used_at')
