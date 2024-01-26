@@ -103,10 +103,11 @@ class Mothership
         ]);
     }
 
-    public function sendPlaylist($videoId, $playlist)
+    public function sendMetaFiles($videoId, $videoM3u8, $initMp4)
     {
-        $this->post('videos/' . $videoId . '/playlist', [
-            'playlist' => base64_encode($playlist),
+        $this->post('videos/' . $videoId . '/files', [
+            'video.m3u8' => base64_encode($videoM3u8),
+            'init.mp4' => base64_encode($initMp4),
         ]);
     }
 

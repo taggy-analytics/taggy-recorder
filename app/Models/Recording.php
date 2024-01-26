@@ -137,6 +137,11 @@ class Recording extends Model
         return $this->getPath('video/video.m3u8');
     }
 
+    public function getInitMp4Path()
+    {
+        return $this->getPath('video/init.mp4');
+    }
+
     public function addM3u8EndTag()
     {
         $m3u8 = Storage::disk('public')
@@ -156,12 +161,16 @@ class Recording extends Model
 
     public function restart()
     {
-        $newRecording = $this->camera->startRecording();
+        $newRecording = $this->camera->startRecording($this->data);
+
+        /*
         $newRecording->update([
             'data' => [
                 'assigned_container' => Arr::get($this->data, 'assigned_container'),
             ],
         ]);
+        */
+
         $this->update(['restart_recording_id' => $newRecording->id]);
         return $newRecording;
     }
