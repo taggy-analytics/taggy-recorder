@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "759bdc44a9660250659e1de4dbfb7227",
+    "content-hash": "c2de3a4ff212430327bdabbf1fd4755d",
     "packages": [
         {
             "name": "brick/math",
@@ -5282,6 +5282,66 @@
                 }
             ],
             "time": "2022-04-22T08:51:55+00:00"
+        },
+        {
+            "name": "spatie/file-system-watcher",
+            "version": "1.1.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/spatie/file-system-watcher.git",
+                "reference": "b6bb3fbeabf33c98894c7c71b2cb0ef01d895fc5"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/spatie/file-system-watcher/zipball/b6bb3fbeabf33c98894c7c71b2cb0ef01d895fc5",
+                "reference": "b6bb3fbeabf33c98894c7c71b2cb0ef01d895fc5",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^8.0",
+                "symfony/process": "^5.2|^6.0"
+            },
+            "require-dev": {
+                "pestphp/pest": "^1.22",
+                "phpunit/phpunit": "^9.5",
+                "spatie/ray": "^1.22",
+                "spatie/temporary-directory": "^2.0",
+                "vimeo/psalm": "^4.3"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Spatie\\Watcher\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Freek Van der Herten",
+                    "email": "freek@spatie.be",
+                    "role": "Developer"
+                }
+            ],
+            "description": "Watch changes in the file system using PHP",
+            "homepage": "https://github.com/spatie/file-system-watcher",
+            "keywords": [
+                "file-system-watcher",
+                "spatie"
+            ],
+            "support": {
+                "issues": "https://github.com/spatie/file-system-watcher/issues",
+                "source": "https://github.com/spatie/file-system-watcher/tree/1.1.2"
+            },
+            "funding": [
+                {
+                    "url": "https://github.com/spatie",
+                    "type": "github"
+                }
+            ],
+            "time": "2023-06-05T07:24:55+00:00"
         },
         {
             "name": "spatie/image",

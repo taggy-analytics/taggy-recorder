@@ -70,9 +70,12 @@ class Camera extends Model
 
     public function startRecording($data)
     {
+        /*
+        I don't think this is necssary
         if(!File::exists($this->storagePath())) {
             File::makeDirectory($this->storagePath(), recursive: true);
         };
+        */
 
         $recording = $this->recordings()->create([
             'name' => now()->toDateTimeLocalString(),
@@ -134,10 +137,13 @@ class Camera extends Model
     }
 
     */
+
+    /*
     public function storagePath()
     {
         return storage_path("app/cameras/{$this->id}/recordings");
     }
+    */
 
     public static function noCameraIsRecording()
     {

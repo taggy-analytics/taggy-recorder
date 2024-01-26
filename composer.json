@@ -31,6 +31,7 @@
         "pusher/pusher-php-server": "^7.2",
         "saloonphp/laravel-http-sender": "^1.2",
         "sammyjo20/saloon-laravel": "^2.0",
+        "spatie/file-system-watcher": "^1.1",
         "spatie/image": "^2.2",
         "spatie/laravel-blink": "^1.6",
         "spatie/laravel-data": "^3.1",
