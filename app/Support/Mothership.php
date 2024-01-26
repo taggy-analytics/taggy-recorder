@@ -106,8 +106,10 @@ class Mothership
     public function sendMetaFiles($videoId, $videoM3u8, $initMp4)
     {
         $this->post('videos/' . $videoId . '/files', [
-            'video.m3u8' => base64_encode($videoM3u8),
-            'init.mp4' => base64_encode($initMp4),
+            'files' => [
+                'video.m3u8' => base64_encode($videoM3u8),
+                'init.mp4' => base64_encode($initMp4),
+            ],
         ]);
     }
 
