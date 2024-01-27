@@ -41,6 +41,8 @@ class RecorderController extends Controller
             Storage::put(Recorder::INSTALLATION_FINISHED_FILENAME, '');
         }
 
+        UserToken::where('entity_id', 0)->delete();
+
         return [
             'status' => 'OK',
         ];
@@ -116,17 +118,15 @@ class RecorderController extends Controller
     public function tokens(StoreTokensRequest $request)
     {
         foreach($request->entities as $entity) {
-            if($entity['id'] > 0) {
-                UserToken::updateOrCreate([
-                    'entity_id' => $entity['id'],
-                    'user_id' => $request->user_id,
-                    'endpoint' => Mothership::getEndpoint(),
-                ], [
-                    'token' => $request->token,
-                    'last_successfully_used_at' => $entity['last_successfully_used_at'],
-                    'last_rejected_at' => null,
-                ]);
-            }
+            UserToken::updateOrCreate([
+                'entity_id' => $entity['id'],
+                'user_id' => $request->user_id,
+                'endpoint' => Mothership::getEndpoint(),
+            ], [
+                'token' => $request->token,
+                'last_successfully_used_at' => $entity['last_successfully_used_at'],
+                'last_rejected_at' => null,
+            ]);
         }
 
         return ['status' => 'OK'];
