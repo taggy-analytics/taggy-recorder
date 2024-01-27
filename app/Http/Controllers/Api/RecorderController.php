@@ -41,7 +41,7 @@ class RecorderController extends Controller
             Storage::put(Recorder::INSTALLATION_FINISHED_FILENAME, '');
         }
 
-        UserToken::where('entity_id', 0)->delete();
+        UserToken::where('entity_id', 999999)->delete();
 
         return [
             'status' => 'OK',

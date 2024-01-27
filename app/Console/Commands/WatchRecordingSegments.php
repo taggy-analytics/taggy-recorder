@@ -2,9 +2,7 @@
 
 namespace App\Console\Commands;
 
-use App\Models\Recording;
-use App\Models\UserToken;
-use App\Support\Mothership;
+use App\Models\LivestreamSegment;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Storage;
 use Spatie\Watcher\Watch;
@@ -29,16 +27,8 @@ class WatchRecordingSegments extends Command
 
     private function sendFile($newFilePath)
     {
-        $recording = $this->getRecording($newFilePath);
-        if($recording->livestream_enabled) {
-            $userToken = UserToken::forEndpointAndEntity($recording->data['endpoint'], $recording->data['entity_id']);
-            Mothership::make($userToken)->sendLivestreamFile($recording, $newFilePath);
-        }
-    }
-
-    private function getRecording($filePath)
-    {
-        $recordingId = array_slice(explode("/", $filePath), -4, 1)[0];
-        return Recording::find($recordingId);
+        LivestreamSegment::create([
+            'file' => $newFilePath,
+        ]);
     }
 }
