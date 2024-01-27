@@ -38,7 +38,7 @@ class WatchRecordingSegments extends Command
 
     private function getRecording($filePath)
     {
-        $recordingId = array_slice(explode("/", $filePath), -4, 1);
+        $recordingId = array_slice(explode("/", $filePath), -4, 1)[0];
         return Recording::find($recordingId);
     }
 }
