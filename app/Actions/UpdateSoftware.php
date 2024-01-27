@@ -65,6 +65,7 @@ class UpdateSoftware
             Process::run('php artisan schedule:clear-cache');
             Process::run('php artisan storage:link');
             Process::run('php artisan horizon:terminate');
+            // ToDo: kill running watch-segments and upload-livestream processes
             Process::run('php artisan taggy:delete-old-releases');
 
             Storage::put(Recorder::CURRENT_SOFTWARE_VERSION_FILENAME, $newVersion['version']);
