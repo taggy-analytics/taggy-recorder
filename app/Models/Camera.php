@@ -8,6 +8,7 @@ use App\Data\CredentialsStatusData;
 use App\Enums\CameraStatus;
 use App\Enums\RecordingMode;
 use App\Models\Traits\BroadcastsEvents;
+use App\Support\Mothership;
 use Illuminate\Database\Eloquent\Casts\AsCollection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Arr;
@@ -70,17 +71,11 @@ class Camera extends Model
 
     public function startRecording($data)
     {
-        /*
-        I don't think this is necssary
-        if(!File::exists($this->storagePath())) {
-            File::makeDirectory($this->storagePath(), recursive: true);
-        };
-        */
-
         $recording = $this->recordings()->create([
             'name' => now()->toDateTimeLocalString(),
             'data' => $data,
             'rotation' => $this->rotation,
+            'livestream_enabled' => Mothership::make()->isOnline(),
         ]);
 
         info('Starting recording # ' . $recording->id . ' for camera #' . $this->id);
@@ -123,27 +118,6 @@ class Camera extends Model
     {
         return (new $this->type);
     }
-
-    /*
-    public function getRecordings()
-    {
-        return collect(File::files($this->storagePath()))
-            ->map(fn(SplFileInfo $file) => Recording::fromFile($file));
-    }
-
-    public function getRecording($name)
-    {
-        return $this->storagePath() . '/' . $name;
-    }
-
-    */
-
-    /*
-    public function storagePath()
-    {
-        return storage_path("app/cameras/{$this->id}/recordings");
-    }
-    */
 
     public static function noCameraIsRecording()
     {
