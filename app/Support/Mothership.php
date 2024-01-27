@@ -97,6 +97,8 @@ class Mothership
 
     public function sendLivestreamFile(Recording $recording, $file, $content = null)
     {
+        $this->client->timeout(600);
+        
         $this->post('recordings/' . $recording->key . '/livestream-segments', [
             'name' => basename($file),
             'content' => $content ?? base64_encode(File::get($file)),
