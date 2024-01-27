@@ -2,6 +2,7 @@
 
 namespace App\Support;
 
+use App\Enums\RecordingFileStatus;
 use App\Enums\RecordingStatus;
 use App\Exceptions\MothershipException;
 use App\Models\Recording;
@@ -108,7 +109,8 @@ class Mothership
 
         $this->post('videos/' . $file->video_id . '/segments', [
             'name' => $file->name,
-            'segment' => base64_encode(Storage::disk('public')->get($file->videoPath())),
+            'status' => $file->status->value,
+            'segment' => $file->status == RecordingFileStatus::TO_BE_UPLOADED ? base64_encode(Storage::disk('public')->get($file->videoPath())) : null,
         ]);
     }
 

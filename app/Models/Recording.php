@@ -41,7 +41,7 @@ class Recording extends Model
         });
 
         static::creating(function(Recording $recording) {
-            $recording->key = Str::random();
+            $recording->key = Str::random(32);
         });
     }
 

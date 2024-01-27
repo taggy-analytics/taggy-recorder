@@ -21,19 +21,26 @@ class ReportRecording extends Report
         // Maybe we have an issue when two syncs run in parallel?! Should not hurt.
         app(SyncTransactionsWithMothership::class)->execute();
 
-        if($video = $this->mothership->reportRecording($recording)) {
-            if($video == RecordingStatus::SESSION_NOT_FOUND_ON_MOTHERSHIP) {
+        if($toVideoResponse = $this->mothership->reportRecording($recording)) {
+            if($toVideoResponse == RecordingStatus::SESSION_NOT_FOUND_ON_MOTHERSHIP) {
                 $recording->setStatus(RecordingStatus::SESSION_NOT_FOUND_ON_MOTHERSHIP);
             }
-            elseif($video == RecordingStatus::RECORDER_NOT_FOUND_ON_MOTHERSHIP) {
+            elseif($toVideoResponse == RecordingStatus::RECORDER_NOT_FOUND_ON_MOTHERSHIP) {
                 $recording->setStatus(RecordingStatus::RECORDER_NOT_FOUND_ON_MOTHERSHIP);
             }
-            elseif($video == RecordingStatus::UNKNOWN_MOTHERSHIP_ERROR) {
+            elseif($toVideoResponse == RecordingStatus::UNKNOWN_MOTHERSHIP_ERROR) {
                 $recording->setStatus(RecordingStatus::UNKNOWN_MOTHERSHIP_ERROR);
             }
             else {
-                $recording->files()->update([
-                    'video_id' => $video['id'],
+                $livestreamedFiles = $recording->files->whereIn('name', $toVideoResponse['knownFiles'])->pluck('id');
+
+                $recording->files()->whereIn('id', $livestreamedFiles)->update([
+                    'video_id' => $toVideoResponse['video']['id'],
+                    'status' => RecordingFileStatus::ALREADY_IN_LIVESTREAM,
+                ]);
+
+                $recording->files()->whereNotIn('id', $livestreamedFiles)->update([
+                    'video_id' => $toVideoResponse['video']['id'],
                     'status' => RecordingFileStatus::TO_BE_UPLOADED,
                 ]);
 
@@ -52,7 +59,7 @@ class ReportRecording extends Report
                 $videoM3u8 = Storage::disk('public')->get($recording->getM3u8Path());
                 $initMp4 = Storage::disk('public')->get($recording->getInitMp4Path());
 
-                $this->mothership->sendMetaFiles($video['id'], $videoM3u8, $initMp4);
+                $this->mothership->sendMetaFiles($toVideoResponse['video']['id'], $videoM3u8, $initMp4);
 
                 $recording->setStatus(RecordingStatus::REPORTED_TO_MOTHERSHIP);
             }
