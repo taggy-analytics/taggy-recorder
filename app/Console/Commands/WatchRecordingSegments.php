@@ -4,6 +4,7 @@ namespace App\Console\Commands;
 
 use App\Models\LivestreamSegment;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Storage;
 use Spatie\Watcher\Watch;
 
@@ -20,15 +21,16 @@ class WatchRecordingSegments extends Command
                 $this->sendFile($newFilePath);
             })
             ->onFileUpdated(function (string $newFilePath) {
-                $this->sendFile($newFilePath);
+                $this->sendFile($newFilePath, true);
             })
             ->start();
     }
 
-    private function sendFile($newFilePath)
+    private function sendFile($newFilePath, $withContent = false)
     {
         LivestreamSegment::create([
             'file' => $newFilePath,
+            'content' => $withContent ? base64_encode(File::get($newFilePath)) : null,
         ]);
     }
 }

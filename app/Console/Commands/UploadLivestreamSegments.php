@@ -17,8 +17,8 @@ class UploadLivestreamSegments extends Command
     public function handle()
     {
         while(true) {
-            LivestreamSegment::whereDate('uploaded_at', '<', now()->subHour())->delete();
-            
+            LivestreamSegment::whereDate('uploaded_at', '<', now()->subMinutes(5))->delete();
+
             LivestreamSegment::whereNull('uploaded_at')
                 ->get()
                 ->each(fn(LivestreamSegment $livestreamSegment) => $this->sendFile($livestreamSegment));
@@ -33,7 +33,7 @@ class UploadLivestreamSegments extends Command
             $recording = $segment->getRecording();
             if($recording->livestream_enabled) {
                 $userToken = UserToken::forEndpointAndEntity($recording->data['endpoint'], $recording->data['entity_id']);
-                Mothership::make($userToken)->sendLivestreamFile($recording, $segment->file);
+                Mothership::make($userToken)->sendLivestreamFile($recording, $segment->file, $segment->content);
                 $segment->update(['uploaded_at' => now()]);
             }
         }

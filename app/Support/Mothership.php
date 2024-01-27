@@ -95,11 +95,11 @@ class Mothership
         }
     }
 
-    public function sendLivestreamFile(Recording $recording, $file)
+    public function sendLivestreamFile(Recording $recording, $file, $content = null)
     {
         $this->post('recordings/' . $recording->key . '/livestream-segments', [
             'name' => basename($file),
-            'content' => base64_encode(File::get($file)),
+            'content' => $content ?? base64_encode(File::get($file)),
         ]);
     }
 
