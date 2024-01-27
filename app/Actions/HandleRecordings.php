@@ -61,6 +61,24 @@ class HandleRecordings
                         'created_at' => $currentTime,
                     ])->toArray();
 
+                $files[] = [
+                    'recording_id' => $recording->id,
+                    'name' => 'init.mp4',
+                    'type' => RecordingFileType::PLAYLIST,
+                    'status' => RecordingFileStatus::CREATED,
+                    'updated_at' => $currentTime,
+                    'created_at' => $currentTime,
+                ];
+
+                $files[] = [
+                    'recording_id' => $recording->id,
+                    'name' => 'video.m3u8',
+                    'type' => RecordingFileType::PLAYLIST,
+                    'status' => RecordingFileStatus::CREATED,
+                    'updated_at' => $currentTime,
+                    'created_at' => $currentTime,
+                ];
+
                 RecordingFile::insert($files);
 
                 $mothershipReports = $recording->load('files')
