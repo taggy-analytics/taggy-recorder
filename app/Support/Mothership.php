@@ -8,6 +8,7 @@ use App\Models\Recording;
 use App\Models\RecordingFile;
 use App\Models\UserToken;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
@@ -91,6 +92,14 @@ class Mothership
             Flare::context('reportTransactionsException', $exception);
             return false;
         }
+    }
+
+    public function sendLivestreamFile(Recording $recording, $file)
+    {
+        $this->post('recordings/' . $recording->key . '/livestream-segments', [
+            'name' => basename($file),
+            'content' => base64_encode(File::get($file)),
+        ]);
     }
 
     public function sendRecordingFile(RecordingFile $file)

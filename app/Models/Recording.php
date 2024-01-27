@@ -29,6 +29,7 @@ class Recording extends Model
         'aborted_at' => 'datetime',
         'status' => RecordingStatus::class,
         'data' => 'array',
+        'livestream_enabled' => 'boolean',
     ];
 
     public static function boot() {
