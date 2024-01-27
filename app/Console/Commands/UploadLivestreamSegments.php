@@ -17,6 +17,8 @@ class UploadLivestreamSegments extends Command
     public function handle()
     {
         while(true) {
+            LivestreamSegment::whereDate('uploaded_at', '<', now()->subHour())->delete();
+            
             LivestreamSegment::whereNull('uploaded_at')
                 ->get()
                 ->each(fn(LivestreamSegment $livestreamSegment) => $this->sendFile($livestreamSegment));
