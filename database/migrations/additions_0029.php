@@ -13,6 +13,7 @@ return new class extends Migration
             $table->id();
             $table->string('file');
             $table->dateTime('uploaded_at')->nullable();
+            $table->dateTime('last_failed_at')->nullable();
             $table->timestamps();
         });
     }

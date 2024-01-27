@@ -19,24 +19,25 @@ class UploadLivestreamSegments extends Command
         while(true) {
             LivestreamSegment::whereNull('uploaded_at')
                 ->get()
-                ->each(fn(LivestreamSegment $livestreamSegment) => $this->sendFile($livestreamSegment->file));
+                ->each(fn(LivestreamSegment $livestreamSegment) => $this->sendFile($livestreamSegment));
 
             usleep(500000);
         }
     }
 
-    private function sendFile($newFilePath)
+    private function sendFile(LivestreamSegment $segment)
     {
-        $recording = $this->getRecording($newFilePath);
-        if($recording->livestream_enabled) {
-            $userToken = UserToken::forEndpointAndEntity($recording->data['endpoint'], $recording->data['entity_id']);
-            Mothership::make($userToken)->sendLivestreamFile($recording, $newFilePath);
+        try {
+            $recording = $segment->getRecording();
+            if($recording->livestream_enabled) {
+                $userToken = UserToken::forEndpointAndEntity($recording->data['endpoint'], $recording->data['entity_id']);
+                Mothership::make($userToken)->sendLivestreamFile($recording, $segment->file);
+                $segment->update(['uploaded_at' => now()]);
+            }
         }
-    }
+        catch(\Exception $exception) {
+            $segment->update(['last_failed_at' => now()]);
+        }
 
-    private function getRecording($filePath)
-    {
-        $recordingId = array_slice(explode("/", $filePath), -4, 1)[0];
-        return Recording::find($recordingId);
     }
 }
