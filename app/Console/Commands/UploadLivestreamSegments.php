@@ -37,6 +37,7 @@ class UploadLivestreamSegments extends Command
         }
         catch(\Exception $exception) {
             $segment->update(['last_failed_at' => now()]);
+            exit;
         }
 
     }
