@@ -105,6 +105,10 @@ class Recorder
 
     public function isUploading($uploading = null)
     {
+        if(!Mothership::make()->isOnline()) {
+            Storage::delete(self::RUNNING_UPLOAD_FILENAME);
+        }
+
         if(is_null($uploading)) {
             return Storage::exists(self::RUNNING_UPLOAD_FILENAME);
         }
