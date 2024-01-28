@@ -101,13 +101,15 @@ class SyncTransactionsWithMothership
                 }
             }
             catch(MothershipException $exception) {
-                report($exception);
                 if($exception->response->status() < 500) {
                     // ToDo: what to do in this case!?
-                    info('Not authorized to sync transactions for entity ' . $entityId);
+                    info('Transactions could not be synced for entity #' . $entityId . ' (HTTP status ' . $exception->response->status() . ')');
+                }
+                else {
+                    report($exception);
+                    throw $exception;
                 }
                 blink()->forget('sync-transactions-running');
-                throw $exception;
             }
         }
 
