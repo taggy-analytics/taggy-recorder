@@ -105,11 +105,8 @@ class SyncTransactionsWithMothership
                     // ToDo: what to do in this case!?
                     info('Transactions could not be synced for entity #' . $entityId . ' (HTTP status ' . $exception->response->status() . ')');
                 }
-                else {
-                    report($exception);
-                    throw $exception;
-                }
                 blink()->forget('sync-transactions-running');
+                throw $exception;
             }
         }
 
