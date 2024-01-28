@@ -17,7 +17,14 @@ class SendReportablesToMothership
                 }
                 $actionClass = 'App\\Actions\\Mothership\\Report' . (new \ReflectionClass($mothershipReport->model))->getShortName();
                 $mothershipReport->update(['reported_at' => now()]);
-                app($actionClass)->execute($mothershipReport->model);
+
+                try {
+                    app($actionClass)->execute($mothershipReport->model);
+                }
+                catch (\Exception $e) {
+                    sleep(5);
+                    info($e->getMessage());
+                }
             }
         }
 
