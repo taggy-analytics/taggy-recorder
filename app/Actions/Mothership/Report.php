@@ -18,7 +18,7 @@ abstract class Report
             return true;
         }
         catch(\Exception $exception) {
-            info($exception->getMessage());
+            info('Error while running mothership report #' . $model->mothershipReport->id . ': ' . $exception->getMessage());
             return false;
         }
     }
