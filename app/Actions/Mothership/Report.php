@@ -15,9 +15,10 @@ abstract class Report
             if($this->executeReport($model)) {
                 $model->mothershipReport->update(['processed_at' => now()]);
             }
+            return true;
         }
         catch(\Exception $exception) {
-            report($exception);
+            info($exception->getMessage());
             return false;
         }
     }
