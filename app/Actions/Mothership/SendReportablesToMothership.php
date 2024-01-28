@@ -11,6 +11,8 @@ class SendReportablesToMothership
     public function execute()
     {
         while(count(MothershipReport::unreported()) > 0) {
+            $errored = false;
+
             foreach(MothershipReport::unreported() as $mothershipReport) {
                 if(!Recorder::make()->isUploading()) {
                     Recorder::make()->isUploading(true);
@@ -18,8 +20,13 @@ class SendReportablesToMothership
                 $actionClass = 'App\\Actions\\Mothership\\Report' . (new \ReflectionClass($mothershipReport->model))->getShortName();
                 $mothershipReport->update(['reported_at' => now()]);
                 if(!app($actionClass)->execute($mothershipReport->model)) {
-                    sleep(5);
+                    $errored = true;
                 }
+            }
+
+            if($errored) {
+                info('Sleeping a little because of error while reporting to mothership...');
+                sleep(10);
             }
         }
 
