@@ -4,13 +4,15 @@ namespace App\Actions\Mothership;
 
 use App\Enums\RecordingFileStatus;
 use App\Models\RecordingFile;
-use Spatie\QueueableAction\QueueableAction;
 
 class ReportRecordingFile extends Report
 {
     public function executeReport(RecordingFile $recordingFile): bool
     {
-        $this->mothership->sendRecordingFile($recordingFile);
+        if($recordingFile->status == RecordingFileStatus::TO_BE_UPLOADED) {
+            $this->mothership->sendRecordingFile($recordingFile);
+        }
+
         $recordingFile->setStatus(RecordingFileStatus::UPLOADED);
 
         return true;

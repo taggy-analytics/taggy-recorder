@@ -109,10 +109,9 @@ class Mothership
     {
         $this->client->timeout(600);
 
-        $this->post('videos/' . $file->video_id . '/segments', [
+        $this->post('videos/' . $file->video_id . '/video-segments', [
             'name' => $file->name,
-            'status' => $file->status->value,
-            'segment' => $file->status == RecordingFileStatus::TO_BE_UPLOADED ? base64_encode(Storage::disk('public')->get($file->videoPath())) : null,
+            'segment' => base64_encode(Storage::disk('public')->get($file->videoPath())),
         ]);
     }
 

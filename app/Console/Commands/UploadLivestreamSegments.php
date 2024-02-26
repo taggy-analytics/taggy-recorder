@@ -21,7 +21,8 @@ class UploadLivestreamSegments extends Command
 
             LivestreamSegment::whereNull('uploaded_at')
                 ->get()
-                ->each(fn(LivestreamSegment $livestreamSegment) => $this->sendFile($livestreamSegment));
+                ->each(fn(
+                    $livestreamSegment) => $this->sendFile($livestreamSegment));
 
             usleep(500000);
         }
