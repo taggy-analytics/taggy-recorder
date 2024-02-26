@@ -75,7 +75,7 @@ class Camera extends Model
             'name' => now()->toDateTimeLocalString(),
             'data' => $data,
             'rotation' => $this->rotation,
-            'livestream_enabled' => Mothership::make()->isOnline(),
+            'livestream_enabled' => false, // Mothership::make()->isOnline(),
         ]);
 
         info('Starting recording # ' . $recording->id . ' for camera #' . $this->id);
