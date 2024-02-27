@@ -59,7 +59,7 @@ class ReportRecording extends Report
                 $videoM3u8 = Storage::disk('public')->get($recording->getM3u8Path());
                 $initMp4 = Storage::disk('public')->get($recording->getInitMp4Path());
 
-                $this->mothership->sendMetaFiles($toVideoResponse['video']['id'], $videoM3u8, $initMp4);
+                // $this->mothership->sendMetaFiles($toVideoResponse['video']['id'], $videoM3u8, $initMp4);
 
                 $recording->setStatus(RecordingStatus::REPORTED_TO_MOTHERSHIP);
             }

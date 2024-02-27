@@ -115,6 +115,7 @@ class Mothership
         ]);
     }
 
+    /*
     public function sendMetaFiles($videoId, $videoM3u8, $initMp4)
     {
         $this->post('videos/' . $videoId . '/files', [
@@ -124,6 +125,7 @@ class Mothership
             ],
         ]);
     }
+    */
 
     public function isOnline($timeout = 3)
     {

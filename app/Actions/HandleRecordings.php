@@ -79,6 +79,15 @@ class HandleRecordings
                     'created_at' => $currentTime,
                 ];
 
+                $files[] = [
+                    'recording_id' => $recording->id,
+                    'name' => 'master.m3u8',
+                    'type' => RecordingFileType::PLAYLIST,
+                    'status' => RecordingFileStatus::CREATED,
+                    'updated_at' => $currentTime,
+                    'created_at' => $currentTime,
+                ];
+
                 RecordingFile::insert($files);
 
                 $mothershipReports = $recording->load('files')
