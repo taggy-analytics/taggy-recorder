@@ -39,7 +39,13 @@ abstract class RtspCamera extends CameraType
     public function stopRecording(Camera $camera)
     {
         // SIGKILL = 9; Constants do not always work for whatever reason
-        return posix_kill($camera->process_id, 9);
+        $killWasSuccessfull = posix_kill($camera->process_id, 9);
+
+        if($killWasSuccessfull) {
+            $camera->update(['process_id' => null]);
+        }
+
+        return $killWasSuccessfull;
     }
 
     public function getRtspUrl(Camera $camera)
@@ -49,10 +55,6 @@ abstract class RtspCamera extends CameraType
 
     public function isRecording(Camera $camera)
     {
-        if(cache()->get('recordingStoppedRecently', false)) {
-            return false;
-        }
-
         if($camera->process_id && !file_exists( "/proc/{$camera->process_id}")) {
             $backtrace = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 10);
             info('I just killed the recording with process ID ' . $camera->process_id . ':', ['backtrace' => $backtrace]);
