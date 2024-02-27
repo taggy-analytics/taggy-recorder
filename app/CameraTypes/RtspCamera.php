@@ -49,7 +49,7 @@ abstract class RtspCamera extends CameraType
 
     public function isRecording(Camera $camera)
     {
-        if(blink()->get('recordingStoppedRecently', false)) {
+        if(cache()->get('recordingStoppedRecently', false)) {
             return false;
         }
 

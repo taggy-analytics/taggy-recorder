@@ -106,7 +106,7 @@ class Camera extends Model
             $recording->addM3u8EndTag();
 
             // The process file seems not to be deleted immediately
-            blink()->put('recordingStoppedRecently', true);
+            cache()->put('recordingStoppedRecently', true, now()->addSeconds(5));
 
             app(CalculateLed::class)->execute();
 
