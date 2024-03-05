@@ -16,6 +16,8 @@ class RecordingResource extends JsonResource
             'type' => is_null($this->stopped_at) ? RecordingType::LIVE->value : RecordingType::FINISHED->value,
             'start_time' => $this->started_at,
             'duration' => $this->getDuration(),
+            'width' => $this->width,
+            'height' => $this->height,
             'rotation' => $this->rotation,
             'data' => $this->data,
             'url' => $this->getUrl(),

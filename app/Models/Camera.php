@@ -76,6 +76,8 @@ class Camera extends Model
             'data' => $data,
             'rotation' => $this->rotation,
             'livestream_enabled' => false, // Mothership::make()->isOnline(),
+            'width' => $this->video_width,
+            'height' => $this->video_height,
         ]);
 
         info('Starting recording # ' . $recording->id . ' for camera #' . $this->id);

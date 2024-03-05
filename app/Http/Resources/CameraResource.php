@@ -26,6 +26,8 @@ class CameraResource extends JsonResource
             'rotation' => $this->rotation,
             'is_recording' => $this->isRecording(),
             'streams' => $this->getStreams(),
+            'video_width' => $this->video_width,
+            'video_height' => $this->video_height,
         ];
     }
 }
