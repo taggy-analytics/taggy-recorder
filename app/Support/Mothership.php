@@ -60,6 +60,8 @@ class Mothership
                 'startTime' => $recording->started_at,
                 'duration' => $recording->getDuration(),
                 'rotation' => $recording->rotation,
+                'width' => $recording->width,
+                'height' => $recording->height,
             ]);
         }
         catch(MothershipException $exception) {
