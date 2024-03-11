@@ -10,7 +10,7 @@ return new class extends Migration
     {
         Schema::table('cameras', function (Blueprint $table) {
             $table->unsignedInteger('video_width')->nullable()->after('recording_mode');
-            $table->unsignedInteger('video_height')->nullable()->after('width');
+            $table->unsignedInteger('video_height')->nullable()->after('video_width');
         });
     }
 };
