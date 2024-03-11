@@ -138,6 +138,7 @@ class SyncTransactionsWithMothership
     private function getQuery($entityId)
     {
         return Transaction::query()
+            ->where('endpoint', Mothership::getEndpoint())
             ->where('entity_id', $entityId);
     }
 }
