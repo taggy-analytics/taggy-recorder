@@ -8,9 +8,10 @@ use Illuminate\Support\Arr;
 
 class CleanTransactions
 {
-    public function execute($entityId)
+    public function execute($endpoint, $entityId)
     {
-        $modalTransactions = Transaction::where('entity_id', $entityId)->get();
+        $modalTransactions = $this->query($endpoint, $entityId)
+            ->get();
 
         $cleanedTransactions = [];
 
@@ -39,9 +40,17 @@ class CleanTransactions
 
         $cleanedTransactions = Arr::flatten($cleanedTransactions);
 
-        Transaction::whereNotIn('id', Arr::pluck($cleanedTransactions, 'id'))
+        $this->query($endpoint, $entityId)
+            ->whereNotIn('id', Arr::pluck($cleanedTransactions, 'id'))
             ->delete();
 
         return $cleanedTransactions;
+    }
+
+    private function query($endpoint, $entityId)
+    {
+        return Transaction::query()
+            ->where('endpoint', $endpoint)
+            ->where('entity_id', $entityId);
     }
 }

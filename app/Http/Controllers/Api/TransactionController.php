@@ -20,7 +20,7 @@ class TransactionController extends Controller
 {
     public function status($entityId, TransactionsStatusRequest $request)
     {
-        $uuids = $this->getUuids($entityId);
+        $uuids = $this->getUuids(Mothership::getEndpoint(), $entityId);
 
         $uuidsConcatenated = $uuids
             ->map(fn($uuid) => substr($uuid, -$request->hash_substring_length))
@@ -81,10 +81,11 @@ class TransactionController extends Controller
 
         if($this->cleanupNeeded($entityId, $request->transactions)) {
             $newTransactions = collect($request->transactions)
-                ->whereNotIn('id', $this->getUuids($entityId))
+                ->whereNotIn('id', $this->getUuids($userToken->endpoint, $entityId))
                 ->hydrateTransactions()
                 ->map(function ($transaction) use ($userToken) {
                     $transaction['user_token_id'] = $userToken->id;
+                    $transaction['endpoint'] = $userToken->endpoint;
                     return $transaction;
                 })
                 ->toArray();
@@ -92,7 +93,7 @@ class TransactionController extends Controller
             Transaction::insert($newTransactions);
 
             $transactions = app(CleanTransactions::class)
-                ->execute($entityId);
+                ->execute($userToken->endpoint, $entityId);
 
             if(count($newTransactions) > 0) {
                 broadcast(new TransactionsAdded($entityId, $newTransactions, $request->origin));
@@ -109,6 +110,7 @@ class TransactionController extends Controller
             $transactions = [];
             foreach($request->transactions ?? [] as $transaction) {
                 $transaction['user_token_id'] = $userToken->id;
+                $transaction['endpoint'] = $userToken->endpoint;
                 $transaction = Transaction::firstOrCreate(['id' => $transaction['id']], $transaction);
                 if($transaction->wasRecentlyCreated) {
                     $transactions[] = $transaction;
@@ -140,9 +142,10 @@ class TransactionController extends Controller
         ];
     }
 
-    private function getUuids($entity)
+    private function getUuids($endpoint, $entity)
     {
         return Transaction::query()
+            ->where('endpoint', $endpoint)
             ->where('entity_id', $entity)
             ->orderBy('created_at')
             ->pluck('id');
