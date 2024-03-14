@@ -6,15 +6,15 @@ use Illuminate\Support\Facades\Process;
 
 class FFMpegCommand
 {
-    public static function run($inputFile, $outputFile, $command)
+    public static function run($inputFile, $outputFile, $command, $beforeInputOptions = '')
     {
-        $command = "-i $inputFile $command $outputFile";
+        $command = "$beforeInputOptions -i $inputFile $command $outputFile";
         return self::runRaw($command);
     }
 
     public static function runRaw($command, $app = 'ffmpeg', $async = true)
     {
-        $command = $app . ' ' . $command;
+        $command = $app . ' ' . trim($command);
         info($command);
         $process = $async ? Process::start($command) : Process::run($command);
 
