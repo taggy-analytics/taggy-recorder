@@ -17,7 +17,7 @@ class UploadLivestreamSegments extends Command
     public function handle()
     {
         while(true) {
-            LivestreamSegment::whereDate('uploaded_at', '<', now()->subMinutes(5))->delete();
+            LivestreamSegment::where('uploaded_at', '<', now()->subMinutes(5))->delete();
 
             LivestreamSegment::whereNull('uploaded_at')
                 ->get()
