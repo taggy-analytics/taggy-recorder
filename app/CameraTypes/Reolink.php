@@ -4,6 +4,7 @@ namespace App\CameraTypes;
 
 use App\Enums\CameraStatus;
 use App\Models\Camera;
+use Illuminate\Http\Client\ConnectionException;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
 use Symfony\Component\Process\Exception\ProcessTimedOutException;
@@ -17,8 +18,11 @@ abstract class Reolink extends RtspCamera
             ->filter(function ($camera) {
                 config(['services.reolink.endpoint' => 'https://' . $camera['ipAddress'] . '/cgi-bin']);
                 config(['services.reolink.token-cache-key' => 'reolink-token-' . $camera['identifier']]);
-
-                return Arr::get(\Nanuc\LaravelReolink\Facades\Reolink::system()->getDevInfo(), 'DevInfo.model') == static::MODEL_NAME;
+                try {
+                    return Arr::get(\Nanuc\LaravelReolink\Facades\Reolink::system()->getDevInfo(), 'DevInfo.model') == static::MODEL_NAME;
+                } catch (ConnectionException $e) {
+                    return false;
+                }
             });
     }
 
