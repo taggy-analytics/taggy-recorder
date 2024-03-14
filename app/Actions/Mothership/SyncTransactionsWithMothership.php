@@ -35,14 +35,6 @@ class SyncTransactionsWithMothership
 
         foreach($entities->keys() as $entityId) {
             //$userTokenTransactions = Arr::get($entityTransactions, $entityId, []);
-
-            $uuids = $this->getQuery($entityId)
-                ->orderBy('created_at')
-                ->pluck('id')
-                ->toArray();
-
-            $hashes = $this->getSegmentsHash($uuids, self::SEGMENT_SIZE_FACTOR, self::SEGMENT_MIN_SIZE);
-
             try {
                 // Let's make sure we have a valid user token
                 // ToDo: we could iterate through all tokens until we don't get a 401/403
@@ -51,12 +43,24 @@ class SyncTransactionsWithMothership
 
                 $mothership = Mothership::make($userToken);
 
+                $uuids = $this->getQuery($entityId, $userToken->endpoint)
+                    ->orderBy('created_at')
+                    ->pluck('id')
+                    ->toArray();
+
+                ray($entityId);
+                if(in_array('bf4612e2-6d80-432d-9f27-9f4aabf6f0d1', $uuids)) {
+                    ray($entityId, $entities[$entityId]->first()->id);
+                }
+
+                $hashes = $this->getSegmentsHash($uuids, self::SEGMENT_SIZE_FACTOR, self::SEGMENT_MIN_SIZE);
+
                 $checkSync = $mothership
                     ->getTransactionsStatus($entityId, $hashes, self::HASH_SUBSTRING_LENGTH);
 
                 if(!$checkSync['transactions_in_sync']) {
                     //foreach($userTokenTransactions as $userTokenId => $transactions) {
-                        $transactions = $this->getQuery($entityId)
+                        $transactions = $this->getQuery($entityId, $userToken->endpoint)
                             //->where('reported_to_mothership', false)
                             ->when(filled($checkSync['last_transaction_in_sync']),
                                 fn(Builder $query) => $query->where('created_at', '>', Transaction::firstWhere('id', $checkSync['last_transaction_in_sync'])->created_at))
@@ -80,7 +84,7 @@ class SyncTransactionsWithMothership
 
                         $cleanedTransactions = collect($reportResponse['transactions']);
 
-                        $databaseUuids = $this->getQuery($entityId)->pluck('id');
+                        $databaseUuids = $this->getQuery($entityId, $userToken->endpoint)->pluck('id');
 
                         $cleanedTransactionsUuids = $cleanedTransactions->pluck('id');
                         $uuidsInCleanedTransactionsButNotInDatabase = $cleanedTransactionsUuids->diff($databaseUuids);
@@ -137,10 +141,10 @@ class SyncTransactionsWithMothership
         return $segments;
     }
 
-    private function getQuery($entityId)
+    private function getQuery($entityId, $endpoint)
     {
         return Transaction::query()
-            ->where('endpoint', Mothership::getEndpoint())
+            ->where('endpoint', $endpoint)
             ->where('entity_id', $entityId);
     }
 }
