@@ -82,7 +82,7 @@ class TransactionController extends Controller
         if($this->cleanupNeeded($entityId, $request->transactions)) {
             $newTransactions = collect($request->transactions)
                 ->whereNotIn('id', $this->getUuids($userToken->endpoint, $entityId))
-                ->hydrateTransactions()
+                ->hydrateTransactions($userToken->endpoint)
                 ->map(function ($transaction) use ($userToken) {
                     $transaction['user_token_id'] = $userToken->id;
                     $transaction['endpoint'] = $userToken->endpoint;

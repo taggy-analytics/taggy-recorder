@@ -27,10 +27,11 @@ class AppServiceProvider extends ServiceProvider
         Model::unguard();
         JsonResource::withoutWrapping();
 
-        Collection::macro('hydrateTransactions', function() {
-            return $this->map(function ($transaction) {
+        Collection::macro('hydrateTransactions', function($mothershipEndpoint = '') {
+            return $this->map(function ($transaction) use ($mothershipEndpoint) {
                 $transaction['created_at'] = Carbon::parse($transaction['created_at'])->toDateTimeString('milliseconds');
                 $transaction['value'] = json_encode($transaction['value']);
+                $transaction['endpoint'] = $mothershipEndpoint;
                 return $transaction;
             });
         });

@@ -49,7 +49,9 @@ class SyncTransactionsWithMothership
                 // For now let's just use the most recent token and hope for the best.
                 $userToken = $entities[$entityId]->first();
 
-                $checkSync = Mothership::make($userToken)
+                $mothership = Mothership::make($userToken);
+
+                $checkSync = $mothership
                     ->getTransactionsStatus($entityId, $hashes, self::HASH_SUBSTRING_LENGTH);
 
                 if(!$checkSync['transactions_in_sync']) {
@@ -60,7 +62,7 @@ class SyncTransactionsWithMothership
                                 fn(Builder $query) => $query->where('created_at', '>', Transaction::firstWhere('id', $checkSync['last_transaction_in_sync'])->created_at))
                             ->get(['id', 'entity_id', 'user_id', 'parent_1', 'parent_2', 'model_type', 'model_id', 'action', 'property', 'value', 'created_at']);
 
-                        $reportResponse = Mothership::make($userToken)
+                        $reportResponse = $mothership
                             ->reportTransactions($entityId, $transactions, $checkSync['last_transaction_in_sync']);
 
                         if(!$reportResponse) {
@@ -85,7 +87,7 @@ class SyncTransactionsWithMothership
 
                         $transactionsToInsert = $cleanedTransactions
                             ->whereIn('id', $uuidsInCleanedTransactionsButNotInDatabase)
-                            ->hydrateTransactions()
+                            ->hydrateTransactions($userToken->endpoint)
                             ->toArray();
 
                         Transaction::insert($transactionsToInsert);
