@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Support\Mothership;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
 
 class UserToken extends Model
 {
@@ -52,5 +53,19 @@ class UserToken extends Model
             ->latest('last_successfully_used_at')
             ->whereNull('last_rejected_at')
             ->first();
+    }
+
+    public static function byEndpointAndEntity()
+    {
+        $subQuery = UserToken::select('endpoint', 'entity_id', DB::raw('MAX(last_successfully_used_at) as last_successfully_used_at'))
+            ->whereNull('last_rejected_at')
+            ->groupBy('endpoint', 'entity_id');
+
+        return UserToken::joinSub($subQuery, 'latest_tokens', function ($join) {
+            $join->on('user_tokens.endpoint', '=', 'latest_tokens.endpoint')
+                ->on('user_tokens.entity_id', '=', 'latest_tokens.entity_id')
+                ->on('user_tokens.last_successfully_used_at', '=', 'latest_tokens.last_successfully_used_at');
+        })->whereNull('last_rejected_at')
+        ->get();
     }
 }

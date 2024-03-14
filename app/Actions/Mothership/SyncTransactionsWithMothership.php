@@ -25,53 +25,46 @@ class SyncTransactionsWithMothership
 
         blink()->put('sync-transactions-running', true);
 
-        /*
-        $entityTransactions = Transaction::query()
-            ->get()
-            ->groupBy(['entity_id', 'user_token_id']);
-        */
+        // $entities = UserToken::perEntity();
 
-        $entities = UserToken::perEntity();
+        $userTokens = UserToken::byEndpointAndEntity();
 
-        foreach($entities->keys() as $entityId) {
-            //$userTokenTransactions = Arr::get($entityTransactions, $entityId, []);
+        foreach($userTokens as $userToken) {
             try {
                 // Let's make sure we have a valid user token
                 // ToDo: we could iterate through all tokens until we don't get a 401/403
                 // For now let's just use the most recent token and hope for the best.
-                $userToken = $entities[$entityId]->first();
 
                 $mothership = Mothership::make($userToken);
 
-                $uuids = $this->getQuery($entityId, $userToken->endpoint)
+                $uuids = $this->getQuery($userToken->entity_id, $userToken->endpoint)
                     ->orderBy('created_at')
                     ->pluck('id')
                     ->toArray();
 
-                ray($entityId);
                 if(in_array('bf4612e2-6d80-432d-9f27-9f4aabf6f0d1', $uuids)) {
-                    ray($entityId, $entities[$entityId]->first()->id);
+                    ray($userToken);
                 }
 
                 $hashes = $this->getSegmentsHash($uuids, self::SEGMENT_SIZE_FACTOR, self::SEGMENT_MIN_SIZE);
 
                 $checkSync = $mothership
-                    ->getTransactionsStatus($entityId, $hashes, self::HASH_SUBSTRING_LENGTH);
+                    ->getTransactionsStatus($userToken->entity_id, $hashes, self::HASH_SUBSTRING_LENGTH);
 
                 if(!$checkSync['transactions_in_sync']) {
                     //foreach($userTokenTransactions as $userTokenId => $transactions) {
-                        $transactions = $this->getQuery($entityId, $userToken->endpoint)
+                        $transactions = $this->getQuery($userToken->entity_id, $userToken->endpoint)
                             //->where('reported_to_mothership', false)
                             ->when(filled($checkSync['last_transaction_in_sync']),
                                 fn(Builder $query) => $query->where('created_at', '>', Transaction::firstWhere('id', $checkSync['last_transaction_in_sync'])->created_at))
                             ->get(['id', 'entity_id', 'user_id', 'parent_1', 'parent_2', 'model_type', 'model_id', 'action', 'property', 'value', 'created_at']);
 
                         $reportResponse = $mothership
-                            ->reportTransactions($entityId, $transactions, $checkSync['last_transaction_in_sync']);
+                            ->reportTransactions($userToken->entity_id, $transactions, $checkSync['last_transaction_in_sync']);
 
                         if(!$reportResponse) {
                             Recorder::make()->log(LogMessageType::REPORTING_TRANSACTIONS_FAILED, 'Reporting failed', [
-                                'entity' => $entityId,
+                                'entity' => $userToken->entity_id,
                                 'transactions' => $transactions,
                                 'lastTransactionInSync' => $checkSync['last_transaction_in_sync'],
                             ]);
@@ -84,7 +77,7 @@ class SyncTransactionsWithMothership
 
                         $cleanedTransactions = collect($reportResponse['transactions']);
 
-                        $databaseUuids = $this->getQuery($entityId, $userToken->endpoint)->pluck('id');
+                        $databaseUuids = $this->getQuery($userToken->entity_id, $userToken->endpoint)->pluck('id');
 
                         $cleanedTransactionsUuids = $cleanedTransactions->pluck('id');
                         $uuidsInCleanedTransactionsButNotInDatabase = $cleanedTransactionsUuids->diff($databaseUuids);
@@ -109,7 +102,7 @@ class SyncTransactionsWithMothership
             catch(MothershipException $exception) {
                 if($exception->response->status() < 500) {
                     // ToDo: what to do in this case!?
-                    info('Transactions could not be synced for entity #' . $entityId . ' (HTTP status ' . $exception->response->status() . ')');
+                    info('Transactions could not be synced for entity #' . $userToken->entity_id . ' (HTTP status ' . $exception->response->status() . ')');
                 }
                 blink()->forget('sync-transactions-running');
                 throw $exception;
