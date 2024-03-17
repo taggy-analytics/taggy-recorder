@@ -30,7 +30,7 @@ abstract class RtspCamera extends CameraType
         $outputDirectory = Storage::disk('public')->path($recording->getPath('video'));
         $outputFile = $outputDirectory . '/video.m3u8';
         File::makeDirectory($outputDirectory, recursive: true);
-        $processId = FFMpegCommand::run($this->getRtspUrl($camera), $outputFile, '-tag:v hvc1 -f hls -hls_time ' . config('taggy-recorder.video-conversion.segment-duration') . ' -hls_segment_type fmp4 -hls_list_size 0 -hls_segment_filename ' . $outputDirectory . '/video-%05d.m4s -c copy', '-rtsp_transport tcp');
+        $processId = FFMpegCommand::run($this->getRtspUrl($camera), $outputFile, '-tag:v hvc1 -f hls -hls_time ' . config('taggy-recorder.video-conversion.segment-duration') . ' -hls_list_size 0 -hls_segment_filename ' . $outputDirectory . '/video-%05d.ts -c copy', '-rtsp_transport tcp');
         // $processId = FFMpegCommand::run($this->getRtspUrl($camera), $outputFile, '-tag:v hvc1 -f hls -hls_time ' . config('taggy-recorder.video-conversion.segment-duration') . ' -hls_list_size 0 -hls_segment_filename ' . $outputDirectory . '/video-%05d.m4s -c copy');
 
         $camera->update(['process_id' => $processId]);
