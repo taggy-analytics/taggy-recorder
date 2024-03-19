@@ -15,7 +15,7 @@ abstract class CameraType
 {
     abstract public static function discover();
     abstract public function getName();
-    abstract public function getFields();
+
     abstract public function getStatus(Camera $camera);
 
     abstract public static function getDefaultCredentials() : array;
@@ -49,6 +49,11 @@ abstract class CameraType
                 ]);
             }
         }
+    }
+
+    public function getFields()
+    {
+        return [];
     }
 
     private static function getCameraClasses()
