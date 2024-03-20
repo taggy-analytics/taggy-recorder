@@ -106,6 +106,11 @@ class Mothership
         $this->post('recordings/' . $recording->key . '/livestream-segments', [
             'name' => basename($file),
             'content' => $content ?? base64_encode(File::get($file)),
+            'rotation' => $recording->rotation,
+            'width' => $recording->width,
+            'height' => $recording->height,
+            'streamingProtocol' => $recording->getStreamingProtocol(),
+            'codec' => $recording->getCodec(),
             'session_uuid' => Arr::get($recording->data, 'session_uuid'),
         ]);
     }
