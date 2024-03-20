@@ -3,6 +3,8 @@
 namespace App\CameraTypes;
 
 use App\Enums\CameraStatus;
+use App\Enums\Codec;
+use App\Enums\StreamingProtocol;
 use App\Models\Camera;
 use Illuminate\Http\Client\ConnectionException;
 use Illuminate\Support\Arr;
@@ -14,6 +16,9 @@ class AnnkeFdc600 extends RtspCamera
 {
     public CONST VIDEO_WIDTH = 3632;
     public CONST VIDEO_HEIGHT = 1632;
+
+    public $streamingProtocol = StreamingProtocol::HLS;
+    public $codec = Codec::H264;
 
     protected const MODEL_NAME = 'Annke FDC600';
 

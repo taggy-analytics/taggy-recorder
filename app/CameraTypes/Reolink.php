@@ -3,6 +3,8 @@
 namespace App\CameraTypes;
 
 use App\Enums\CameraStatus;
+use App\Enums\Codec;
+use App\Enums\StreamingProtocol;
 use App\Models\Camera;
 use Illuminate\Http\Client\ConnectionException;
 use Illuminate\Support\Arr;
@@ -12,6 +14,9 @@ use Symfony\Component\Process\Process;
 
 abstract class Reolink extends RtspCamera
 {
+    public $streamingProtocol = StreamingProtocol::HLS;
+    public $codec = Codec::HEVC;
+
     public static function discover()
     {
         return self::discoverByVendorMac('ec:71:db')

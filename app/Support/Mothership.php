@@ -62,6 +62,8 @@ class Mothership
                 'rotation' => $recording->rotation,
                 'width' => $recording->width,
                 'height' => $recording->height,
+                'streamingProtocol' => $recording->getStreamingProtocol(),
+                'codec' => $recording->getCodec(),
             ]);
         }
         catch(MothershipException $exception) {

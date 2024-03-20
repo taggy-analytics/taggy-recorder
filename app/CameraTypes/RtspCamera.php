@@ -10,6 +10,8 @@ use Illuminate\Support\Facades\Storage;
 
 abstract class RtspCamera extends CameraType
 {
+    abstract public function getRtspUrl(Camera $camera);
+
     public function isAvailable(Camera $camera)
     {
         $ch = curl_init();
@@ -46,11 +48,6 @@ abstract class RtspCamera extends CameraType
         }
 
         return $killWasSuccessfull;
-    }
-
-    public function getRtspUrl(Camera $camera)
-    {
-        return "rtsp://{$camera->credentials['user']}:{$camera->credentials['password']}@{$camera->ip_address}:554/h265Preview_01_main";
     }
 
     public function isRecording(Camera $camera)

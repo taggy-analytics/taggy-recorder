@@ -194,4 +194,14 @@ class Recording extends Model
             'stopped_at' => $this->started_at?->addMilliseconds(round($duration * 1000)),
         ]);
     }
+
+    public function getStreamingProtocol()
+    {
+        return $this->camera->getType()->streamingProtocol;
+    }
+
+    public function getCodec()
+    {
+        return $this->camera->getType()->codec;
+    }
 }
