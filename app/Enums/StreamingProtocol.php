@@ -2,7 +2,7 @@
 
 namespace App\Enums;
 
-enum StreamingProtocol
+enum StreamingProtocol : string
 {
-    case HLS;
+    case HLS = 'hls';
 }

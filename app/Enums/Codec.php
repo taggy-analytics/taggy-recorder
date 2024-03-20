@@ -2,8 +2,8 @@
 
 namespace App\Enums;
 
-enum Codec
+enum Codec : string
 {
-    case HEVC;
-    case H264;
+    case HEVC = 'hevc';
+    case H264 = 'h264';
 }
