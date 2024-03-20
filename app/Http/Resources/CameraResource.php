@@ -28,6 +28,8 @@ class CameraResource extends JsonResource
             'streams' => $this->getStreams(),
             'video_width' => $this->video_width,
             'video_height' => $this->video_height,
+            'width' => $this->video_width,
+            'height' => $this->video_height,
         ];
     }
 }
