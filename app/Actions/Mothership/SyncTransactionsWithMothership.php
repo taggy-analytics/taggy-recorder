@@ -42,10 +42,6 @@ class SyncTransactionsWithMothership
                     ->pluck('id')
                     ->toArray();
 
-                if(in_array('bf4612e2-6d80-432d-9f27-9f4aabf6f0d1', $uuids)) {
-                    ray($userToken);
-                }
-
                 $hashes = $this->getSegmentsHash($uuids, self::SEGMENT_SIZE_FACTOR, self::SEGMENT_MIN_SIZE);
 
                 $checkSync = $mothership
