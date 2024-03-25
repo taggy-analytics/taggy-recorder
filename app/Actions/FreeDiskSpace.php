@@ -25,8 +25,8 @@ class FreeDiskSpace
 
             while ($this->getDiskUsage() < $this->deleteOldFilesUntil) {
                 $fileToDelete = $filesToDelete->shift();
-                $fileToDelete->delete();
-                $fileToDelete->recording->update([
+                $fileToDelete?->delete();
+                $fileToDelete?->recording->update([
                     'status' => RecordingStatus::DELETING_FILES,
                 ]);
             }

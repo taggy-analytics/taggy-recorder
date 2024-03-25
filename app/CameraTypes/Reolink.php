@@ -99,29 +99,6 @@ abstract class Reolink extends RtspCamera
             info($output);
         }
 
-        if($status == CameraStatus::READY && $camera->credentials_status->invalidCredentialsDiscoveredAt) {
-            // Camera can be reached for the first time!!!
-            $camera->credentials_status->invalidCredentialsDiscoveredAt = null;
-            $camera->credentials_status->newCredentialsReportedAt = null;
-            $camera->credentials_status->newCredentialsReceivedAt = null;
-            $camera->credentials_status->newCredentialsUnsuccessfulAt = null;
-            $camera->credentials_status->newCredentialsSuccessfulAt = now();
-            $camera->save();
-        }
-        elseif(in_array($status, [CameraStatus::CONNECTION_REFUSED, CameraStatus::AUTHENTICATION_FAILED])) {
-            if(!$camera->credentials_status->invalidCredentialsDiscoveredAt) {
-                $camera->credentials_status->invalidCredentialsDiscoveredAt = now();
-                $camera->save();
-            }
-            elseif($camera->credentials_status->newCredentialsReceivedAt && !$camera->credentials_status->newCredentialsUnsuccessfulAt) {
-                $camera->credentials_status->invalidCredentialsDiscoveredAt = now();
-                $camera->credentials_status->newCredentialsReportedAt = null;
-                $camera->credentials_status->newCredentialsReceivedAt = null;
-                $camera->credentials_status->newCredentialsUnsuccessfulAt = now();
-                $camera->save();
-            }
-        }
-
         return $status;
     }
 }

@@ -4,15 +4,11 @@ namespace App\Models;
 
 use App\Actions\CalculateLed;
 use App\CameraTypes\CameraType;
-use App\Data\CredentialsStatusData;
 use App\Enums\CameraStatus;
 use App\Enums\RecordingMode;
 use App\Models\Traits\BroadcastsEvents;
-use App\Support\Mothership;
 use Illuminate\Database\Eloquent\Casts\AsCollection;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Arr;
-use Illuminate\Support\Facades\File;
 
 class Camera extends Model
 {
@@ -21,18 +17,15 @@ class Camera extends Model
     public const DEFAULT_ROTATION = 1 / (60 * 4608);
 
     protected $casts = [
-        'sent_to_mothership_at' => 'datetime',
         'status' => CameraStatus::class,
         'credentials' => AsCollection::class,
         'recording_mode' => RecordingMode::class,
-        'credentials_status' => CredentialsStatusData::class,
     ];
 
     public static function boot() {
         parent::boot();
 
         static::creating(function(Camera $camera) {
-            $camera->credentials_status = new CredentialsStatusData();
             $camera->credentials = $camera->getType()->getDefaultCredentials();
             $camera->status = $camera->status ?? CameraStatus::DISCOVERED;
         });

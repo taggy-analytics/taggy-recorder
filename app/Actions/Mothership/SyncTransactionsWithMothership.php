@@ -120,7 +120,7 @@ class SyncTransactionsWithMothership
             $segment = array_splice($array, 0, $segmentSize);
 
             foreach ($segment as $item) {
-                $hashData .= substr($item, 0, self::HASH_SUBSTRING_LENGTH);
+                $hashData .= substr($item, -self::HASH_SUBSTRING_LENGTH);
                 $currentIndex++;
             }
 

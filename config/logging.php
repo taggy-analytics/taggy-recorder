@@ -68,6 +68,7 @@ return [
         ],
 
         'websocket' => [
+            'driver' => 'single',
             'level' => env('LOG_WEBSOCKETS', false) ? 'debug' : 'emergency',
             'path' => storage_path('logs/websocket.log'),
         ],

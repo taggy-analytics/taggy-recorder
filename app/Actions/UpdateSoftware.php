@@ -56,6 +56,7 @@ class UpdateSoftware
                 Process::run($afterInstallScript);
 
                 chdir($releasePath);
+                Process::run('npm install');
                 Process::run('composer install');
                 Process::run('php artisan migrate --force');
 
