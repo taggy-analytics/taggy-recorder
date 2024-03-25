@@ -2,6 +2,7 @@
 
 namespace App\Support;
 
+use App\Actions\UpdateSoftware;
 use App\Enums\RecordingFileStatus;
 use App\Enums\RecordingStatus;
 use App\Exceptions\MothershipException;
@@ -219,10 +220,20 @@ class Mothership
         blink()->put(self::LAST_RESPONSE_STATUS_CACHE_KEY, $response->status());
 
         if($response->status() >= 400) {
-            if($response->status() == 401) {
-                $this->userToken?->revoke();
+            switch($response->status()) {
+                case 401:
+                    $this->userToken?->revoke();
+                    throw new MothershipException($method, $url, $data, $response);
+                case 420:
+                    app(UpdateSoftware::class)->execute();
+                    $response = $this->client
+                        ->{$method}($url, $data);
+
+                    blink()->put(self::LAST_RESPONSE_STATUS_CACHE_KEY, $response->status());
+                    break;
+                default:
+                    throw new MothershipException($method, $url, $data, $response);
             }
-            throw new MothershipException($method, $url, $data, $response);
         }
 
         $this->headers = [
