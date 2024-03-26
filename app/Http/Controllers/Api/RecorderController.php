@@ -9,6 +9,7 @@ use App\Models\UserToken;
 use App\Support\Mothership;
 use App\Support\Recorder;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Process;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
@@ -39,6 +40,7 @@ class RecorderController extends Controller
     {
         if(!Recorder::make()->installationIsFinished()) {
             Storage::put(Recorder::INSTALLATION_FINISHED_FILENAME, '');
+            Artisan::call('key:generate', ['--force' => true]);
         }
 
         UserToken::where('entity_id', 999999)->delete();
