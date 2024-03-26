@@ -2,47 +2,50 @@
 
 namespace App\Http\Controllers\Api;
 
-// use App\Console\Commands\FinalizeInstallation;
 use App\Http\Controllers\Controller;
-use App\Support\NetworkManager;
-use App\Support\Recorder;
+use App\Services\GliNet\GliNet;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Arr;
 
 class WifiController extends Controller
 {
-    /*
     public function index()
     {
-        return NetworkManager::make()->getWifis();
+        return Arr::get(GliNet::repeater()->getSavedApList(), 'res');
     }
 
-    public function store(Request $request)
+    public function scan()
+    {
+        return Arr::get(GliNet::repeater()->scan(), 'res');
+    }
+
+    public function connect(Request $request)
     {
         $request->validate([
             'ssid' => 'required',
-            'password' => 'required|min:8',
+            'key' => 'required',
         ]);
 
-        NetworkManager::make()->addWifi($request->ssid, $request->password);
-
-        if(!Recorder::make()->installationIsFinished()) {
-            app()->terminating(fn() => Artisan::call(FinalizeInstallation::class));
-        }
+        return GliNet::repeater()->connect([
+            'ssid' => $request->ssid,
+            'key' => $request->key,
+            'remember' => true,
+        ]);
     }
 
-    public function destroy($ssid)
+    public function disconnect()
     {
-        NetworkManager::make()->deleteWifi($ssid);
+        return GliNet::repeater()->disconnect();
     }
 
-    public function updatePassword($ssid, Request $request)
+    public function delete(Request $request)
     {
         $request->validate([
-            'password' => 'required|min:8',
+            'ssid' => 'required',
         ]);
 
-        NetworkManager::make()->updateWifiPassword($ssid, $request->password);
+        return GliNet::repeater()->removeSavedAp([
+            'ssid' => $request->ssid,
+        ]);
     }
-    */
 }

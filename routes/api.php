@@ -24,13 +24,7 @@ Route::post('recorder/refresh-app-key', [\App\Http\Controllers\Api\RecorderContr
 Route::get('recorder/get-public-key', [\App\Http\Controllers\Api\RecorderController::class, 'getPublicKey']);
 Route::get('recorder/network-status', [\App\Http\Controllers\Api\RecorderController::class, 'networkStatus']);
 
-// Route::get('recorder/vpn/status', [\App\Http\Controllers\Api\RecorderController::class, 'vpnStatus']);
-// Route::post('recorder/vpn/config', [\App\Http\Controllers\Api\RecorderController::class, 'setVpnConfig']);
-// Route::post('recorder/vpn/start', [\App\Http\Controllers\Api\RecorderController::class, 'startVpn']);
-// Route::post('recorder/vpn/stop', [\App\Http\Controllers\Api\RecorderController::class, 'stopVpn']);
-
 Route::post('recorder/tokens', [\App\Http\Controllers\Api\RecorderController::class, 'tokens']);
-
 Route::post('recorder/dot-env', [\App\Http\Controllers\Api\RecorderController::class, 'setDotEnv']);
 
 Route::get('cameras', [\App\Http\Controllers\Api\CameraController::class, 'index']);
@@ -43,13 +37,11 @@ Route::post('cameras/{camera}/recording/stop', [\App\Http\Controllers\Api\Camera
 Route::get('recordings', [\App\Http\Controllers\Api\RecordingController::class, 'index']);
 Route::get('recordings/{recording}', [\App\Http\Controllers\Api\RecordingController::class, 'show']);
 
-
 Route::post('entities/{entityId}/transactions/status', [\App\Http\Controllers\Api\TransactionController::class, 'status']);
 Route::post('entities/{entityId}/transactions', [\App\Http\Controllers\Api\TransactionController::class, 'store']);
 
-/*
 Route::get('wifis', [\App\Http\Controllers\Api\WifiController::class, 'index']);
-Route::post('wifis', [\App\Http\Controllers\Api\WifiController::class, 'store']);
-Route::delete('wifis/{ssid}', [\App\Http\Controllers\Api\WifiController::class, 'destroy']);
-Route::put('wifis/{ssid}/change-password', [\App\Http\Controllers\Api\WifiController::class, 'updatePassword']);
-*/
+Route::get('wifis/scan', [\App\Http\Controllers\Api\WifiController::class, 'scan']);
+Route::post('wifis/connect', [\App\Http\Controllers\Api\WifiController::class, 'connect']);
+Route::post('wifis/disconnect', [\App\Http\Controllers\Api\WifiController::class, 'disconnect']);
+Route::delete('wifis/delete', [\App\Http\Controllers\Api\WifiController::class, 'delete']);
