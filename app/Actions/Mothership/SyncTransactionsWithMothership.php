@@ -9,6 +9,7 @@ use App\Models\UserToken;
 use App\Support\Mothership;
 use App\Support\Recorder;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\File;
 
 
 class SyncTransactionsWithMothership
@@ -42,7 +43,7 @@ class SyncTransactionsWithMothership
                     ->pluck('id')
                     ->toArray();
 
-                $hashes = $this->getSegmentsHash($uuids, self::SEGMENT_SIZE_FACTOR, self::SEGMENT_MIN_SIZE);
+                $hashes = $this->getSegmentsHash($uuids, self::SEGMENT_SIZE_FACTOR, self::SEGMENT_MIN_SIZE, $userToken->entity_id);
 
                 $checkSync = $mothership
                     ->getTransactionsStatus($userToken->entity_id, $hashes, self::HASH_SUBSTRING_LENGTH);
@@ -108,23 +109,31 @@ class SyncTransactionsWithMothership
         blink()->forget('sync-transactions-running');
     }
 
-    private function getSegmentsHash($array, $factor, $minSize) {
+    private function getSegmentsHash($uuids, $factor, $minSize, $entityId) {
         $segments = [];
 
         $currentIndex = -1;
 
-        while (count($array) > 0) {
+        $debug = implode(PHP_EOL,$uuids) . PHP_EOL . PHP_EOL;
+
+        while (count($uuids) > 0) {
             $hashData = '';
 
-            $segmentSize = max($minSize, ceil(count($array) * $factor));
-            $segment = array_splice($array, 0, $segmentSize);
+            $segmentSize = config('app.debug') ? 1 : max($minSize, ceil(count($uuids) * $factor));
+            $segment = array_splice($uuids, 0, $segmentSize);
 
             foreach ($segment as $item) {
                 $hashData .= substr($item, -self::HASH_SUBSTRING_LENGTH);
                 $currentIndex++;
             }
 
+            $debug .= crc32($hashData) . ' ' . $hashData . PHP_EOL;
+
             $segments[$currentIndex] = crc32($hashData);
+        }
+
+        if(config('app.debug')) {
+            File::put(storage_path('logs/transactions/' . $entityId . '.log'), $debug);
         }
 
         return $segments;
