@@ -32,6 +32,7 @@ class EnsureNetworkIsSetup
     {
         return GliNet::make()
             ->getClients()
+            ->filter(fn($client) => $client['online'] === true)
             ->pluck("name")
             ->contains(gethostname());
     }
