@@ -114,7 +114,7 @@ class SyncTransactionsWithMothership
 
         $currentIndex = -1;
 
-        $debug = implode(PHP_EOL,$uuids) . PHP_EOL . PHP_EOL;
+        $debug = implode(PHP_EOL, $uuids) . PHP_EOL . PHP_EOL;
 
         while (count($uuids) > 0) {
             $hashData = '';
@@ -133,7 +133,7 @@ class SyncTransactionsWithMothership
         }
 
         if(config('app.debug')) {
-            File::put(storage_path('logs/transactions/' . $entityId . '.log'), $debug);
+            File::put(storage_path('logs/transactions-' . $entityId . '.log'), $debug);
         }
 
         return $segments;

@@ -82,6 +82,7 @@ class Mothership
         return $this->post('entities/' . $entityId . '/transactions/status', [
             'hashes' => $hashes,
             'hash_substring_length' => $hashSubstringLength,
+            'debug' => config('app.debug'),
         ]);
     }
 
