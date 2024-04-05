@@ -7,6 +7,7 @@ use App\Services\GliNet;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Process;
 use Illuminate\Support\Str;
+use Spatie\LaravelIgnition\Facades\Flare;
 
 class EnsureNetworkIsSetup
 {
@@ -30,8 +31,12 @@ class EnsureNetworkIsSetup
 
     private function routerKnowsHostname()
     {
-        return GliNet::make()
-            ->getClients()
+        $clients = GliNet::make()
+            ->getClients();
+
+        Flare::context('clients', $clients);
+
+        return $clients
             ->filter(fn($client) => $client['online'] === true)
             ->pluck("name")
             ->contains(gethostname());
