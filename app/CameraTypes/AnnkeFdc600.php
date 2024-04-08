@@ -17,6 +17,8 @@ class AnnkeFdc600 extends RtspCamera
     public CONST VIDEO_WIDTH = 3632;
     public CONST VIDEO_HEIGHT = 1632;
 
+    protected $latency = 2;
+
     public $streamingProtocol = StreamingProtocol::HLS;
     public $codec = Codec::H264;
 

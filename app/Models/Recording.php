@@ -204,4 +204,9 @@ class Recording extends Model
     {
         return $this->camera->getType()->codec;
     }
+
+    public function getLatency()
+    {
+        return config('taggy-recorder.video-conversion.segment-duration') + $this->camera->getType()->getLatency();
+    }
 }

@@ -91,4 +91,9 @@ abstract class CameraType
             ->filter(fn($device) => !Camera::pluck('ip_address')->contains($device['ipAddress']))
             ->values();
     }
+
+    public function getLatency()
+    {
+        return $this->latency;
+    }
 }

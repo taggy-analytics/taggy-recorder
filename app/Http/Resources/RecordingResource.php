@@ -25,6 +25,7 @@ class RecordingResource extends JsonResource
             'camera' => CameraResource::make($this->camera),
             'aborted_at' => $this->aborted_at,
             'thumbnail' => route('image', 'recording.png'),
+            'latency' => $this->resource->getLatency(),
         ];
     }
 }

@@ -14,6 +14,8 @@ use Symfony\Component\Process\Process;
 
 abstract class Reolink extends RtspCamera
 {
+    protected $latency = 2;
+
     public $streamingProtocol = StreamingProtocol::HLS;
     public $codec = Codec::HEVC;
 
