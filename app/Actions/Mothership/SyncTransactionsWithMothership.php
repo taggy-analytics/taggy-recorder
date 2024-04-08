@@ -84,7 +84,7 @@ class SyncTransactionsWithMothership
                             ->hydrateTransactions($userToken->endpoint)
                             ->toArray();
 
-                        Transaction::insert($transactionsToInsert);
+                        Transaction::insertChunked($transactionsToInsert);
 
                         if($reportResponse['content'] == 'all-transactions') {
                             $uuidsInDatabaseButNotInCleanedTransactions = $databaseUuids->diff($cleanedTransactionsUuids);

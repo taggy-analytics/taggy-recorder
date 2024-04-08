@@ -2,10 +2,12 @@
 
 namespace App\Models;
 
+use App\Models\Traits\InsertsChunked;
 use Illuminate\Database\Eloquent\Model;
 
 class MothershipReport extends Model
 {
+    use InsertsChunked;
     protected $casts = [
         'user_token' => 'encrypted',
         'reported_at' => 'datetime',

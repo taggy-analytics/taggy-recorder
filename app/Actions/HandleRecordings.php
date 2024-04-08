@@ -90,7 +90,7 @@ class HandleRecordings
                 ];
                 */
 
-                RecordingFile::insert($files);
+                RecordingFile::insertChunked($files);
 
                 $mothershipReports = $recording->load('files')
                     ->files()
@@ -102,7 +102,7 @@ class HandleRecordings
                         'created_at' => $currentTime,
                     ])->toArray();
 
-                MothershipReport::insert($mothershipReports);
+                MothershipReport::insertChunked($mothershipReports);
 
                 $recording->setStatus(RecordingStatus::CREATED_RECORDING_FILES_IN_DB);
             }

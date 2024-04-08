@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Enums\RecordingFileStatus;
 use App\Enums\RecordingFileType;
 use App\Models\Traits\HasStatus;
+use App\Models\Traits\InsertsChunked;
 use App\Models\Traits\IsReportedToMothership;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Storage;
@@ -14,6 +15,7 @@ class RecordingFile extends Model
 {
     use HasStatus;
     use IsReportedToMothership;
+    use InsertsChunked;
 
     protected $casts = [
         'status' => RecordingFileStatus::class,

@@ -90,12 +90,8 @@ class TransactionController extends Controller
                 })
                 ->toArray();
 
-            $chunks = array_chunk($newTransactions, 100);
+            Transaction::insertChunked($newTransactions);
 
-            foreach ($chunks as $chunk) {
-                Transaction::insert($chunk);
-            }
-            
             $transactions = app(CleanTransactions::class)
                 ->execute($userToken->endpoint, $entityId);
 
