@@ -4,6 +4,7 @@ namespace App\Actions;
 
 use App\Enums\LogMessageType;
 use App\Services\GliNet;
+use Illuminate\Http\Client\ConnectionException;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Process;
 
@@ -29,8 +30,13 @@ class EnsureNetworkIsSetup
 
     private function routerKnowsHostname()
     {
-        $clients = GliNet::make()
-            ->getClients();
+        try {
+            $clients = GliNet::make()
+                ->getClients();
+        }
+        catch(ConnectionException $exception) {
+            return null;
+        }
 
         return $clients
             ->filter(fn($client) => Arr::get($client, 'online') === true)
