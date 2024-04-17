@@ -2,7 +2,7 @@
 
 return [
     'video-conversion' => [
-        'segment-duration' => 2,
+        'segment-duration' => env('HLS_SEGMENT_DURATION', 6),
         'thumbnails' => [
             'nth' => 20,
         ]

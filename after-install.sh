@@ -1,7 +1,7 @@
 #!/bin/bash
 
 echo "Hello, world"
-grep -q '^DIESISTEINTEST=' ./.env || echo 'DIESISTEINTEST=1234!' >> ./.env
+grep -q '^HLS_SEGMENT_DURATION=' ./.env || echo 'HLS_SEGMENT_DURATION=6' >> ./.env
 
 if [ ! -f /etc/supervisor/conf.d/watchtest.conf ]; then
     # File doesn't exist, create and add configuration
