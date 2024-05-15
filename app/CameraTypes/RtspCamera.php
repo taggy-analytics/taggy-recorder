@@ -2,6 +2,7 @@
 
 namespace App\CameraTypes;
 
+use App\Enums\CameraStatus;
 use App\Models\Camera;
 use App\Models\Recording;
 use App\Support\FFMpegCommand;
@@ -32,7 +33,7 @@ abstract class RtspCamera extends CameraType
         $outputDirectory = Storage::disk('public')->path($recording->getPath('video'));
         $outputFile = $outputDirectory . '/video.m3u8';
         File::makeDirectory($outputDirectory, recursive: true);
-        $processId = FFMpegCommand::run($this->getRtspUrl($camera), $outputFile, '-tag:v hvc1 -f hls -hls_time ' . config('taggy-recorder.video-conversion.segment-duration') . ' -hls_list_size 0 -hls_segment_filename ' . $outputDirectory . '/video-%05d.ts -c copy', '-rtsp_transport tcp');
+        $processId = FFMpegCommand::run($this->getRtspUrl($camera), $outputFile, '-tag:v hvc1 -f hls -hls_time ' . config('taggy-recorder.video-conversion.segment-duration') . ' -hls_list_size 0 -hls_segment_filename ' . $outputDirectory . '/video-%05d.ts -c copy -use_wallclock_as_timestamps 1', '-fflags +genpts');
         // $processId = FFMpegCommand::run($this->getRtspUrl($camera), $outputFile, '-tag:v hvc1 -f hls -hls_time ' . config('taggy-recorder.video-conversion.segment-duration') . ' -hls_list_size 0 -hls_segment_filename ' . $outputDirectory . '/video-%05d.m4s -c copy');
 
         $camera->update(['process_id' => $processId]);
@@ -40,33 +41,18 @@ abstract class RtspCamera extends CameraType
 
     public function stopRecording(Camera $camera)
     {
-        // SIGKILL = 9; Constants do not always work for whatever reason
-        $killWasSuccessfull = posix_kill($camera->process_id, 9);
+        shell_exec('pkill -f ' . $camera->recordings()->latest()->first()->key);
 
-        if($killWasSuccessfull) {
-            $camera->update(['process_id' => null]);
-        }
-
-        return $killWasSuccessfull;
+        return true;
     }
 
     public function isRecording(Camera $camera)
     {
-        if($camera->process_id && !file_exists( "/proc/{$camera->process_id}")) {
-            $backtrace = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 10);
-            info('I just killed the recording with process ID ' . $camera->process_id . ':', ['backtrace' => $backtrace]);
-            $camera->update(['process_id' => null]);
+        if($camera->status != CameraStatus::READY) {
+            return false;
         }
 
-        return filled($camera->process_id);
+        $key = $camera->recordings()->latest()->first()->key;
+        return str_contains(shell_exec("pgrep -fl " . $key), 'ffmpeg');
     }
-
-    /*
-    private function getProcess(Camera $camera)
-    {
-        return Recorder::make()->getRunningFfmpegProcesses()
-            ->filter(fn($process) => $process['input'] == $this->getRtspUrl($camera))
-            ->first();
-    }
-    */
 }
