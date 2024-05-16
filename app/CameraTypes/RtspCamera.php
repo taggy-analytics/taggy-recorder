@@ -52,7 +52,12 @@ abstract class RtspCamera extends CameraType
             return false;
         }
 
-        $key = $camera->recordings()->latest()->first()->key;
+        $key = $camera->recordings()->latest()->first()?->key;
+
+        if(empty($key)) {
+            return false;
+        }
+
         return str_contains(shell_exec("pgrep -fl " . $key), 'ffmpeg');
     }
 }
