@@ -44,7 +44,7 @@ class RunStartupActions extends Command
         app(EnsureAppKeyIsSet::class)->execute();
 
         $counter = 0;
-        while(Mothership::make()->isOnline(disableCache: true) && $counter < 5) {
+        while(!Mothership::make()->isOnline(disableCache: true) && $counter < 5) {
             sleep(5);
             $counter++;
         }
