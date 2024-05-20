@@ -22,7 +22,7 @@ class UpdateSoftware
             try {
                 $newVersion = $mothership->checkForUpdateFile();
             }
-            catch(MothershipException $exception) {
+            catch(\Exception $exception) {
                 return [
                     'updated' => false,
                     'version' => Recorder::make()->currentSoftwareVersion(),

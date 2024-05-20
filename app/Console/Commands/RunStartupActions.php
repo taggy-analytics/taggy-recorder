@@ -5,6 +5,7 @@ namespace App\Console\Commands;
 use App\Actions\EnsureAppKeyIsSet;
 use App\Actions\EnsureNetworkIsSetup;
 use App\Actions\UpdateSoftware;
+use App\Support\Mothership;
 use App\Support\Recorder;
 use Illuminate\Console\Command;
 use Illuminate\Console\Scheduling\Schedule;
@@ -41,6 +42,13 @@ class RunStartupActions extends Command
 
         app(EnsureNetworkIsSetup::class)->execute();
         app(EnsureAppKeyIsSet::class)->execute();
+
+        $counter = 0;
+        while(Mothership::make()->isOnline(disableCache: true) && $counter < 5) {
+            sleep(5);
+            $counter++;
+        }
+
         app(UpdateSoftware::class)->execute();
     }
 }

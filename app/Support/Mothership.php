@@ -139,14 +139,14 @@ class Mothership
     }
     */
 
-    public function isOnline($timeout = 3)
+    public function isOnline($timeout = 3, $disableCache = false)
     {
         // App simulator testing
         if(cache()->has('connectedToMothership')) {
             return cache()->get('connectedToMothership');
         }
 
-        return blink()->once('isOnline', function() use ($timeout) {
+        return blink()->once('isOnline' . ($disableCache ? Str::random() : ''), function() use ($timeout) {
             try {
                 return $this->checkStatus($timeout)->status() == 200;
             }
