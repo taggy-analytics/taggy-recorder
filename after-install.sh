@@ -1,6 +1,5 @@
 #!/bin/bash
 
-echo "Hello, world"
 grep -q '^HLS_SEGMENT_DURATION=' ./.env || echo 'HLS_SEGMENT_DURATION=6' >> ./.env
 
 if [ ! -f /etc/supervisor/conf.d/watchtest.conf ]; then
@@ -8,7 +7,7 @@ if [ ! -f /etc/supervisor/conf.d/watchtest.conf ]; then
     echo "[program:watchtest]
 process_name=%(program_name)s
 directory=/var/www/taggy/current
-command=php /var/www/taggy/current/artisan taggy:watch-recording-segmentsa
+command=php /var/www/taggy/current/artisan taggy:watch-recording-segments
 autostart=true
 autorestart=true
 user=taggy

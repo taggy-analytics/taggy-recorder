@@ -18,14 +18,14 @@ def log_system_metrics():
         cpu_usage = subprocess.getoutput("ps aux --sort=-%cpu | head -n 11")
         mem_usage = subprocess.getoutput("ps aux --sort=-%mem | head -n 11")
         free_memory = subprocess.getoutput("free -h")
-        htop_output = subprocess.getoutput("htop -b -n 1")
+        top_output = subprocess.getoutput("top -b -n 1 | head -n 20")
 
         log_entry = (
             f"{now}\n\n"
-            f"CPU Usage:\n{cpu_usage}\n\n"
-            f"Memory Usage:\n{mem_usage}\n\n"
+            f"Top 10 CPU-Consuming Processes:\n{cpu_usage}\n\n"
+            f"Top 10 Memory-Consuming Processes:\n{mem_usage}\n\n"
             f"Free Memory:\n{free_memory}\n\n"
-            f"HTop Output:\n{htop_output}\n\n"
+            f"Top Output:\n{top_output}\n\n"
             f"{'='*50}\n"
         )
 
