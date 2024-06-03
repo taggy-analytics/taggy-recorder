@@ -18,8 +18,16 @@ def log_system_metrics():
         cpu_usage = subprocess.getoutput("ps aux --sort=-%cpu | head -n 11")
         mem_usage = subprocess.getoutput("ps aux --sort=-%mem | head -n 11")
         free_memory = subprocess.getoutput("free -h")
+        htop_output = subprocess.getoutput("htop -b -n 1")
 
-        log_entry = f"{now}\n\nCPU Usage:\n{cpu_usage}\n\nMemory Usage:\n{mem_usage}\n\nFree Memory:\n{free_memory}\n\n{'='*50}\n"
+        log_entry = (
+            f"{now}\n\n"
+            f"CPU Usage:\n{cpu_usage}\n\n"
+            f"Memory Usage:\n{mem_usage}\n\n"
+            f"Free Memory:\n{free_memory}\n\n"
+            f"HTop Output:\n{htop_output}\n\n"
+            f"{'='*50}\n"
+        )
 
         with open(get_log_filename(), 'a') as log_file:
             log_file.write(log_entry)
