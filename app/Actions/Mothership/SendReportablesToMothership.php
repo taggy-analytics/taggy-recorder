@@ -5,6 +5,7 @@ namespace App\Actions\Mothership;
 use App\Actions\CalculateLed;
 use App\Models\MothershipReport;
 use App\Support\Recorder;
+use Spatie\LaravelIgnition\Facades\Flare;
 
 class SendReportablesToMothership
 {
@@ -14,8 +15,13 @@ class SendReportablesToMothership
             $errored = false;
 
             foreach(MothershipReport::unreported() as $mothershipReport) {
+                Flare::context('motherShipReport', $mothershipReport);
                 if(!Recorder::make()->isUploading()) {
                     Recorder::make()->isUploading(true);
+                }
+                if(!$mothershipReport->model) {
+                    $mothershipReport->delete();
+                    continue;
                 }
                 $actionClass = 'App\\Actions\\Mothership\\Report' . (new \ReflectionClass($mothershipReport->model))->getShortName();
                 $mothershipReport->update(['reported_at' => now()]);
