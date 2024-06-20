@@ -15,6 +15,8 @@ class WatchRecordingSegments extends Command
 
     protected $description = 'Watch recording segments';
 
+    public const STOP_FILE_NAME = '.stopWatchRecordingSegments';
+
     public function handle()
     {
         $paths = collect(File::directories(Storage::disk("public")->path("recordings")))
@@ -26,7 +28,10 @@ class WatchRecordingSegments extends Command
             ->values()
             ->toArray();
 
+        Storage::delete(self::STOP_FILE_NAME);
+
         Watch::paths($paths)
+            ->shouldContinue(fn() => !Storage::exists(self::STOP_FILE_NAME))
             ->onFileCreated(function (string $newFilePath) {
                 $this->sendFile($newFilePath);
             })
