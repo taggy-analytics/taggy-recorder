@@ -8,8 +8,6 @@ return new class extends Migration
 {
     public function up()
     {
-        Schema::table('livestream_segments', function (Blueprint $table) {
-            $table->text('m3u8_content')->nullable()->after('content');
-        });
+
     }
 };

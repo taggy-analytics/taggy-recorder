@@ -7,6 +7,7 @@ use App\Models\Recording;
 use App\Models\UserToken;
 use App\Support\Mothership;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Storage;
 
 class UploadLivestreamSegments extends Command
 {
@@ -36,7 +37,9 @@ class UploadLivestreamSegments extends Command
             $recording = $segment->getRecording();
             if($recording->livestream_enabled) {
                 $userToken = UserToken::forEndpointAndEntity($recording->data['endpoint'], $recording->data['entity_id']);
-                Mothership::make($userToken)->sendLivestreamFile($recording, $segment->file, $segment->content, $segment->m3u8_content);
+                $m3u8Content = Storage::get('segment-m3u8-' . $segment->id);
+                Storage::delete('segment-m3u8-' . $segment->id);
+                Mothership::make($userToken)->sendLivestreamFile($recording, $segment->file, $segment->content, $m3u8Content);
                 $segment->update(['uploaded_at' => now()]);
             }
         }
