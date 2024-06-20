@@ -10,6 +10,7 @@ use App\Models\Traits\BroadcastsEvents;
 use Illuminate\Database\Eloquent\Casts\AsCollection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Facades\Process;
 
 class Camera extends Model
 {
@@ -76,9 +77,7 @@ class Camera extends Model
 
         info('Starting recording # ' . $recording->id . ' for camera #' . $this->id);
 
-        Artisan::call('taggy:watch-recording-segments', [
-            'recording' => $recording->id,
-        ]);
+        Process::start('php ' . base_path('artisan') . ' taggy:watch-recording-segments ' . $recording->id);
 
         $this->getType()->startRecording($this, $recording);
 

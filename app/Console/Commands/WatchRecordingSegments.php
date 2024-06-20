@@ -19,25 +19,24 @@ class WatchRecordingSegments extends Command
     public function handle()
     {
         $recording = Recording::findOrFail($this->argument('recording'));
-
         $path = Storage::disk('public')->path($recording->getPath('video'));
+        $startTime = now();
 
         Watch::path($path)
-            ->shouldContinue(fn() => $recording->isRecordingProcessRunning())
+            ->shouldContinue(fn() => $startTime->diffInSeconds() < 10 || $recording->isRecordingProcessRunning())
             ->onFileCreated(function (string $newFilePath) {
-                $this->sendFile($newFilePath);
-            })
-            ->onFileUpdated(function (string $newFilePath) {
-                $this->sendFile($newFilePath, true);
+                $m3u8Path = preg_replace('/video-\d+\.ts$/', 'video.m3u8', $newFilePath);
+                $this->sendFile($newFilePath, m3u8Content: base64_encode(File::get($m3u8Path)));
             })
             ->start();
     }
 
-    private function sendFile($newFilePath, $withContent = false)
+    private function sendFile($newFilePath, $content = null, $m3u8Content = null)
     {
         LivestreamSegment::create([
             'file' => $newFilePath,
-            'content' => $withContent ? base64_encode(File::get($newFilePath)) : null,
+            'm3u8_content' => $m3u8Content,
+            'content' => $content,
         ]);
     }
 }

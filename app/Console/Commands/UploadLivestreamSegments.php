@@ -36,7 +36,7 @@ class UploadLivestreamSegments extends Command
             $recording = $segment->getRecording();
             if($recording->livestream_enabled) {
                 $userToken = UserToken::forEndpointAndEntity($recording->data['endpoint'], $recording->data['entity_id']);
-                Mothership::make($userToken)->sendLivestreamFile($recording, $segment->file, $segment->content);
+                Mothership::make($userToken)->sendLivestreamFile($recording, $segment->file, $segment->content, $segment->m3u8_content);
                 $segment->update(['uploaded_at' => now()]);
             }
         }
