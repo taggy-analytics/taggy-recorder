@@ -23,6 +23,7 @@ class WatchRecordingSegments extends Command
                     File::lastModified($dir)
                 )->greaterThanOrEqualTo(now()->subDay())
             )
+            ->values()
             ->toArray();
 
         Watch::paths($paths)
