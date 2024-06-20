@@ -46,7 +46,6 @@ abstract class RtspCamera extends CameraType
     {
         $outputDirectory = Storage::disk('public')->path($recording->getPath('video'));
         $outputFile = $outputDirectory . '/video.m3u8';
-        File::makeDirectory($outputDirectory, recursive: true);
         $segmentDuration = config('taggy-recorder.video-conversion.segment-duration');
         $segmentFilename = $outputDirectory . '/video-%05d.ts';
         $options = '-tag:v hvc1 -f hls -hls_time ' . $segmentDuration . ' -hls_list_size 0 -hls_segment_filename ' . $segmentFilename . ' -c copy';

@@ -11,6 +11,7 @@ use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
@@ -42,6 +43,10 @@ class Recording extends Model
 
         static::creating(function(Recording $recording) {
             $recording->key = Str::random(32);
+
+            $outputDirectory = Storage::disk('public')->path($recording->getPath('video'));
+            File::makeDirectory($outputDirectory, recursive: true);
+            shell_exec('pkill -f file-watcher.js');
         });
     }
 

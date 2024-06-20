@@ -76,7 +76,6 @@ class Camera extends Model
         info('Starting recording # ' . $recording->id . ' for camera #' . $this->id);
 
         $this->getType()->startRecording($this, $recording);
-        shell_exec('pkill -f ' . 'file-watcher.js');
 
         $recording->update(['started_at' => now()->subMilliseconds($this->getType()->getRecordingStartDelay())]);
 
