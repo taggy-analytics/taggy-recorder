@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use App\Models\LivestreamSegment;
+use App\Models\Recording;
 use Carbon\Carbon;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\File;
@@ -11,27 +12,18 @@ use Spatie\Watcher\Watch;
 
 class WatchRecordingSegments extends Command
 {
-    protected $signature = 'taggy:watch-recording-segments';
+    protected $signature = 'taggy:watch-recording-segments {recording}';
 
     protected $description = 'Watch recording segments';
 
-    public const STOP_FILE_NAME = '.stopWatchRecordingSegments';
-
     public function handle()
     {
-        $paths = collect(File::directories(Storage::disk("public")->path("recordings")))
-            ->filter(
-                fn($dir) => Carbon::createFromTimestamp(
-                    File::lastModified($dir)
-                )->greaterThanOrEqualTo(now()->subDay())
-            )
-            ->values()
-            ->toArray();
+        $recording = Recording::findOrFail($this->argument('recording'));
 
-        Storage::delete(self::STOP_FILE_NAME);
+        $path = Storage::disk('public')->path($recording->getPath('video'));
 
-        Watch::paths($paths)
-            ->shouldContinue(fn() => !Storage::exists(self::STOP_FILE_NAME))
+        Watch::path($path)
+            ->shouldContinue(fn() => $recording->isRecordingProcessRunning())
             ->onFileCreated(function (string $newFilePath) {
                 $this->sendFile($newFilePath);
             })

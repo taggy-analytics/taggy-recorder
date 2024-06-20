@@ -9,6 +9,7 @@ use App\Enums\RecordingMode;
 use App\Models\Traits\BroadcastsEvents;
 use Illuminate\Database\Eloquent\Casts\AsCollection;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Artisan;
 
 class Camera extends Model
 {
@@ -74,6 +75,10 @@ class Camera extends Model
         ]);
 
         info('Starting recording # ' . $recording->id . ' for camera #' . $this->id);
+
+        Artisan::call('taggy:watch-recording-segments', [
+            'recording' => $recording->id,
+        ]);
 
         $this->getType()->startRecording($this, $recording);
 

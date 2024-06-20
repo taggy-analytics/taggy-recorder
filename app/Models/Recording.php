@@ -11,7 +11,6 @@ use App\Models\Traits\IsReportedToMothership;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
@@ -44,10 +43,11 @@ class Recording extends Model
 
         static::creating(function(Recording $recording) {
             $recording->key = Str::random(32);
+        });
 
+        static::created(function(Recording $recording) {
             $outputDirectory = Storage::disk('public')->path($recording->getPath('video'));
             File::makeDirectory($outputDirectory, recursive: true);
-            Storage::put(WatchRecordingSegments::STOP_FILE_NAME, 'stop!');
         });
     }
 
@@ -214,5 +214,12 @@ class Recording extends Model
     public function getLatency()
     {
         return config('taggy-recorder.video-conversion.segment-duration') + $this->camera->getType()->getLatency();
+    }
+
+    public function isRecordingProcessRunning()
+    {
+        $command = "pgrep -af 'ffmpeg.*" . escapeshellarg($this->key) . "'";
+        exec($command, $output);
+        return !empty($output);
     }
 }
