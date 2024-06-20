@@ -1,53 +1,75 @@
-#!/usr/bin/env python3
-
-import os
+import psutil
 import time
 from datetime import datetime, timedelta
-import subprocess
+from collections import deque
 
-log_dir = '/var/www/taggy/storage/logs'
-log_interval = 1  # seconds
+def log_top_processes(log_file):
+    process_info = {}
 
-def get_log_filename():
-    return os.path.join(log_dir, f"stall-debug_{datetime.now().strftime('%Y-%m-%d')}.log")
+    # Deque to store CPU times for the last 10 seconds
+    history = deque(maxlen=10)
 
-def log_system_metrics():
     while True:
-        now = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+        # Get current time
+        current_time = datetime.now()
 
-        cpu_usage = subprocess.getoutput("ps aux --sort=-%cpu | head -n 11")
-        mem_usage = subprocess.getoutput("ps aux --sort=-%mem | head -n 11")
-        free_memory = subprocess.getoutput("free -h")
-        top_output = subprocess.getoutput("top -b -n 1 | head -n 20")
+        # Get current CPU times
+        current_cpu_times = {}
+        for p in psutil.process_iter(['pid', 'cpu_times', 'cmdline']):
+            try:
+                current_cpu_times[p.pid] = (p.cpu_times(), p.cmdline())
+            except (psutil.NoSuchProcess, psutil.AccessDenied, psutil.ZombieProcess):
+                pass
 
-        log_entry = (
-            f"{now}\n\n"
-            f"Top 10 CPU-Consuming Processes:\n{cpu_usage}\n\n"
-            f"Top 10 Memory-Consuming Processes:\n{mem_usage}\n\n"
-            f"Free Memory:\n{free_memory}\n\n"
-            f"Top Output:\n{top_output}\n\n"
-            f"{'='*50}\n"
-        )
+        # Store the current CPU times with the timestamp
+        history.append((current_time, current_cpu_times))
 
-        with open(get_log_filename(), 'a') as log_file:
-            log_file.write(log_entry)
+        # If we have less than 10 entries, we can't calculate a 10-second average yet
+        if len(history) < 10:
+            time.sleep(1)
+            continue
 
-        time.sleep(log_interval)
+        # Calculate CPU usage over the last 10 seconds for each process
+        total_cpu_usage = {}
+        for i in range(1, len(history)):
+            prev_time, prev_cpu_times = history[i - 1]
+            curr_time, curr_cpu_times = history[i]
+            interval = (curr_time - prev_time).total_seconds()
 
-def delete_old_logs():
-    now = datetime.now()
-    cutoff = now - timedelta(days=7)
-    for filename in os.listdir(log_dir):
-        if filename.startswith("stall-debug_"):
-            filepath = os.path.join(log_dir, filename)
-            filedate = datetime.strptime(filename[len("stall-debug_"):len("stall-debug_")+10], '%Y-%m-%d')
-            if filedate < cutoff:
-                os.remove(filepath)
+            for pid, (curr_times, cmdline) in curr_cpu_times.items():
+                if pid in prev_cpu_times:
+                    prev_times, _ = prev_cpu_times[pid]
+                    user_time = curr_times.user - prev_times.user
+                    system_time = curr_times.system - prev_times.system
+                    cpu_percent = (user_time + system_time) / interval * 100
+
+                    if pid not in total_cpu_usage:
+                        total_cpu_usage[pid] = []
+                    total_cpu_usage[pid].append((cpu_percent, cmdline))
+
+        # Calculate the average CPU usage over the 10 seconds
+        avg_cpu_usage = {pid: (sum(usage for usage, _ in usages) / len(usages), usages[0][1]) for pid, usages in total_cpu_usage.items()}
+
+        # Sort by average CPU usage
+        sorted_processes = sorted(avg_cpu_usage.items(), key=lambda x: x[1][0], reverse=True)
+
+        # Get top 10 processes
+        top_processes = sorted_processes[:10]
+
+        # Log to file
+        with open(log_file, 'a') as f:
+            f.write(f"{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n")
+            for pid, (avg_cpu, cmdline) in top_processes:
+                try:
+                    cmdline_str = ' '.join(cmdline)
+                    f.write(f"{avg_cpu:.2f}% {cmdline_str} (PID: {pid})\n")
+                except (psutil.NoSuchProcess, psutil.AccessDenied, psutil.ZombieProcess):
+                    pass
+            f.write("\n")
+
+        # Sleep for 1 second
+        time.sleep(1)
 
 if __name__ == "__main__":
-    if not os.path.exists(log_dir):
-        os.makedirs(log_dir)
-
-    while True:
-        log_system_metrics()
-        delete_old_logs()
+    log_file = "process_log.txt"
+    log_top_processes(log_file)

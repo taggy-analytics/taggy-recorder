@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use App\Models\LivestreamSegment;
+use Carbon\Carbon;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Storage;
@@ -16,7 +17,15 @@ class WatchRecordingSegments extends Command
 
     public function handle()
     {
-        Watch::path(Storage::disk('public')->path('recordings'))
+        $paths = collect(File::directories(Storage::disk("public")->path("recordings")))
+            ->filter(
+                fn($dir) => Carbon::createFromTimestamp(
+                    File::lastModified($dir)
+                )->greaterThanOrEqualTo(now()->subDay())
+            )
+            ->toArray();
+
+        Watch::paths($paths)
             ->onFileCreated(function (string $newFilePath) {
                 $this->sendFile($newFilePath);
             })
