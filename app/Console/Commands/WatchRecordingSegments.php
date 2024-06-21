@@ -28,7 +28,7 @@ class WatchRecordingSegments extends Command
             ->onFileCreated(function (string $newFilePath) {
                 if(Str::endsWith($newFilePath, '.ts')) {
                     $m3u8Path = preg_replace('/video-\d+\.ts$/', 'video.m3u8', $newFilePath);
-                    $this->sendFile($newFilePath, m3u8Content: base64_encode(File::get($m3u8Path)));
+                    $this->sendFile($newFilePath, m3u8Content: File::get($m3u8Path));
                 }
             })
             ->start();
@@ -38,7 +38,6 @@ class WatchRecordingSegments extends Command
     {
         $segment = LivestreamSegment::create([
             'file' => $newFilePath,
-            // 'm3u8_content' => $m3u8Content,
             'content' => $content,
         ]);
 
