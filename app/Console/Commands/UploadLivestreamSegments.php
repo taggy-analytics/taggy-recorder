@@ -18,16 +18,21 @@ class UploadLivestreamSegments extends Command
     public function handle()
     {
         while(true) {
-            LivestreamSegment::where('uploaded_at', '<', now()->subMinutes(5))->delete();
+            try {
+                LivestreamSegment::where('uploaded_at', '<', now()->subMinutes(5))->delete();
 
-            LivestreamSegment::query()
-                ->whereNull('uploaded_at')
-                ->orderBy('id')
-                ->take(5)
-                ->get()
-                ->each(fn($livestreamSegment) => $this->sendFile($livestreamSegment));
+                LivestreamSegment::query()
+                    ->whereNull('uploaded_at')
+                    ->orderBy('id')
+                    ->take(5)
+                    ->get()
+                    ->each(fn($livestreamSegment) => $this->sendFile($livestreamSegment));
 
-            sleep(1);
+                sleep(1);
+            }
+            catch(\Exception $exception) {
+                sleep(10);
+            }
         }
     }
 

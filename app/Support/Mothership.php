@@ -109,6 +109,7 @@ class Mothership
             'name' => basename($file),
             'content' => $content ?? base64_encode(File::get($file)),
             'm3u8Content' => $m3u8Content,
+            'startTime' => $recording->started_at,
             'rotation' => $recording->rotation,
             'width' => $recording->width,
             'height' => $recording->height,
