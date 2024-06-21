@@ -56,8 +56,8 @@ class ReportRecording extends Report
                     ]);
 
                 $recording->addM3u8EndTag();
-                $videoM3u8 = Storage::disk('public')->get($recording->getM3u8Path());
-                $initMp4 = Storage::disk('public')->get($recording->getInitMp4Path());
+                // $videoM3u8 = Storage::disk('public')->get($recording->getM3u8Path());
+                // $initMp4 = Storage::disk('public')->get($recording->getInitMp4Path());
 
                 // $this->mothership->sendMetaFiles($toVideoResponse['video']['id'], $videoM3u8, $initMp4);
 

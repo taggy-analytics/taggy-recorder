@@ -55,7 +55,7 @@ class Mothership
                 'recorderSystemId' => Recorder::make()->getSystemId(),
                 'cameraId' => $recording->camera_id,
                 'key' => $recording->key,
-                'totalSegments' => $recording->files()->count(),
+                'totalSegments' => $recording->files()->where('status', RecordingFileStatus::TO_BE_UPLOADED)->count(),
                 'sessionUuid' => Arr::get($recording->data, 'session_uuid'),
                 'entityId' => Arr::get($recording->data, 'entity_id'),
                 'startTime' => $recording->started_at,
