@@ -22,7 +22,7 @@ class UploadLivestreamSegments extends Command
 
             LivestreamSegment::query()
                 ->whereNull('uploaded_at')
-                ->orderBy('last_failed_at')
+                ->orderBy('id')
                 ->take(5)
                 ->get()
                 ->each(fn($livestreamSegment) => $this->sendFile($livestreamSegment));
@@ -47,6 +47,5 @@ class UploadLivestreamSegments extends Command
             $segment->update(['last_failed_at' => now()]);
             exit;
         }
-
     }
 }
