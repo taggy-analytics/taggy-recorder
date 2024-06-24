@@ -53,7 +53,7 @@ abstract class RtspCamera extends CameraType
 
     public function stopRecording(Camera $camera)
     {
-        shell_exec('pkill -f ' . $camera->recordings()->latest()->first()->key);
+        shell_exec("pkill -f 'ffmpeg.*" . $camera->recordings()->latest()->first()->key . "'");
 
         return true;
     }
