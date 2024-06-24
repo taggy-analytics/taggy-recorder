@@ -12,6 +12,7 @@ use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Process;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
@@ -219,7 +220,7 @@ class Recording extends Model
     public function isRecordingProcessRunning()
     {
         $command = "pgrep -af 'ffmpeg.*" . escapeshellarg($this->key) . "'";
-        exec($command, $output);
-        return !empty($output);
+
+        return Str::contains(Process::run($command)->output(), 'hls_time');
     }
 }
