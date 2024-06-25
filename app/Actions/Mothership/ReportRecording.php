@@ -47,7 +47,8 @@ class ReportRecording extends Report
                 $currentTime = now()->toDateTimeString();
 
                 MothershipReport::query()
-                    ->where('status', RecordingFileStatus::ALREADY_IN_LIVESTREAM)
+                    ->where('model_type', RecordingFile::class)
+                    ->whereIn('model_id', $livestreamedFiles)
                     ->update([
                         'processed_at' => $currentTime,
                     ]);
