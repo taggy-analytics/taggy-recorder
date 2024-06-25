@@ -47,8 +47,15 @@ class ReportRecording extends Report
                 $currentTime = now()->toDateTimeString();
 
                 MothershipReport::query()
+                    ->where('status', RecordingFileStatus::ALREADY_IN_LIVESTREAM)
+                    ->update([
+                        'processed_at' => $currentTime,
+                    ]);
+
+                MothershipReport::query()
                     ->where('model_type', RecordingFile::class)
                     ->whereIn('model_id', $recording->files()->pluck('id'))
+                    ->whereNotIn('model_id', $livestreamedFiles)
                     ->update([
                         'ready_to_send' => true,
                         'user_token_id' => $recording->mothershipReport->user_token_id,
