@@ -36,7 +36,8 @@ class ReportRecording extends Report
 
                 $recording->files()->whereIn('id', $livestreamedFiles)->update([
                     'video_id' => $toVideoResponse['video']['id'],
-                    'status' => RecordingFileStatus::ALREADY_IN_LIVESTREAM,
+                    // 'status' => RecordingFileStatus::ALREADY_IN_LIVESTREAM,
+                    'status' => RecordingFileStatus::UPLOADED,
                 ]);
 
                 $recording->files()->whereNotIn('id', $livestreamedFiles)->update([
@@ -44,31 +45,21 @@ class ReportRecording extends Report
                     'status' => RecordingFileStatus::TO_BE_UPLOADED,
                 ]);
 
-                $currentTime = now()->toDateTimeString();
-
                 MothershipReport::query()
                     ->where('model_type', RecordingFile::class)
                     ->whereIn('model_id', $livestreamedFiles)
-                    ->update([
-                        'processed_at' => $currentTime,
-                    ]);
+                    ->delete();
 
                 MothershipReport::query()
                     ->where('model_type', RecordingFile::class)
                     ->whereIn('model_id', $recording->files()->pluck('id'))
-                    ->whereNotIn('model_id', $livestreamedFiles)
                     ->update([
                         'ready_to_send' => true,
                         'user_token_id' => $recording->mothershipReport->user_token_id,
-                        'updated_at' => $currentTime,
+                        'updated_at' => now()->toDateTimeString(),
                     ]);
 
                 $recording->addM3u8EndTag();
-                // $videoM3u8 = Storage::disk('public')->get($recording->getM3u8Path());
-                // $initMp4 = Storage::disk('public')->get($recording->getInitMp4Path());
-
-                // $this->mothership->sendMetaFiles($toVideoResponse['video']['id'], $videoM3u8, $initMp4);
-
                 $recording->setStatus(RecordingStatus::REPORTED_TO_MOTHERSHIP);
             }
 

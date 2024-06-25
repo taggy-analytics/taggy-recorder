@@ -14,7 +14,7 @@ class UpdateSoftware
 {
     public function execute()
     {
-        return cache()->lock('lock-update-sofware', 300)->block(300, function () {
+        return cache()->lock('lock-update-software', 300)->block(300, function () {
             app(CalculateLed::class)->execute();
 
             $mothership = Mothership::make();

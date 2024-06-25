@@ -54,6 +54,7 @@ class HandleRecordings
                         'created_at' => $currentTime,
                     ])->toArray();
 
+                /*
                 $files[] = [
                     'recording_id' => $recording->id,
                     'name' => 'init.mp4',
@@ -62,6 +63,7 @@ class HandleRecordings
                     'updated_at' => $currentTime,
                     'created_at' => $currentTime,
                 ];
+                */
 
                 $files[] = [
                     'recording_id' => $recording->id,
