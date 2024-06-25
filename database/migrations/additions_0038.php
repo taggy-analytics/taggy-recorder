@@ -8,7 +8,7 @@ return new class extends Migration
 {
     public function up()
     {
-        $supervisorConfPath = '/etc/supervisor/conf.d/watchtest.conf';
+        $supervisorConfPath = '/etc/supervisor/conf.d/watch.conf';
 
         if (file_exists($supervisorConfPath)) {
             unlink($supervisorConfPath);

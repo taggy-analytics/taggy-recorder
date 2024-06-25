@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use App\Console\Commands\WatchRecordingSegments;
 use App\Enums\RecordingStatus;
 use App\Models\Traits\BroadcastsEvents;
 use App\Models\Traits\HasStatus;

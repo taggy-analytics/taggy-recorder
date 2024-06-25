@@ -3,6 +3,7 @@
 namespace App\Console;
 
 use App\Console\Commands\CalculateLed;
+use App\Console\Commands\CleanLivestreamSegments;
 use App\Console\Commands\FreeDiskSpace;
 use App\Console\Commands\HandleCameras;
 use App\Console\Commands\HandleRecordings;
@@ -49,6 +50,9 @@ class Kernel extends ConsoleKernel
 
         $schedule->command(RunHealthChecks::class)
             ->everyMinute();
+
+        $schedule->command(CleanLivestreamSegments::class)
+            ->everyFiveMinutes();
 
         $schedule->command(MeasureTemperature::class)
             ->everyFifteenSeconds();

@@ -49,6 +49,7 @@ class RunStartupActions extends Command
             $counter++;
         }
 
+        $this->call(CleanLivestreamSegments::class);
         app(UpdateSoftware::class)->execute();
     }
 }
