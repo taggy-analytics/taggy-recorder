@@ -18,6 +18,11 @@ class UploadLivestreamSegments extends Command
     public function handle()
     {
         while(true) {
+            if(!Mothership::make()->isOnline()) {
+                sleep(10);
+                continue;
+            }
+
             try {
                 LivestreamSegment::query()
                     ->whereNull('uploaded_at')
