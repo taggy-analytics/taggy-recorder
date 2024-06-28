@@ -3,6 +3,8 @@
 # Navigate to the desired directory
 cd /var/www/taggy/current
 
+sudo apt install python3.11-venv
+
 # Create a virtual environment
 python3 -m venv myenv
 
