@@ -12,6 +12,10 @@ return [
         storage_path('app/scenes') => [
             'deleteAllOlderThanMinutes' => 120,
         ],
+
+        storage_path('app/segments-m3u8') => [
+            'deleteAllOlderThanMinutes' => 60 * 6,
+        ],
     ],
 
     /*
