@@ -105,7 +105,7 @@ class Recording extends Model
 
     public function getDuration()
     {
-        return $this->getEndTime()->diffInMilliseconds($this->started_at) / 1000;
+        return $this->started_at->diffInMilliseconds($this->getEndTime()) / 1000;
     }
 
     public function getUrl()
