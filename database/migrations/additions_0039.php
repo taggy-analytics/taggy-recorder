@@ -15,8 +15,8 @@ return new class extends Migration
 
         $this->writeFileIfNotExists('/etc/supervisor/conf.d/reverb.conf', '[program:reverb]
 directory=/var/www/taggy/current
-command=php8 /var/www/taggy/current/artisan reverb:start --no-interaction
-process_name=%(program_name)s_%(process_num)02d
+command=php /var/www/taggy/current/artisan reverb:start --no-interaction
+process_name=%(program_name)s
 autostart=true
 autorestart=true
 user=taggy

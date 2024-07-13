@@ -9,7 +9,7 @@ return new class extends Migration
     public function up()
     {
         Schema::table('scenes', function (Blueprint $table) {
-            $table->unsignedDouble('duration', 7, 3)->change();
+            $table->decimal('duration', 7, 3)->change();
         });
     }
 };

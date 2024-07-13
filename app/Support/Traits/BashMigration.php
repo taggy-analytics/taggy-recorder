@@ -31,5 +31,6 @@ trait BashMigration
     protected function createOrUpdateDotEnvValue($key, $value)
     {
         DotenvEditor::setKey($key, $value);
+        DotenvEditor::save();
     }
 }
