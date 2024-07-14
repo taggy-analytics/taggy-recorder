@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Support;
-    
+
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Process;
 
