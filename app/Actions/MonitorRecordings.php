@@ -11,7 +11,7 @@ class MonitorRecordings
     {
         foreach(Recording::running()->get() as $recording) {
             // Handle hard recorder shutoff without stopping recording before
-            if(Recorder::make()->getUptime() < $recording->getDuration()) {
+            if($recording->getDuration() && Recorder::make()->getUptime() < $recording->getDuration()) {
                 $recording->camera->stopRecording();
                 $recording->cleanup();
             }
