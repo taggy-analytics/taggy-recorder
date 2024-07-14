@@ -3,10 +3,6 @@
 namespace App\Actions;
 
 use App\Enums\LogMessageType;
-use App\Services\GliNet;
-use App\Support\Network;
-use Illuminate\Http\Client\ConnectionException;
-use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Process;
 
 class EnsureNetworkIsSetup
@@ -31,17 +27,6 @@ class EnsureNetworkIsSetup
 
     private function routerKnowsHostname()
     {
-        try {
-            $clients = Network::make()
-                ->getClients();
-        }
-        catch(ConnectionException $exception) {
-            return null;
-        }
-
-        return $clients
-            //->filter(fn($client) => Arr::get($client, 'online') === true)
-            ->pluck("name")
-            ->contains(gethostname());
+        return strpos(shell_exec("ping -c 1 " . gethostname()), '1 received') !== false;
     }
 }
