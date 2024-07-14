@@ -7,6 +7,7 @@ use App\Enums\CameraStatus;
 use App\Models\Camera;
 use App\Models\Recording;
 use App\Services\GliNet;
+use App\Support\Network;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
@@ -71,13 +72,13 @@ abstract class CameraType
     protected static function getDevices()
     {
         try {
-            return GliNet::make()
+            return once(fn() => Network::make()
                 ->getClients()
-                ->map(fn($client) => [
-                    'identifier' => $client['mac'],
-                    'name' => $client['name'],
-                    'ipAddress' => $client['ip'],
-                ]);
+                    ->map(fn($client) => [
+                        'identifier' => $client['mac'],
+                        'name' => $client['name'],
+                        'ipAddress' => $client['ip'],
+                    ]));
         }
         catch(\Exception $exception) {
             return new Collection();

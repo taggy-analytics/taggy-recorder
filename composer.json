@@ -43,7 +43,8 @@
         "spatie/laravel-queueable-action": "^2.14",
         "spatie/laravel-ray": "^1.32",
         "spatie/laravel-tail": "^4.4",
-        "symfony/yaml": "^6.3"
+        "symfony/yaml": "^6.3",
+        "ext-simplexml": "*"
     },
     "require-dev": {
         "fakerphp/faker": "^1.9.1",
