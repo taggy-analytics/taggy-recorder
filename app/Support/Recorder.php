@@ -109,7 +109,7 @@ class Recorder
         return LivestreamSegment::latest('uploaded_at')
             ->first()
             ->uploaded_at
-            ->lt(now()->subSeconds(10));
+            ->gt(now()->subSeconds(10));
     }
 
     public function isUploading($uploading = null)
