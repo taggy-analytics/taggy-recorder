@@ -24,6 +24,11 @@ class Network
 
         return collect($array["host"])
             ->map(function ($host) {
+                if(!Arr::has($host, "address")) {
+                    return [
+                        'identifier' => null,
+                    ];
+                }
                 $addresses = Arr::flatten($host["address"], 1);
 
                 return [
