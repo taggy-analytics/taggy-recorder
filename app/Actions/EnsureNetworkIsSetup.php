@@ -27,6 +27,6 @@ class EnsureNetworkIsSetup
 
     private function routerKnowsHostname()
     {
-        return strpos(shell_exec("ping -c 1 " . gethostname()), '1 received') !== false;
+        return strpos(shell_exec("ping -c 1 " . config('taggy-recorder.hostname')), '1 received') !== false;
     }
 }
