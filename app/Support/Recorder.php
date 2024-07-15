@@ -6,6 +6,7 @@ use App\Actions\CalculateLed;
 use App\Actions\CheckIfAllNeededServicesAreUpAndRunning;
 use App\Enums\LedColor;
 use App\Enums\LogMessageType;
+use App\Models\LivestreamSegment;
 use App\Models\RecorderLog;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\File;
@@ -101,6 +102,14 @@ class Recorder
     public function isUpdatingFirmware()
     {
         return $this->getRunningProcesses('taggy:update-software')->count() > 1;
+    }
+
+    public function isLivestreaming()
+    {
+        return LivestreamSegment::latest('uploaded_at')
+            ->first()
+            ->uploaded_at
+            ->lt(now()->subSeconds(10));
     }
 
     public function isUploading($uploading = null)

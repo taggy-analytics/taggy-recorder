@@ -18,7 +18,7 @@ class CalculateLed
             $recorder->led(LedColor::GREEN, 0.5);
         }
         elseif(!Camera::noCameraIsRecording()) {
-            $recorder->led(LedColor::RED, 0.5);
+            $recorder->led(LedColor::RED, $recorder->isLivestreaming() ? 0.25 : 0.5);
         }
         elseif($recorder->isUploading()) {
             $recorder->led(LedColor::BLUE, 0.5);
