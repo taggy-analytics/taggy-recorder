@@ -18,7 +18,7 @@ class UploadLivestreamSegments extends Command
     public function handle()
     {
         while(true) {
-            if(!Mothership::make()->isOnline()) {
+            if(!Mothership::make()->isOnline(disableCache: true)) {
                 sleep(10);
                 continue;
             }
