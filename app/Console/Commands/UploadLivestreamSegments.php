@@ -6,6 +6,7 @@ use App\Models\LivestreamSegment;
 use App\Models\Recording;
 use App\Models\UserToken;
 use App\Support\Mothership;
+use App\Support\Recorder;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Storage;
 
@@ -17,6 +18,8 @@ class UploadLivestreamSegments extends Command
 
     public function handle()
     {
+        Recorder::make()->waitUntilAllNeededServicesAreUpAndRunning();
+        
         while(true) {
             if(!Mothership::make()->isOnline(disableCache: true)) {
                 sleep(10);

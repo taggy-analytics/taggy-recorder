@@ -5,6 +5,7 @@ namespace App\Support;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Process;
+use Illuminate\Support\Str;
 
 class Network
 {
@@ -15,9 +16,11 @@ class Network
 
     public function getClients() : Collection
     {
-        info('Running nmap...');
-
         $subnet = $this->getSubnet();
+
+        if(empty($subnet)) {
+            return new Collection;
+        }
 
         $nmap = Process::run('sudo nmap -sn -PR -T5 -oX - ' . $subnet)
             ->output();
@@ -64,6 +67,10 @@ class Network
         $command = "ip -o -f inet addr show | awk '/scope global/ {print $4}'";
 
         $cidr = Process::run($command)->output();
+
+        if(!Str::contains($cidr, '/')) {
+            return null;
+        }
 
         list($ip, $netmask) = explode("/", trim($cidr));
 
