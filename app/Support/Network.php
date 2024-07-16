@@ -15,6 +15,8 @@ class Network
 
     public function getClients() : Collection
     {
+        info('Running nmap...');
+
         $nmap = Process::run('sudo nmap -sn -PR -T5 -oX - ' . $this->getSubnet())
             ->output();
 

@@ -4,6 +4,7 @@ namespace App\Actions;
 
 use App\Enums\LogMessageType;
 use App\Support\Network;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Process;
 use Illuminate\Support\Str;
 
@@ -29,10 +30,16 @@ class EnsureNetworkIsSetup
 
     private function hostnameIsKnown()
     {
-        return Network::make()
-            ->getClients()
-            ->pluck('name')
-            ->filter(fn($name) => Str::startsWith($name, config('taggy-recorder.hostname')))
-            ->count() > 0;
+        $record = dns_get_record(config('taggy-recorder.hostname'));
+
+        if(count($record) == 0) {
+            return false;
+        }
+
+        if(Str::startsWith(Arr::get($record, '0.ip'), '127.0.')) {
+            return false;
+        }
+
+        return true;
     }
 }

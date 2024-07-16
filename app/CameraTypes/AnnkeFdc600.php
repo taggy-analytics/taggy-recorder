@@ -8,6 +8,7 @@ use App\Enums\StreamingProtocol;
 use App\Models\Camera;
 use Illuminate\Http\Client\ConnectionException;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
 use Symfony\Component\Process\Exception\ProcessTimedOutException;
 use Symfony\Component\Process\Process;
@@ -26,6 +27,9 @@ class AnnkeFdc600 extends RtspCamera
 
     public static function discover()
     {
+        // ToDo: reactivate when/if Annke is used
+        return new Collection();
+
         return self::discoverByVendorMac('80:be:af');
     }
 
