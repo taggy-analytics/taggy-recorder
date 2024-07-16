@@ -16,5 +16,5 @@ return [
         'restart-aborted-recordings-timeout' => 15,
     ],
     'log-requests' => env('LOG_REQUESTS', false),
-    'hostname' => env('HOSTNAME'),
+    'hostname' => env('HOSTNAME', 'taggy'),
 ];
