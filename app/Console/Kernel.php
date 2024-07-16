@@ -4,6 +4,7 @@ namespace App\Console;
 
 use App\Console\Commands\CalculateLed;
 use App\Console\Commands\CleanLivestreamSegments;
+use App\Console\Commands\DiscoverNewCameras;
 use App\Console\Commands\FreeDiskSpace;
 use App\Console\Commands\HandleCameras;
 use App\Console\Commands\HandleRecordings;
@@ -24,6 +25,9 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
+        $schedule->command(DiscoverNewCameras::class)
+            ->everyMinute();
+
         $schedule->command(HandleCameras::class)
             ->runInBackground()
             ->withoutOverlapping(1)

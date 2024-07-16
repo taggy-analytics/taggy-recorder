@@ -17,7 +17,9 @@ class Network
     {
         info('Running nmap...');
 
-        $nmap = Process::run('sudo nmap -sn -PR -T5 -oX - ' . $this->getSubnet())
+        $subnet = $this->getSubnet();
+
+        $nmap = Process::run('sudo nmap -sn -PR -T5 -oX - ' . $subnet)
             ->output();
 
         $xml = simplexml_load_string($nmap);
