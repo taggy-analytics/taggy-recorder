@@ -38,13 +38,11 @@ return [
     ],
 
     'reolink' => [
-        'endpoint' => env('REOLINK_ENDPOINT'),
         'username' => env('REOLINK_USERNAME', 'admin'),
         'password' => env('REOLINK_PASSWORD', ''),
     ],
 
     'glinet' => [
-        'endpoint' => env('GLINET_ENDPOINT'),
         'username' => env('GLINET_USERNAME'),
         'password' => env('GLINET_PASSWORD'),
     ],

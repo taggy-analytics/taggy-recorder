@@ -3,6 +3,7 @@
 namespace App\Support;
 
 use Illuminate\Support\Arr;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Process;
 
 class Network
@@ -12,9 +13,9 @@ class Network
         return new self();
     }
 
-    public function getClients()
+    public function getClients() : Collection
     {
-        $nmap = Process::run('sudo nmap -sn -PR -T5 -oX - 10.3.16.0/24')
+        $nmap = Process::run('sudo nmap -sn -PR -T5 -oX - ' . $this->getSubnet())
             ->output();
 
         $xml = simplexml_load_string($nmap);
@@ -52,5 +53,19 @@ class Network
                 return !empty($client["ipAddress"]);
             })
             ->values();
+    }
+
+    private function getSubnet()
+    {
+        $command = "ip -o -f inet addr show | awk '/scope global/ {print $4}'";
+
+        $cidr = Process::run($command)->output();
+
+        list($ip, $netmask) = explode("/", trim($cidr));
+
+        $ipParts = explode(".", $ip);
+        $subnetStart = implode(".", array_slice($ipParts, 0, -1)) . ".0";
+
+        return $subnetStart . "/" . $netmask;
     }
 }

@@ -3,7 +3,9 @@
 namespace App\Actions;
 
 use App\Enums\LogMessageType;
+use App\Support\Network;
 use Illuminate\Support\Facades\Process;
+use Illuminate\Support\Str;
 
 class EnsureNetworkIsSetup
 {
@@ -11,7 +13,7 @@ class EnsureNetworkIsSetup
     {
         $counter = 0;
 
-        while(!$this->routerKnowsHostname()) {
+        while(!$this->hostnameIsKnown()) {
             Process::run('sudo ip link set eth0 down');
             sleep(1);
             Process::run('sudo ip link set eth0 up');
@@ -25,8 +27,12 @@ class EnsureNetworkIsSetup
         }
     }
 
-    private function routerKnowsHostname()
+    private function hostnameIsKnown()
     {
-        return strpos(shell_exec("ping -c 1 " . config('taggy-recorder.hostname')), '1 received') !== false;
+        return Network::make()
+            ->getClients()
+            ->pluck('name')
+            ->filter(fn($name) => Str::startsWith($name, config('taggy-recorder.hostname')))
+            ->count() > 0;
     }
 }

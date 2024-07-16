@@ -32,6 +32,7 @@ class GliNet
 
     private function send($method, $params)
     {
+        throw new \Exception('This does not work any more and should not be needed currently. If it is still needed, the endpoint need to be calculated from Network::getGateway');
         $response = Http::post(config('services.glinet.endpoint'), [
             'jsonrpc' => '2.0',
             'method' => $method,
