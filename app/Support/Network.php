@@ -22,13 +22,18 @@ class Network
         $json = json_encode($xml);
         $array = json_decode($json, true);
 
-        return collect($array["host"])
+        return collect(Arr::get($array, "host"))
             ->map(function ($host) {
                 if(!Arr::has($host, "address")) {
                     return [
                         'identifier' => null,
                     ];
                 }
+
+                if (Arr::has($host["address"], "@attributes")) {
+                    $host["address"] = [$host["address"]];
+                }
+
                 $addresses = Arr::flatten($host["address"], 1);
 
                 return [
@@ -44,7 +49,7 @@ class Network
                 ];
             })
             ->filter(function ($client) {
-                return !empty($client["identifier"]) && !empty($client["ipAddress"]);
+                return !empty($client["ipAddress"]);
             })
             ->values();
     }
