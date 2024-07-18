@@ -49,14 +49,6 @@ class UpdateSoftware
                 symlink(realpath($releasePath . '/../../storage'), $releasePath . '/storage');
                 symlink(realpath($releasePath . '/../../.env'), $releasePath . '/.env');
 
-                /*
-                $afterInstallScript = $releasePath . '/after-install.sh';
-                chmod($afterInstallScript, 0755);
-
-                Process::run('chmod +x ' . $afterInstallScript);
-                Process::run($afterInstallScript);
-                */
-
                 chdir($releasePath);
                 Process::timeout(180)->run('npm install');
                 Process::timeout(120)->run('composer install');

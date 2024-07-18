@@ -47,7 +47,19 @@ class Camera extends Model
     {
         if($refresh) {
             $oldStatus = $this->status;
-            $this->status = $this->getType()->getStatus($this);
+            $newStatus = $this->getType()->getStatus($this);
+
+            if($oldStatus == CameraStatus::READY && $newStatus != CameraStatus::READY && $this->isRecording()) {
+                // Something is strange... Probably we got a ProcessTimedOutException
+                $counter = 0;
+                do {
+                    sleep(1);
+                    $newStatus = $this->getType()->getStatus($this);
+                    $counter++;
+                } while($newStatus != CameraStatus::READY && $counter < 5);
+            }
+
+            $this->status = $newStatus;
 
             if($this->isDirty('status')) {
                 $this->save();
