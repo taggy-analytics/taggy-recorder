@@ -26,7 +26,7 @@ class ResetRecorder
 
         Artisan::call('key:generate');
 
-        File::deleteDirectory(storage_path('app/public/recordings'), true);
         File::deleteDirectory(storage_path('logs'), true);
+        File::deleteDirectory(storage_path('app/public/recordings'), true);
     }
 }
