@@ -39,7 +39,7 @@ abstract class CameraType
                     'type' => $cameraClass::class,
                     'identifier' => $aCamera['identifier'],
                 ],[
-                    'name' => $aCamera['name'],
+                    'name' => self::hydrateName($aCamera['name']),
                     'ip_address' => $aCamera['ipAddress'],
                     'video_width' => $cameraClass::VIDEO_WIDTH,
                     'video_height' => $cameraClass::VIDEO_HEIGHT,
@@ -71,6 +71,11 @@ abstract class CameraType
             ->filter(fn($device) => Str::startsWith(strtolower($device['identifier']), strtolower($mac)))
             ->filter(fn($device) => !Camera::pluck('ip_address')->contains($device['ipAddress']))
             ->values();
+    }
+
+    private static function hydrateName($name)
+    {
+        return Str::replace(['.lan', '.fritz.box'], '', $name, false);
     }
 
     public function getLatency()
