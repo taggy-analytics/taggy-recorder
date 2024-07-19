@@ -76,7 +76,7 @@ class Camera extends Model
         return $this->getType()->isRecording($this);
     }
 
-    public function startRecording($data)
+    public function startRecording($data = [])
     {
         $recording = $this->recordings()->create([
             'name' => now()->toDateTimeLocalString(),
