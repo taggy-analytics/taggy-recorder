@@ -8,6 +8,13 @@ class FFMpegCommand
 {
     public static function run($inputFile, $outputFile, $command, $beforeInputOptions = '')
     {
+        if(is_array($command)) {
+            $command = implode(' ', $command);
+        }
+        if(is_array($beforeInputOptions)) {
+            $beforeInputOptions = implode(' ', $beforeInputOptions);
+        }
+
         $command = "$beforeInputOptions -i $inputFile $command $outputFile";
         return self::runRaw($command);
     }

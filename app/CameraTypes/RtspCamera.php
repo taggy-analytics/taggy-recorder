@@ -46,8 +46,24 @@ abstract class RtspCamera extends CameraType
         $outputFile = $outputDirectory . '/video.m3u8';
         $segmentDuration = config('taggy-recorder.video-conversion.segment-duration');
         $segmentFilename = $outputDirectory . '/video-%05d.ts';
-        $options = '-tag:v hvc1 -f hls -hls_time ' . $segmentDuration . ' -hls_list_size 0 -hls_segment_filename ' . $segmentFilename . ' -c:v copy -c:a aac -b:a 128k -avoid_negative_ts make_zero';
-        $beforeInputOptions = '-use_wallclock_as_timestamps 1 -fflags +genpts';
+
+        $beforeInputOptions = [
+            '-use_wallclock_as_timestamps 1',
+            '-fflags +genpts',
+            '-rtsp_transport tcp',
+        ];
+
+        $options = [
+            '-tag:v hvc1',
+            '-f hls -hls_time ' . $segmentDuration,
+            '-hls_list_size 0',
+            'hls_segment_filename ' . $segmentFilename,
+            '-c:v copy',
+            '-c:a aac',
+            '-b:a 96k',
+            '-avoid_negative_ts make_zero',
+        ];
+
         FFMpegCommand::run($this->getRtspUrl($camera), $outputFile, $options, $beforeInputOptions);
     }
 
