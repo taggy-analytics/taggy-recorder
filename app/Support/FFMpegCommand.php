@@ -21,7 +21,7 @@ class FFMpegCommand
 
     public static function runRaw($command, $app = 'ffmpeg', $async = true)
     {
-        $command = $app . ' ' . trim($command);
+        $command = $app . ' ' . trim($command) . (config('taggy-recorder.ffmpeg.logging') ? ' 2> ' . storage_path('logs/ffmpeg.log') : '');
         info($command);
         $process = $async ? Process::start($command) : Process::run($command);
 

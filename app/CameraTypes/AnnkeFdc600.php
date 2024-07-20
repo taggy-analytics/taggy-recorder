@@ -5,6 +5,7 @@ namespace App\CameraTypes;
 use App\Enums\CameraStatus;
 use App\Enums\Codec;
 use App\Enums\StreamingProtocol;
+use App\Enums\StreamQuality;
 use App\Models\Camera;
 use Illuminate\Http\Client\ConnectionException;
 use Illuminate\Support\Arr;
@@ -47,7 +48,7 @@ class AnnkeFdc600 extends RtspCamera
     }
 
 
-    public function getRtspUrl(Camera $camera)
+    public function getRtspUrl(Camera $camera, StreamQuality $quality = StreamQuality::HIGH)
     {
         $password = $camera->credentials['password'];
         $passwordPart = strlen($password) > 0 ? ':' . $password : '';

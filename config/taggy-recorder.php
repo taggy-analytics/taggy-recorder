@@ -17,4 +17,7 @@ return [
     ],
     'log-requests' => env('LOG_REQUESTS', false),
     'hostname' => env('HOSTNAME', 'taggy'),
+    'ffmpeg' => [
+        'logging' => env('FFMPEG_LOGGING', false),
+    ],
 ];

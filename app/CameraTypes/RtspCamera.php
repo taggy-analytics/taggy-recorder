@@ -3,6 +3,7 @@
 namespace App\CameraTypes;
 
 use App\Enums\CameraStatus;
+use App\Enums\StreamQuality;
 use App\Models\Camera;
 use App\Models\Recording;
 use App\Support\FFMpegCommand;
@@ -11,7 +12,7 @@ use Illuminate\Support\Facades\Storage;
 
 abstract class RtspCamera extends CameraType
 {
-    abstract public function getRtspUrl(Camera $camera);
+    abstract public function getRtspUrl(Camera $camera, StreamQuality $quality = StreamQuality::HIGH);
 
     public function isAvailable(Camera $camera)
     {
@@ -51,6 +52,7 @@ abstract class RtspCamera extends CameraType
             '-use_wallclock_as_timestamps 1',
             '-fflags +genpts',
             '-rtsp_transport tcp',
+            config('taggy-recorder.ffmpeg.logging') ? '-loglevel debug' : '',
         ];
 
         $options = [

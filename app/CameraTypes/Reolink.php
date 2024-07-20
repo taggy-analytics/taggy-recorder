@@ -5,6 +5,7 @@ namespace App\CameraTypes;
 use App\Enums\CameraStatus;
 use App\Enums\Codec;
 use App\Enums\StreamingProtocol;
+use App\Enums\StreamQuality;
 use App\Models\Camera;
 use Illuminate\Http\Client\ConnectionException;
 use Illuminate\Support\Arr;
@@ -62,19 +63,21 @@ abstract class Reolink extends RtspCamera
         ];
     }
 
-    public function getRtspUrl(Camera $camera)
+    public function getRtspUrl(Camera $camera, StreamQuality $quality = StreamQuality::HIGH)
     {
         $password = $camera->credentials['password'];
         $passwordPart = strlen($password) > 0 ? ':' . $password : '';
 
+        $quality = $quality == StreamQuality::HIGH ? 'main' : 'sub';
+
         // Todo: use Reolink::network()->getRtspUrl()
-        return "rtsp://{$camera->credentials['user']}{$passwordPart}@{$camera->ip_address}:554/h265Preview_01_main";
+        return "rtsp://{$camera->credentials['user']}{$passwordPart}@{$camera->ip_address}:554/h265Preview_01_" . $quality;
     }
 
     public function getStatus(Camera $camera)
     {
         $output = '';
-        $process = new Process(['ffprobe', '-hide_banner', $this->getRtspUrl($camera)]);
+        $process = new Process(['ffprobe', '-hide_banner', $this->getRtspUrl($camera, StreamQuality::LOW)]);
         $process->setTimeout(5);
 
         try {
