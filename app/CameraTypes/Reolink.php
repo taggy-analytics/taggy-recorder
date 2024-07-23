@@ -68,10 +68,10 @@ abstract class Reolink extends RtspCamera
         $password = $camera->credentials['password'];
         $passwordPart = strlen($password) > 0 ? ':' . $password : '';
 
-        $quality = $quality == StreamQuality::HIGH ? 'main' : 'sub';
+        $stream = $quality == StreamQuality::HIGH ? 'h265Preview_01_main' : 'h264Preview_01_sub';
 
         // Todo: use Reolink::network()->getRtspUrl()
-        return "rtsp://{$camera->credentials['user']}{$passwordPart}@{$camera->ip_address}:554/h265Preview_01_" . $quality;
+        return "rtsp://{$camera->credentials['user']}{$passwordPart}@{$camera->ip_address}:554/" . $stream;
     }
 
     public function getStatus(Camera $camera)
