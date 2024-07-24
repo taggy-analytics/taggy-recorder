@@ -12,12 +12,14 @@ class MonitorRecordings
         foreach(Recording::running()->get() as $recording) {
             // Handle hard recorder shutoff without stopping recording before
             if($recording->getDuration() && Recorder::make()->getUptime() < $recording->getDuration()) {
+                info('Handle hard recorder shutoff');
                 $recording->camera->stopRecording();
                 $recording->cleanup();
             }
 
             // Abort recordings when camera is not available anymore
             if(!$this->cameraIsAvailable($recording)) {
+                info('Handle camera not available anymore');
                 $recording->camera->stopRecording();
                 $recording->update([
                     'aborted_at' => now(),
@@ -29,6 +31,7 @@ class MonitorRecordings
         // Restart recordings that have been aborted recently
         foreach(Recording::freshlyAborted()->get() as $recording) {
             if($this->cameraIsAvailable($recording)) {
+                info('Restart aborted recording');
                 $recording->restart();
             }
         }
