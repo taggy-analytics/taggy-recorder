@@ -16,6 +16,9 @@ abstract class RtspCamera extends CameraType
 
     public function isAvailable(Camera $camera)
     {
+        return $camera->getStatus(false) == CameraStatus::READY;
+
+        /*
         $ch = curl_init();
         $timeout = 5;
         curl_setopt($ch, CURLOPT_URL, $this->getRtspUrl($camera));
@@ -27,6 +30,7 @@ abstract class RtspCamera extends CameraType
         curl_close($ch);
 
         return $curlResult !== false;
+        */
     }
 
     /*
