@@ -47,16 +47,12 @@ class Camera extends Model
     {
         if($refresh) {
             $oldStatus = $this->status;
-            $newStatus = $this->getType()->getStatus($this);
 
-            if($oldStatus == CameraStatus::READY && $newStatus != CameraStatus::READY && $this->isRecording()) {
-                // Something is strange... Probably we got a ProcessTimedOutException
-                $counter = 0;
-                do {
-                    sleep(1);
-                    $newStatus = $this->getType()->getStatus($this);
-                    $counter++;
-                } while($newStatus != CameraStatus::READY && $counter < 5);
+            if($this->isRecording() && $this->getLatestRecording()-) {
+                $newStatus = CameraStatus::READY;
+            }
+            else {
+                $newStatus = $this->getType()->getStatus($this);
             }
 
             $this->status = $newStatus;
@@ -113,7 +109,7 @@ class Camera extends Model
     public function stopRecording()
     {
         if($this->getType()->stopRecording($this)) {
-            $recording = $this->recordings()->latest()->first();
+            $recording = $this->getLatestRecording();
             $recording->update(['stopped_at' => now()]);
             $recording->addM3u8EndTag();
 
@@ -125,6 +121,11 @@ class Camera extends Model
         app(CalculateLed::class)->execute();
 
         return false;
+    }
+
+    public function getLatestRecording()
+    {
+        return $this->recordings()->latest()->first();
     }
 
     public function getType() : CameraType

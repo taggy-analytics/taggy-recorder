@@ -82,7 +82,7 @@ abstract class RtspCamera extends CameraType
             return false;
         }
 
-        $key = $camera->recordings()->latest()->first()?->key;
+        $key = $camera->getLatestRecording()?->key;
 
         if(empty($key)) {
             return false;
