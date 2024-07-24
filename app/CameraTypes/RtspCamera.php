@@ -55,7 +55,7 @@ abstract class RtspCamera extends CameraType
         $beforeInputOptions = [
             '-use_wallclock_as_timestamps 1',
             '-fflags +genpts',
-            '-rtsp_transport tcp',
+            // '-rtsp_transport tcp',  // Don't add this ever! It will crash the recording
             config('taggy-recorder.ffmpeg.logging') ? '-loglevel debug' : '',
         ];
 
