@@ -48,7 +48,7 @@ class Camera extends Model
         if($refresh) {
             $oldStatus = $this->status;
 
-            if($this->isRecording() && $this->getLatestRecording()-) {
+            if($this->isRecording() && $this->getLatestRecording()) {
                 $newStatus = CameraStatus::READY;
             }
             else {
