@@ -48,7 +48,9 @@ class Camera extends Model
         if($refresh) {
             $oldStatus = $this->status;
 
-            if($this->isRecording() && $this->getLatestRecording()) {
+            // Workaround for slow ffprobe on RTSP stream on Reolink
+            // ToDo: works only for RTSP currently
+            if($oldStatus == CameraStatus::READY && $this->isPortOpen(554)) {
                 $newStatus = CameraStatus::READY;
             }
             else {
@@ -141,5 +143,11 @@ class Camera extends Model
             }
         }
         return true;
+    }
+
+    private function isPortOpen($port)
+    {
+        return Process::run("nc -z -v -w1 {$this->ip_address} {$port}")
+            ->successful();
     }
 }
