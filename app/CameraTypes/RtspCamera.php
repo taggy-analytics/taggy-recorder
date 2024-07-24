@@ -57,13 +57,13 @@ abstract class RtspCamera extends CameraType
 
         $options = [
             '-tag:v hvc1',
-            '-f hls -hls_time ' . $segmentDuration,
-            '-hls_list_size 0',
-            'hls_segment_filename ' . $segmentFilename,
             '-c:v copy',
             '-c:a aac',
             '-b:a 96k',
             '-avoid_negative_ts make_zero',
+            '-f hls -hls_time ' . $segmentDuration,
+            '-hls_list_size 0',
+            'hls_segment_filename ' . $segmentFilename,
         ];
 
         FFMpegCommand::run($this->getRtspUrl($camera), $outputFile, $options, $beforeInputOptions);
