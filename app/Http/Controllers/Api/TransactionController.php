@@ -75,9 +75,6 @@ class TransactionController extends Controller
             'token' => $request->header('User-Token'),
         ]);
 
-        info('User token recently created?' . ($userToken->wasRecentlyCreated ? 'yes' : 'no'));
-        info('User token: ' . $userToken);
-
         $mothership = Mothership::make($userToken);
 
         if($this->cleanupNeeded($entityId, $request->transactions)) {
@@ -90,12 +87,6 @@ class TransactionController extends Controller
                     return $transaction;
                 })
                 ->toArray();
-
-            info('Entity ID: ' . $entityId);
-            info('Header User-Token: ' . $request->header('User-Token'));
-            info('Mothership::getEndpoint(): ' . Mothership::getEndpoint());
-            info('$mothership->getEndpoint(): ' . $mothership->getEndpoint());
-            info('$userToken->endpoint: ' . $userToken->endpoint);
 
             Transaction::insertChunked($newTransactions);
 
