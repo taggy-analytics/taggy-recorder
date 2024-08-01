@@ -224,8 +224,8 @@ class Recording extends Model
         return Str::contains(Process::run($command)->output(), 'hls_time');
     }
 
-    public function getData($key)
+    public function getData($key, $default = null)
     {
-        return Arr::get($this->data, $key);
+        return Arr::get($this->data, $key, $default);
     }
 }
