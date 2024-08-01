@@ -10,6 +10,7 @@ use App\Models\Traits\IsReportedToMothership;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Process;
 use Illuminate\Support\Facades\Storage;
@@ -221,5 +222,10 @@ class Recording extends Model
         $command = "pgrep -af 'ffmpeg.*" . escapeshellarg($this->key) . "'";
 
         return Str::contains(Process::run($command)->output(), 'hls_time');
+    }
+
+    public function getData($key)
+    {
+        return Arr::get($this->data, $key);
     }
 }
