@@ -41,6 +41,7 @@ abstract class CameraType
                 ],[
                     'name' => self::hydrateName($aCamera['name']),
                     'ip_address' => $aCamera['ipAddress'],
+                    'rotation' => 1 / (60 * $cameraClass::VIDEO_WIDTH),
                     'video_width' => $cameraClass::VIDEO_WIDTH,
                     'video_height' => $cameraClass::VIDEO_HEIGHT,
                 ]);

@@ -16,8 +16,6 @@ class Camera extends Model
 {
     use BroadcastsEvents;
 
-    public const DEFAULT_ROTATION = 1 / (60 * 4608);
-
     protected $casts = [
         'status' => CameraStatus::class,
         'credentials' => AsCollection::class,

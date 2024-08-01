@@ -59,7 +59,7 @@ class RecordingController extends Controller
 
     private function getAllowedRecordings()
     {
-        $allowedEntityIds = collect(auth()->user()->entities)
+        $allowedEntityIds = collect(auth()->user()->memberships)
             ->filter(fn($entity) => $entity['can_tag'])->pluck('entity_id');
 
         return Recording::all()
