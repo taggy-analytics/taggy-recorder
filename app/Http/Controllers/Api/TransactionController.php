@@ -144,7 +144,7 @@ class TransactionController extends Controller
         }
 
         return [
-            'transactions' => TransactionResource::collection(collect($transactions)->sortBy('created_at')),
+            'transactions' => TransactionResource::collection(collect($transactions)->sortBy(['created_at', 'id'])),
             'content' => $content,
         ];
     }
@@ -155,6 +155,7 @@ class TransactionController extends Controller
             ->where('endpoint', $endpoint)
             ->where('entity_id', $entity)
             ->orderBy('created_at')
+            ->orderBy('id')
             ->pluck('id');
     }
 

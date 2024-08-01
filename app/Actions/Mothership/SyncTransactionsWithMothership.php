@@ -40,6 +40,7 @@ class SyncTransactionsWithMothership
 
                 $uuids = $this->getQuery($userToken->entity_id, $userToken->endpoint)
                     ->orderBy('created_at')
+                    ->orderBy('id')
                     ->pluck('id')
                     ->toArray();
 
