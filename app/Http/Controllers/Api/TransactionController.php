@@ -134,9 +134,13 @@ class TransactionController extends Controller
 
             $transactions = match($request->last_transaction_in_sync) {
                 true => [],
-                null => Transaction::where('entity_id', $entityId)->get(),
+                null => Transaction::query()
+                    ->where('entity_id', $entityId)
+                    ->where('endpoint', Mothership::getEndpoint())
+                    ->get(),
                 default => Transaction::query()
                     ->where('entity_id', $entityId)
+                    ->where('endpoint', Mothership::getEndpoint())
                     ->where('created_at', '>=', Transaction::find($request->last_transaction_in_sync)->created_at)
                     ->get(),
             };
