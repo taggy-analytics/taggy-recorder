@@ -9,4 +9,9 @@ class ReolinkDuo3Poe extends Reolink
 
     // used to identify the camera type from the API DevInfo response
     protected const MODEL_NAME = 'Reolink Duo 3 PoE';
+
+    public static function getRotation()
+    {
+        return 1 / (60 * static::VIDEO_WIDTH * 2);
+    }
 }

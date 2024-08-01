@@ -41,12 +41,17 @@ abstract class CameraType
                 ],[
                     'name' => self::hydrateName($aCamera['name']),
                     'ip_address' => $aCamera['ipAddress'],
-                    'rotation' => 1 / (60 * $cameraClass::VIDEO_WIDTH),
+                    'rotation' => $cameraClass::getRotation(),
                     'video_width' => $cameraClass::VIDEO_WIDTH,
                     'video_height' => $cameraClass::VIDEO_HEIGHT,
                 ]);
             }
         }
+    }
+
+    public static function getRotation()
+    {
+        return 1 / (60 * static::VIDEO_WIDTH);
     }
 
     public function getFields()
