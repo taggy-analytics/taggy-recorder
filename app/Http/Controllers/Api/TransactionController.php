@@ -67,15 +67,16 @@ class TransactionController extends Controller
 
     public function store($entityId, StoreTransactionsRequest $request)
     {
-        $token = cache()->get('user-token');
-
         $userToken = UserToken::firstOrCreate([
             'entity_id' => $entityId,
             'user_id' => $request->user()->id,
-            'endpoint' => cache()->get('mothership-endpoint'),
+            'endpoint' => Mothership::getEndpoint(),
         ], [
-            'token' => $token,
+            'token' => $request->header('User-Token'),
         ]);
+
+        info('User token recently created?' . ($userToken->wasRecentlyCreated ? 'yes' : 'no'));
+        info('User token: ' . $userToken);
 
         $mothership = Mothership::make($userToken);
 
@@ -89,6 +90,12 @@ class TransactionController extends Controller
                     return $transaction;
                 })
                 ->toArray();
+
+            info('Entity ID: ' . $entityId);
+            info('Header User-Token: ' . $request->header('User-Token'));
+            info('Mothership::getEndpoint(): ' . Mothership::getEndpoint());
+            info('$mothership->getEndpoint(): ' . $mothership->getEndpoint());
+            info('$userToken->endpoint: ' . $userToken->endpoint);
 
             Transaction::insertChunked($newTransactions);
 
