@@ -11,6 +11,7 @@ class CleanTransactions
     public function execute($endpoint, $entityId)
     {
         $modalTransactions = $this->query($endpoint, $entityId)
+            ->orderBy('created_at')
             ->get();
 
         $cleanedTransactions = [];
