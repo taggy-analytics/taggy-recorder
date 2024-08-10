@@ -74,7 +74,7 @@ abstract class CameraType
     protected static function discoverByVendorMac($mac)
     {
         return Network::make()->getClients()
-            ->filter(fn($device) => Str::startsWith(strtolower($device['identifier']), strtolower($mac)))
+            ->filter(fn($device) => filled($device['identifier']) && Str::startsWith(strtolower($device['identifier']), strtolower($mac)))
             ->filter(fn($device) => !Camera::pluck('ip_address')->contains($device['ipAddress']))
             ->values();
     }
