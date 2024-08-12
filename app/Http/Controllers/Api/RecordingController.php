@@ -59,6 +59,9 @@ class RecordingController extends Controller
 
     private function getAllowedRecordings()
     {
+        // ToDo: Fix permissions
+        return Recording::all();
+
         $allowedEntityIds = collect(auth()->user()->canTagMemberships);
 
         return Recording::all()
