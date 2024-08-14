@@ -53,6 +53,6 @@ class CleanTransactions
         return Transaction::query()
             ->where('endpoint', $endpoint)
             ->where('entity_id', $entityId)
-            ->where('created_at', '>', $lastTransactionsResetAt);
+            ->when(filled($lastTransactionsResetAt), fn($query) => $query->where('created_at', '>', $lastTransactionsResetAt));
     }
 }
