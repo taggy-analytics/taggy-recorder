@@ -29,6 +29,7 @@ class StoreTransactionsRequest extends FormRequest
             'origin' => 'required',
             'transactions' => 'array',
             'last_transaction_in_sync' => 'nullable',
+            'last_transactions_reset_at' => 'required',
         ];
 
         if(debug_backtrace()[1]['class'] == FormRequestRulesExtractor::class) {

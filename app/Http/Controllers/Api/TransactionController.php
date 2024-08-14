@@ -20,7 +20,7 @@ class TransactionController extends Controller
 {
     public function status($entityId, TransactionsStatusRequest $request)
     {
-        $uuids = $this->getUuids(Mothership::getEndpoint(), $entityId);
+        $uuids = $this->getUuids(Mothership::getEndpoint(), $entityId, $request->last_transactions_reset_at);
 
         $uuidsConcatenated = $uuids
             ->map(fn($uuid) => substr($uuid, -$request->hash_substring_length))
@@ -79,7 +79,7 @@ class TransactionController extends Controller
 
         if($this->cleanupNeeded($entityId, $request->transactions)) {
             $newTransactions = collect($request->transactions)
-                ->whereNotIn('id', $this->getUuids($userToken->endpoint, $entityId))
+                ->whereNotIn('id', $this->getUuids($userToken->endpoint, $entityId, $request->last_transactions_reset_at))
                 ->hydrateTransactions($userToken->endpoint)
                 ->map(function ($transaction) use ($userToken) {
                     $transaction['user_token_id'] = $userToken->id;
@@ -91,7 +91,7 @@ class TransactionController extends Controller
             Transaction::insertChunked($newTransactions);
 
             $transactions = app(CleanTransactions::class)
-                ->execute($userToken->endpoint, $entityId);
+                ->execute($userToken->endpoint, $entityId, $request->last_transactions_reset_at);
 
             if(count($newTransactions) > 0) {
                 broadcast(new TransactionsAdded($entityId, $newTransactions, $request->origin));
@@ -144,11 +144,12 @@ class TransactionController extends Controller
         ];
     }
 
-    private function getUuids($endpoint, $entity)
+    private function getUuids($endpoint, $entity, $lastTransactionsResetAt)
     {
         return Transaction::query()
             ->where('endpoint', $endpoint)
             ->where('entity_id', $entity)
+            ->where('created_at', '>', $lastTransactionsResetAt)
             ->orderBy('created_at')
             ->orderBy('id')
             ->pluck('id');
