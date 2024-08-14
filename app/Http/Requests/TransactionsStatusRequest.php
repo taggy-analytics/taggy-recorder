@@ -29,7 +29,7 @@ class TransactionsStatusRequest extends FormRequest
             // It is sufficiently safe to use only parts of the UUID, rather than the whole, for the calculation of the hash.
             // This parameter defines the number of characters from the UUID that are to be used for the calculation.
             'hash_substring_length' => 'required|int',
-            'last_transactions_reset_at' => 'required',
+            // 'last_transactions_reset_at' => 'required',
         ];
     }
 }

@@ -149,7 +149,7 @@ class TransactionController extends Controller
         return Transaction::query()
             ->where('endpoint', $endpoint)
             ->where('entity_id', $entity)
-            ->where('created_at', '>', $lastTransactionsResetAt)
+            ->when(filled($lastTransactionsResetAt), fn($query) => $query->where('created_at', '>', $lastTransactionsResetAt))
             ->orderBy('created_at')
             ->orderBy('id')
             ->pluck('id');
