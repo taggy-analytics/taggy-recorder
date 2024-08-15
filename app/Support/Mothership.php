@@ -89,7 +89,7 @@ class Mothership
     public function reportTransactions($entityId, $transactions, $lastTransactionInSync = null)
     {
         try {
-            return $this->post('entities/' . $entityId . '/transactions', [
+            return $this->setTimeout(15)->post('entities/' . $entityId . '/transactions', [
                 'origin' => Recorder::make()->getSystemId(),
                 'transactions' => Arr::except($transactions, 'user_token_id'),
                 'last_transaction_in_sync' => $lastTransactionInSync,
@@ -244,5 +244,11 @@ class Mothership
         ];
 
         return $type == 'json' ? $response->json() : $response->body();
+    }
+
+    private function setTimeout($timeout)
+    {
+        $this->client = $this->client->timeout($timeout);
+        return $this;
     }
 }

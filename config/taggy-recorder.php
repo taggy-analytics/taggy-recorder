@@ -19,6 +19,7 @@ return [
     'hostname' => env('HOSTNAME', 'taggy'),
     'ffmpeg' => [
         'logging' => env('FFMPEG_LOGGING', false),
+        'logging-level' => env('FFMPEG_LOGGING_LEVEL', 'info'),
         'record-audio' => env('FFMPEG_RECORD_AUDIO', true),
     ],
 ];
