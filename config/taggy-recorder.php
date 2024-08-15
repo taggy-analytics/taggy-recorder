@@ -19,5 +19,6 @@ return [
     'hostname' => env('HOSTNAME', 'taggy'),
     'ffmpeg' => [
         'logging' => env('FFMPEG_LOGGING', false),
+        'record-audio' => env('FFMPEG_RECORD_AUDIO', true),
     ],
 ];

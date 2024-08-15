@@ -66,10 +66,16 @@ abstract class RtspCamera extends CameraType
             '-hls_list_size 0',
             '-hls_segment_filename ' . $segmentFilename,
             '-c:v copy',
-            '-c:a aac',
-            '-b:a 96k',
             '-avoid_negative_ts make_zero',
         ];
+
+        if(config('taggy-recorder.ffmpeg.record-audio')) {
+            $options[] = '-c:a aac';
+            $options[] = '-b:a 96k';
+        }
+        else {
+            $options[] = '-an';
+        }
 
         FFMpegCommand::run($this->getRtspUrl($camera), $outputFile, $options, $beforeInputOptions);
     }
