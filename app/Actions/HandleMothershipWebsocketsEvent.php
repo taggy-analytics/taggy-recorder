@@ -6,6 +6,7 @@ use App\Actions\Mothership\SyncTransactionsWithMothership;
 use App\Enums\WebsocketEventType;
 use App\Events\TransactionsAdded;
 use App\Models\Transaction;
+use App\Support\Mothership;
 use App\Support\Recorder;
 use Illuminate\Support\Str;
 
@@ -30,7 +31,7 @@ class HandleMothershipWebsocketsEvent
     {
         $newTransactions = collect($data['transactions'])
             ->whereNotIn('id', $this->getUuids($entityId))
-            ->hydrateTransactions()
+            ->hydrateTransactions(Mothership::getEndpoint())
             ->toArray();
 
         if(count($newTransactions) > 0) {
