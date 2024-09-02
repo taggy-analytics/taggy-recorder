@@ -112,8 +112,10 @@ class Recorder
             ?->gt(now()->subSeconds(10));
     }
 
-    public function isUploading($uploading = null)
+    public function isUploading($uploading = null, $calculateLed = true)
     {
+        $exists = Storage::exists(self::RUNNING_UPLOAD_FILENAME);
+
         if(!Mothership::make()->isOnline()) {
             Storage::delete(self::RUNNING_UPLOAD_FILENAME);
         }
@@ -128,7 +130,9 @@ class Recorder
             Storage::delete(self::RUNNING_UPLOAD_FILENAME);
         }
 
-        app(CalculateLed::class)->execute();
+        if($calculateLed) {
+            app(CalculateLed::class)->execute();
+        }
     }
 
     public function logMeasure($type, $message)

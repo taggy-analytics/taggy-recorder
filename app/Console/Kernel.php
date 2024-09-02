@@ -50,6 +50,7 @@ class Kernel extends ConsoleKernel
 
         $schedule->command(CalculateLed::class)
             ->runInBackground()
+            ->withoutOverlapping(1)
             ->everyTwoSeconds();
 
         $schedule->command(RunHealthChecks::class)
