@@ -13,6 +13,7 @@ use App\Models\UserToken;
 use Chrisyue\PhpM3u8\Facade\ParserFacade;
 use Chrisyue\PhpM3u8\Stream\TextStream;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 
 class HandleRecordings
@@ -98,6 +99,10 @@ class HandleRecordings
                     ])->toArray();
 
                 MothershipReport::insertChunked($mothershipReports);
+
+                DB::table('livestream_segments')
+                    ->where('file', 'LIKE', '%' . $recording->key . '%')
+                    ->delete();
 
                 $recording->setStatus(RecordingStatus::CREATED_RECORDING_FILES_IN_DB);
             }
