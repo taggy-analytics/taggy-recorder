@@ -16,6 +16,8 @@ class RunMothershipActions
         }
         */
 
+        info('Mother oh mother');
+
         if(!Mothership::make()->isOnline()) {
             return;
         }
