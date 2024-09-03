@@ -7,34 +7,37 @@ use App\Enums\LedColor;
 use App\Models\Camera;
 use App\Support\Mothership;
 use App\Support\Recorder;
+use Illuminate\Support\Facades\Cache;
 
 class CalculateLed
 {
     public function execute()
     {
-        $recorder = Recorder::make();
+        Cache::lock('calculateLeds', 10)->get(function () {
+            $recorder = Recorder::make();
 
-        if($recorder->isUpdatingFirmware()) {
-            $recorder->led(LedColor::GREEN, 0.5);
-        }
-        elseif(!Camera::noCameraIsRecording()) {
-            $recorder->led(LedColor::RED, $recorder->isLivestreaming() ? 0.25 : 0.5);
-        }
-        elseif($recorder->isUploading(calculateLed: false)) {
-            $recorder->led(LedColor::BLUE, 0.5);
-        }
-        elseif(Mothership::make()->isOnline(1) && $this->cameraIsAvailable()) {
-            $recorder->led([LedColor::BLUE, LedColor::RED], 1);
-        }
-        elseif(Mothership::make()->isOnline(1)) {
-            $recorder->led(LedColor::BLUE);
-        }
-        elseif($this->cameraIsAvailable()) {
-            $recorder->led(LedColor::RED);
-        }
-        else {
-            $recorder->led(LedColor::GREEN);
-        }
+            if($recorder->isUpdatingFirmware()) {
+                $recorder->led(LedColor::GREEN, 0.5);
+            }
+            elseif(!Camera::noCameraIsRecording()) {
+                $recorder->led(LedColor::RED, $recorder->isLivestreaming() ? 0.25 : 0.5);
+            }
+            elseif($recorder->isUploading(calculateLed: false)) {
+                $recorder->led(LedColor::BLUE, 0.5);
+            }
+            elseif(Mothership::make()->isOnline(1) && $this->cameraIsAvailable()) {
+                $recorder->led([LedColor::BLUE, LedColor::RED], 1);
+            }
+            elseif(Mothership::make()->isOnline(1)) {
+                $recorder->led(LedColor::BLUE);
+            }
+            elseif($this->cameraIsAvailable()) {
+                $recorder->led(LedColor::RED);
+            }
+            else {
+                $recorder->led(LedColor::GREEN);
+            }
+        });
     }
 
     private function cameraIsAvailable()
