@@ -25,11 +25,13 @@ class RunMothershipActions
         }
 
         // $this->runAction(SyncTransactionsWithMothership::class);
-        $this->runAction(ManageWebsocketsConnection::class);
+
+        // 2024-09-03 Disable for now; might be responsible for recorder hangups?!
+        // $this->runAction(ManageWebsocketsConnection::class);
+        
         $this->runAction(SendLogToMothership::class);
         $this->runAction(SendTemperatureLogToMothership::class);
         $this->runAction(SendReportablesToMothership::class);
-        // $this->runAction(CheckForDeletedRecordings::class);
     }
 
     private function runAction($action)
