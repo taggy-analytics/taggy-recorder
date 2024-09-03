@@ -21,8 +21,9 @@ class RunStartupActions extends Command
 
         info('Running startup actions');
         $this->call('cache:clear');
-        //$this->call('schedule:clear-cache');
 
+
+        /*
         $mutexCleared = false;
 
         foreach ($schedule->events($this->laravel) as $event) {
@@ -39,6 +40,7 @@ class RunStartupActions extends Command
         if (! $mutexCleared) {
            info('No mutex files were found.');
         }
+        */
 
         app(EnsureNetworkIsSetup::class)->execute();
         app(EnsureAppKeyIsSet::class)->execute();
