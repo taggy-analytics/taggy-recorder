@@ -63,7 +63,7 @@ class Kernel extends ConsoleKernel
             ->everyFifteenSeconds();
 
         $schedule->command(FreeDiskSpace::class)
-            ->withoutOverlapping(15)
+            ->withoutOverlapping()
             ->everyFiveMinutes();
 
         $schedule->command('clean:directories')

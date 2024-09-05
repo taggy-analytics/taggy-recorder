@@ -23,12 +23,13 @@ class FreeDiskSpace
                 ->orderBy('updated_at')
                 ->get();
 
-            while ($this->getDiskUsage() < $this->deleteOldFilesUntil) {
+            while ($this->getDiskUsage() < $this->deleteOldFilesUntil && $filesToDelete->count() > 0) {
                 $fileToDelete = $filesToDelete->shift();
                 $fileToDelete?->delete();
                 $fileToDelete?->recording->update([
                     'status' => RecordingStatus::DELETING_FILES,
                 ]);
+                sleep(1);
             }
         }
     }
