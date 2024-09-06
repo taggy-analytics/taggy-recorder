@@ -8,10 +8,10 @@ if (! function_exists('reportToMothership')) {
 }
 
 if (! function_exists('checkMemory')) {
-    function checkMemory()
+    function checkMemory($key = null)
     {
         $backtrace = debug_backtrace()[0];
-        $key = $backtrace['file'] . '-' . $backtrace['line'];
+        $key ??= basename($backtrace['file']) . '-' . $backtrace['line'];
         $memoryConsumers = cache()->get('memoryConsumers', []);
 
         $memoryUsage = memory_get_usage();
