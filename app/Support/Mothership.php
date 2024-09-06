@@ -104,7 +104,7 @@ class Mothership
     public function sendLivestreamFile(Recording $recording, $file, $content = null, $m3u8Content = null)
     {
         $this->client->timeout(600);
-        checkMemory('afterSetClientTimeout');
+
         $postData = [
             'name' => basename($file),
             'content' => $content ?? base64_encode(File::get($file)),
@@ -117,9 +117,8 @@ class Mothership
             'codec' => $recording->getCodec(),
             'session_uuid' => Arr::get($recording->data, 'session_uuid'),
         ];
-        checkMemory('afterSetPostData');
+
         $this->post('recordings/' . $recording->key . '/livestream-segments', $postData);
-        checkMemory('afterPost');
     }
 
     public function sendRecordingFile(RecordingFile $file)
@@ -200,11 +199,7 @@ class Mothership
 
     private function post($url, $data = [], $type = 'json')
     {
-        checkMemory('beforePost');
-        $return = $this->request('post', $url, $data, $type);
-        checkMemory('afterPost');
-
-        return $return;
+        return $this->request('post', $url, $data, $type);
     }
 
     private function delete($url)
@@ -224,10 +219,9 @@ class Mothership
 
     private function request($method, $url, $data = null, $type = 'json')
     {
-        checkMemory('beforeResponse');
         $response = $this->client
             ->{$method}($url, $data);
-        checkMemory('afterResponse');
+
         blink()->put(self::LAST_RESPONSE_STATUS_CACHE_KEY, $response->status());
 
         if($response->status() >= 400) {
@@ -246,14 +240,10 @@ class Mothership
                     throw new MothershipException($method, $url, $data, $response);
             }
         }
-        checkMemory('afterResponseStatus');
         $this->headers = [
             'content-disposition' => $response->header('content-disposition'),
         ];
-        checkMemory('afterResponseHeaders');
-        $return = $type == 'json' ? $response->json() : $response->body();
-        checkMemory('afterResponseBody');
-        return $return;
+        return $type == 'json' ? $response->json() : $response->body();
     }
 
     private function setTimeout($timeout)

@@ -20,12 +20,17 @@ class UploadLivestreamSegments extends Command
     {
         Recorder::make()->waitUntilAllNeededServicesAreUpAndRunning();
 
-        checkMemory('start', true);
-
         while(true) {
             if(!Mothership::make()->isOnline(disableCache: true)) {
                 sleep(10);
                 continue;
+            }
+
+            // This script somehow has a memory leak which eventually causes a Pi crash.
+            // As a workaround let's just kill it when it consumes more than 300MB.
+            // The supervisor will start it right up again.
+            if(memory_get_usage() > 300000000) {
+                return;
             }
 
             try {
@@ -35,18 +40,13 @@ class UploadLivestreamSegments extends Command
                     ->take(5)
                     ->get();
 
-                checkMemory('afterSQLQuery');
-
                 if(count($livestreamSegments) > 0) {
                     $livestreamSegments->each(fn($livestreamSegment) => $this->sendFile($livestreamSegment));
-                    checkMemory('afterLoop');
                     sleep(1);
                 }
                 else {
                     sleep(10);
                 }
-
-                checkMemory('afterBatch');
             }
             catch(\Exception $exception) {
                 sleep(10);
@@ -58,18 +58,13 @@ class UploadLivestreamSegments extends Command
     {
         try {
             $recording = $segment->getRecording();
-            checkMemory('afterRecording');
+
             if($recording->livestream_enabled && Arr::has($recording->data, ['endpoint'])) {
                 $userToken = UserToken::forEndpointAndEntity($recording->data['endpoint'], $recording->data['entity_id']);
-                checkMemory('afterUserToken');
                 $m3u8Content = explode(PHP_EOL, trim(Storage::get('segments-m3u8/segment-m3u8-' . $segment->id)));
-                checkMemory('afterM3u8Content');
                 Storage::delete('segments-m3u8/segment-m3u8-' . $segment->id);
-                checkMemory('afterStorageDelete');
                 Mothership::make($userToken)->sendLivestreamFile($recording, $segment->file, $segment->content, implode(PHP_EOL, array_slice($m3u8Content, 0, -2)));
-                checkMemory('afterSendLivestreamFile');
                 $segment->update(['uploaded_at' => now()]);
-                checkMemory('afterUpdate');
             }
         }
         catch(\Exception $exception) {
