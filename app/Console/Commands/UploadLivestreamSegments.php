@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use App\Models\Camera;
 use App\Models\LivestreamSegment;
 use App\Models\UserToken;
 use App\Support\Mothership;
@@ -44,8 +45,11 @@ class UploadLivestreamSegments extends Command
                     $livestreamSegments->each(fn($livestreamSegment) => $this->sendFile($livestreamSegment));
                     sleep(1);
                 }
-                else {
+                elseif(Camera::noCameraIsRecording()) {
                     sleep(10);
+                }
+                else {
+                    sleep(1);
                 }
             }
             catch(\Exception $exception) {
