@@ -105,7 +105,7 @@ class Mothership
     {
         $this->client->timeout(600);
         checkMemory('afterSetClientTimeout');
-        $this->post('recordings/' . $recording->key . '/livestream-segments', [
+        $postData = [
             'name' => basename($file),
             'content' => $content ?? base64_encode(File::get($file)),
             'm3u8Content' => $m3u8Content,
@@ -116,7 +116,9 @@ class Mothership
             'streamingProtocol' => $recording->getStreamingProtocol(),
             'codec' => $recording->getCodec(),
             'session_uuid' => Arr::get($recording->data, 'session_uuid'),
-        ]);
+        ];
+        checkMemory('afterSetPostData');
+        $this->post('recordings/' . $recording->key . '/livestream-segments', $postData);
         checkMemory('afterPost');
     }
 
@@ -198,7 +200,11 @@ class Mothership
 
     private function post($url, $data = [], $type = 'json')
     {
-        return $this->request('post', $url, $data, $type);
+        checkMemory('beforePost');
+        $return = $this->request('post', $url, $data, $type);
+        checkMemory('afterPost');
+
+        return $return;
     }
 
     private function delete($url)
