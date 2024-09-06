@@ -8,16 +8,21 @@ if (! function_exists('reportToMothership')) {
 }
 
 if (! function_exists('checkMemory')) {
-    function checkMemory($key = null)
+    function checkMemory($key = null, $initialize = false)
     {
+        if($initialize) {
+            cache()->forget('memoryConsumers');
+            cache()->forget('lastMemoryUsage');
+        }
+
         $backtrace = debug_backtrace()[0];
         $key ??= basename($backtrace['file']) . '-' . $backtrace['line'];
-        $memoryConsumers = blink()->get('memoryConsumers', []);
+        $memoryConsumers = cache()->get('memoryConsumers', []);
 
         $memoryUsage = memory_get_usage();
 
-        if(blink()->has('lastMemoryUsage')) {
-            $memoryAdded = $memoryUsage - blink()->get('lastMemoryUsage');
+        if(cache()->has('lastMemoryUsage')) {
+            $memoryAdded = $memoryUsage - cache()->get('lastMemoryUsage');
             if(Arr::has($memoryConsumers, $key)) {
                 $memoryConsumers[$key] += $memoryAdded;
             }
@@ -26,8 +31,8 @@ if (! function_exists('checkMemory')) {
             }
         }
 
-        blink()->put('lastMemoryUsage', $memoryUsage);
-        blink()->put('memoryConsumers', $memoryConsumers);
+        cache()->put('lastMemoryUsage', $memoryUsage);
+        cache()->put('memoryConsumers', $memoryConsumers);
 
         info($memoryConsumers);
     }
