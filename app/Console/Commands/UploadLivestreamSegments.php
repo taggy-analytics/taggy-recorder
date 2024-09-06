@@ -29,16 +29,24 @@ class UploadLivestreamSegments extends Command
             }
 
             try {
-                LivestreamSegment::query()
+                $livestreamSegments = LivestreamSegment::query()
                     ->whereNull('uploaded_at')
                     ->orderBy('id')
                     ->take(5)
-                    ->get()
-                    ->each(fn($livestreamSegment) => $this->sendFile($livestreamSegment));
+                    ->get();
+
+                checkMemory('afterSQLQuery');
+
+                if(count($livestreamSegments) > 0) {
+                    $livestreamSegments->each(fn($livestreamSegment) => $this->sendFile($livestreamSegment));
+                    checkMemory('afterLoop');
+                    sleep(1);
+                }
+                else {
+                    sleep(10);
+                }
 
                 checkMemory('afterBatch');
-
-                sleep(1);
             }
             catch(\Exception $exception) {
                 sleep(10);
