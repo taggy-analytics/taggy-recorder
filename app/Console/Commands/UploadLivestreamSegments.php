@@ -45,7 +45,6 @@ class UploadLivestreamSegments extends Command
                 if(count($livestreamSegments) > 0) {
                     $livestreamSegments->each(fn($livestreamSegment) => $this->sendFile($livestreamSegment));
                     sleep(1);
-                    info('Mem: ' . memory_get_usage());
                 }
                 elseif(Camera::noCameraIsRecording()) {
                     sleep(10);
