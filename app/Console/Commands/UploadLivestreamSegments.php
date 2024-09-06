@@ -31,6 +31,7 @@ class UploadLivestreamSegments extends Command
             // As a workaround let's just kill it when it consumes more than 300MB.
             // The supervisor will start it right up again.
             if(memory_get_usage() > 300000000) {
+                info('Restarting UploadLivestreamSegment daemon (Memory: ' . memory_get_usage() .')');
                 return;
             }
 
@@ -44,6 +45,7 @@ class UploadLivestreamSegments extends Command
                 if(count($livestreamSegments) > 0) {
                     $livestreamSegments->each(fn($livestreamSegment) => $this->sendFile($livestreamSegment));
                     sleep(1);
+                    info('Mem: ' . memory_get_usage());
                 }
                 elseif(Camera::noCameraIsRecording()) {
                     sleep(10);
