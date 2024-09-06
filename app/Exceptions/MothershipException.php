@@ -3,6 +3,7 @@
 namespace App\Exceptions;
 
 use Exception;
+use Illuminate\Support\Facades\Log;
 
 class MothershipException extends Exception
 {
@@ -12,6 +13,7 @@ class MothershipException extends Exception
         public $data,
         public $response,
     ){
+        Log::channel('mothership')->error($response?->getMessage());
         parent::__construct($response?->status() . ': ' . $method . ' ' . $url);
     }
 }
