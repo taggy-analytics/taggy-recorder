@@ -34,6 +34,8 @@ class UploadLivestreamSegments extends Command
                     ->get()
                     ->each(fn($livestreamSegment) => $this->sendFile($livestreamSegment));
 
+                checkMemory('afterBatch');
+
                 sleep(1);
             }
             catch(\Exception $exception) {
@@ -46,12 +48,18 @@ class UploadLivestreamSegments extends Command
     {
         try {
             $recording = $segment->getRecording();
+            checkMemory('afterRecording');
             if($recording->livestream_enabled && Arr::has($recording->data, ['endpoint'])) {
                 $userToken = UserToken::forEndpointAndEntity($recording->data['endpoint'], $recording->data['entity_id']);
+                checkMemory('afterUserToken');
                 $m3u8Content = explode(PHP_EOL, trim(Storage::get('segments-m3u8/segment-m3u8-' . $segment->id)));
+                checkMemory('afterM3u8Content');
                 Storage::delete('segments-m3u8/segment-m3u8-' . $segment->id);
+                checkMemory('afterStorageDelete');
                 Mothership::make($userToken)->sendLivestreamFile($recording, $segment->file, $segment->content, implode(PHP_EOL, array_slice($m3u8Content, 0, -2)));
+                checkMemory('afterSendLivestreamFile');
                 $segment->update(['uploaded_at' => now()]);
+                checkMemory('afterUpdate');
             }
         }
         catch(\Exception $exception) {
