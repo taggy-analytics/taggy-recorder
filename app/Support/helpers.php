@@ -12,22 +12,22 @@ if (! function_exists('checkMemory')) {
     {
         $backtrace = debug_backtrace()[0];
         $key ??= basename($backtrace['file']) . '-' . $backtrace['line'];
-        $memoryConsumers = cache()->get('memoryConsumers', []);
+        $memoryConsumers = blink()->get('memoryConsumers', []);
 
         $memoryUsage = memory_get_usage();
 
-        if(cache()->has('lastMemoryUsage')) {
-            $memoryAdded = $memoryUsage - cache()->get('lastMemoryUsage');
+        if(blink()->has('lastMemoryUsage')) {
+            $memoryAdded = $memoryUsage - blink()->get('lastMemoryUsage');
             if(Arr::has($memoryConsumers, $key)) {
                 $memoryConsumers[$key] += $memoryAdded;
             }
             else {
-                $memoryConsumers[$key] = $memoryUsage;
+                $memoryConsumers[$key] = $memoryAdded;
             }
         }
 
-        cache()->put('lastMemoryUsage', $memoryUsage);
-        cache()->put('memoryConsumers', $memoryConsumers);
+        blink()->put('lastMemoryUsage', $memoryUsage);
+        blink()->put('memoryConsumers', $memoryConsumers);
 
         info($memoryConsumers);
     }
