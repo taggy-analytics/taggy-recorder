@@ -218,9 +218,10 @@ class Mothership
 
     private function request($method, $url, $data = null, $type = 'json')
     {
+        checkMemory('beforeResponse');
         $response = $this->client
             ->{$method}($url, $data);
-
+        checkMemory('afterResponse');
         blink()->put(self::LAST_RESPONSE_STATUS_CACHE_KEY, $response->status());
 
         if($response->status() >= 400) {
@@ -239,12 +240,14 @@ class Mothership
                     throw new MothershipException($method, $url, $data, $response);
             }
         }
-
+        checkMemory('afterResponseStatus');
         $this->headers = [
             'content-disposition' => $response->header('content-disposition'),
         ];
-
-        return $type == 'json' ? $response->json() : $response->body();
+        checkMemory('afterResponseHeaders');
+        $return = $type == 'json' ? $response->json() : $response->body();
+        checkMemory('afterResponseBody');
+        return $return;
     }
 
     private function setTimeout($timeout)
