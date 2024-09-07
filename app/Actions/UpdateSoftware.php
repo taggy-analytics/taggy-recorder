@@ -62,7 +62,6 @@ class UpdateSoftware
                 unlink($releasePath . '/../../current');
                 symlink($releasePath, $releasePath . '/../../current');
 
-                Process::run('pkill -f "taggy:upload-livestream-segments"');
                 Process::run('php artisan cache:clear');
                 Process::run('php artisan schedule:clear-cache');
                 Process::run('php artisan storage:link');
