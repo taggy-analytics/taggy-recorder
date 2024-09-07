@@ -236,6 +236,10 @@ class Mothership
 
                     blink()->put(self::LAST_RESPONSE_STATUS_CACHE_KEY, $response->status());
                     break;
+                case 429:
+                    info('429 Headers:');
+                    info($response->headers());
+                    throw new MothershipException($method, $url, $data, $response);
                 default:
                     throw new MothershipException($method, $url, $data, $response);
             }
