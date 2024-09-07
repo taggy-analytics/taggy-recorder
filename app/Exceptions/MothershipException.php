@@ -13,7 +13,7 @@ class MothershipException extends Exception
         public $data,
         public $response,
     ){
-        Log::channel('mothership')->error($response?->getMessage());
+        Log::channel('mothership')->error($response?->getBody());
         parent::__construct($response?->status() . ': ' . $method . ' ' . $url);
     }
 }
