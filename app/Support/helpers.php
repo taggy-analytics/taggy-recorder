@@ -37,3 +37,13 @@ if (! function_exists('checkMemory')) {
         info($memoryConsumers);
     }
 }
+
+if (! function_exists('preventMemoryLeak')) {
+    function preventMemoryLeak($message = null, $limit = 300000000)
+    {
+        if(memory_get_usage() > $limit) {
+            info(($message ?? 'Memory leak prevented') .  ' (Memory: ' . memory_get_usage() .')');
+            exit;
+        }
+    }
+}

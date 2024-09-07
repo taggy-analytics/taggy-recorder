@@ -84,6 +84,11 @@ return [
             'path' => storage_path('logs/mothership.log'),
         ],
 
+        'memory' => [
+            'driver' => 'daily',
+            'path' => storage_path('logs/memory.log'),
+        ],
+
         'daily' => [
             'driver' => 'daily',
             'path' => storage_path('logs/laravel.log'),

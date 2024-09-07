@@ -9,6 +9,7 @@ use App\Support\Mothership;
 use App\Support\Recorder;
 use Illuminate\Console\Command;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 
 class UploadLivestreamSegments extends Command
@@ -30,10 +31,7 @@ class UploadLivestreamSegments extends Command
             // This script somehow has a memory leak which eventually causes a Pi crash.
             // As a workaround let's just kill it when it consumes more than 300MB.
             // The supervisor will start it right up again.
-            if(memory_get_usage() > 300000000) {
-                info('Restarting UploadLivestreamSegment daemon (Memory: ' . memory_get_usage() .')');
-                return;
-            }
+            preventMemoryLeak('loop');
 
             try {
                 $livestreamSegments = LivestreamSegment::query()
@@ -63,6 +61,9 @@ class UploadLivestreamSegments extends Command
     {
         try {
             $recording = $segment->getRecording();
+
+            preventMemoryLeak('sendFile');
+            Log::channel('memory')->info(memory_get_usage());
 
             if($recording->livestream_enabled && Arr::has($recording->data, ['endpoint'])) {
                 $userToken = UserToken::forEndpointAndEntity($recording->data['endpoint'], $recording->data['entity_id']);
