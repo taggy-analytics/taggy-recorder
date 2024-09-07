@@ -197,6 +197,9 @@ class Recording extends Model
             }
         }
 
+        info('Setting stopped_at...');
+        info(array_slice(debug_backtrace(), 0, 5));
+
         $this->update([
             'stopped_at' => $this->started_at?->addMilliseconds(round($duration * 1000)),
         ]);
