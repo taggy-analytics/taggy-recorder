@@ -4,6 +4,7 @@ namespace App\Actions\Mothership;
 
 use App\Models\Camera;
 use App\Support\Mothership;
+use App\Support\Recorder;
 use Illuminate\Support\Facades\Storage;
 
 class RunMothershipActions
@@ -17,6 +18,10 @@ class RunMothershipActions
         */
 
         if(!Mothership::make()->isOnline()) {
+            return;
+        }
+
+        if(Recorder::make()->isLivestreaming()) {
             return;
         }
 
