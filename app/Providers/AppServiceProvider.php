@@ -30,7 +30,8 @@ class AppServiceProvider extends ServiceProvider
         Collection::macro('hydrateTransactions', function($mothershipEndpoint) {
             return $this->map(function ($transaction) use ($mothershipEndpoint) {
                 $transaction['created_at'] = Carbon::parse($transaction['created_at'])->toDateTimeString('milliseconds');
-                $transaction['value'] = json_encode($transaction['value']);
+                // 2024-09-10 Remove encoding for testing purposes
+                // $transaction['value'] = json_encode($transaction['value']);
                 $transaction['endpoint'] = $mothershipEndpoint;
                 return $transaction;
             });
