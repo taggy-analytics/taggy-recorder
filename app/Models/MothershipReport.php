@@ -25,11 +25,12 @@ class MothershipReport extends Model
         return $this->belongsTo(UserToken::class);
     }
 
-    public static function unreported()
+    public static function unreported($limit = 5)
     {
         return self::query()
             ->whereNull('processed_at')
             ->where('ready_to_send', true)
+            ->take($limit)
             ->get();
     }
 }

@@ -20,10 +20,13 @@ class UploadLivestreamSegments extends Command
 
     public function handle()
     {
-        Recorder::make()->waitUntilAllNeededServicesAreUpAndRunning();
+        $recorder = Recorder::make();
+        $mothership = Mothership::make();
+
+        $recorder->waitUntilAllNeededServicesAreUpAndRunning();
 
         while(true) {
-            if(!Mothership::make()->isOnline(disableCache: true)) {
+            if(!$mothership->isOnline(disableCache: true)) {
                 sleep(10);
                 continue;
             }
