@@ -52,7 +52,7 @@ class UpdateSoftware
                 chdir($releasePath);
                 Process::timeout(180)->run('npm install');
                 Process::timeout(120)->run('composer install');
-                Process::run('php artisan migrate --force');
+                Process::run('sudo php artisan migrate --force');
 
                 // Do final checks before activating new release
                 if(!File::exists($releasePath . '/vendor')) {
