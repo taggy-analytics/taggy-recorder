@@ -237,9 +237,10 @@ class Mothership
                     blink()->put(self::LAST_RESPONSE_STATUS_CACHE_KEY, $response->status());
                     break;
                 case 429:
-                    info('429 Headers:');
-                    info($response->headers());
-                    throw new MothershipException($method, $url, $data, $response);
+                    info('429 from Mothership; retrying in ' . $response->header('Retry-After') . ' seconds...');
+                    sleep($response->header('Retry-After'));
+                    $this->request($method, $url, $data, $type);
+                    break;
                 default:
                     throw new MothershipException($method, $url, $data, $response);
             }
