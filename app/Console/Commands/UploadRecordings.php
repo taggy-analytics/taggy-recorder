@@ -33,13 +33,17 @@ class UploadRecordings extends Command
                 continue;
             }
 
-            $errored = false;
-
             $unreportedReports = MothershipReport::unreported();
 
-            if ($unreportedReports->count() == 0 && $recorder->isUploading()) {
-                $recorder->isUploading(false);
+            if ($unreportedReports->count() == 0) {
+                if($recorder->isUploading()) {
+                    $recorder->isUploading(false);
+                }
+                sleep(10);
+                continue;
             }
+
+            $errored = false;
 
             foreach ($unreportedReports as $mothershipReport) {
                 if ($recorder->isLivestreaming()) {
