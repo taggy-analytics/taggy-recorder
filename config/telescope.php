@@ -154,12 +154,14 @@ return [
             'enabled' => env('TELESCOPE_DUMP_WATCHER', true),
             'always' => env('TELESCOPE_DUMP_WATCHER_ALWAYS', false),
         ],
+        */
 
         Watchers\EventWatcher::class => [
             'enabled' => env('TELESCOPE_EVENT_WATCHER', true),
             'ignore' => [],
         ],
 
+        /*
         Watchers\ExceptionWatcher::class => env('TELESCOPE_EXCEPTION_WATCHER', true),
 
         Watchers\GateWatcher::class => [
