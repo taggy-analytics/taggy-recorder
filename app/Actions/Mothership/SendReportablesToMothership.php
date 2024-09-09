@@ -12,36 +12,23 @@ class SendReportablesToMothership
 {
     public function execute()
     {
-        $unreportedReports = MothershipReport::unreported();
-        static $reflectionCache = [];
-        $recorder = Recorder::make();
-
-        while(count($unreportedReports) > 0) {
+        while(count(MothershipReport::unreported()) > 0) {
             $errored = false;
 
-            foreach($unreportedReports as $mothershipReport) {
-                if($recorder->isLivestreaming()) {
+            foreach(MothershipReport::unreported() as $mothershipReport) {
+                if(Recorder::make()->isLivestreaming()) {
                     return;
                 }
 
-                // preventMemoryLeak();
-
                 Flare::context('motherShipReport', $mothershipReport);
-                if(!$recorder->isUploading()) {
-                    $recorder->isUploading(true);
+                if(!Recorder::make()->isUploading()) {
+                    Recorder::make()->isUploading(true);
                 }
                 if(!$mothershipReport->model) {
                     $mothershipReport->delete();
-                    $mothershipReport = null;
                     continue;
                 }
-
-                $modelClass = get_class($mothershipReport->model);
-                if (!isset($reflectionCache[$modelClass])) {
-                    $reflectionCache[$modelClass] = new \ReflectionClass($modelClass);
-                }
-                $actionClass = 'App\\Actions\\Mothership\\Report' . $reflectionCache[$modelClass]->getShortName();
-
+                $actionClass = 'App\\Actions\\Mothership\\Report' . (new \ReflectionClass($mothershipReport->model))->getShortName();
                 $mothershipReport->update(['reported_at' => now()]);
                 if(!app($actionClass)->execute($mothershipReport->model)) {
                     $errored = true;
@@ -52,12 +39,10 @@ class SendReportablesToMothership
                 info('Sleeping a little because of error while reporting to mothership...');
                 sleep(10);
             }
-
-            $unreportedReports = MothershipReport::unreported();
         }
 
-        if($recorder->isUploading()) {
-            $recorder->isUploading(false);
+        if(Recorder::make()->isUploading()) {
+            Recorder::make()->isUploading(false);
         }
     }
 }
