@@ -37,7 +37,9 @@ class RunMothershipActions
 
         $this->runAction(SendLogToMothership::class);
         $this->runAction(SendTemperatureLogToMothership::class);
-        $this->runAction(SendReportablesToMothership::class);
+
+        // 2024-09-09 Disable and run separately
+        // $this->runAction(SendReportablesToMothership::class);
     }
 
     private function runAction($action)
