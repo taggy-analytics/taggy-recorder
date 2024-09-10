@@ -88,7 +88,7 @@ class TransactionController extends Controller
                 })
                 ->toArray();
 
-            Transaction::insertChunked($newTransactions);
+            Transaction::insertChunked(Arr::encodeValue($newTransactions));
 
             $transactions = app(CleanTransactions::class)
                 ->execute($userToken->endpoint, $entityId, $request->last_transactions_reset_at);

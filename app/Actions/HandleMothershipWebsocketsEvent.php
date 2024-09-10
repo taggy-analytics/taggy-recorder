@@ -8,6 +8,7 @@ use App\Events\TransactionsAdded;
 use App\Models\Transaction;
 use App\Support\Mothership;
 use App\Support\Recorder;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
 
 class HandleMothershipWebsocketsEvent
@@ -35,7 +36,7 @@ class HandleMothershipWebsocketsEvent
             ->toArray();
 
         if(count($newTransactions) > 0) {
-            Transaction::insertChunked($newTransactions);
+            Transaction::insertChunked(Arr::encodeValue($newTransactions));
 
             broadcast(new TransactionsAdded($entityId, $newTransactions, Recorder::make()->getSystemId()));
         }

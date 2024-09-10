@@ -7,6 +7,7 @@ use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 use Illuminate\Support\ServiceProvider;
 use Spatie\LaravelIgnition\Facades\Flare;
@@ -30,10 +31,16 @@ class AppServiceProvider extends ServiceProvider
         Collection::macro('hydrateTransactions', function($mothershipEndpoint) {
             return $this->map(function ($transaction) use ($mothershipEndpoint) {
                 $transaction['created_at'] = Carbon::parse($transaction['created_at'])->toDateTimeString('milliseconds');
-                $transaction['value'] = json_encode($transaction['value']);
                 $transaction['endpoint'] = $mothershipEndpoint;
                 return $transaction;
             });
+        });
+
+        Arr::macro('encodeValue', function($array) {
+            return array_map(function ($item) {
+                $item['value'] = json_encode($item['value']);
+                return $item;
+            }, $array);
         });
 
         Request::macro('environmentData', function() {
