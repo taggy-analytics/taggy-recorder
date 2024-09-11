@@ -5,6 +5,7 @@ namespace App\Console\Commands;
 use App\Enums\WebsocketEventType;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
+use Spatie\LaravelIgnition\Facades\Flare;
 
 class HandleMothershipWebsocketsEvent extends Command
 {
@@ -27,6 +28,8 @@ class HandleMothershipWebsocketsEvent extends Command
      */
     public function handle()
     {
+        Flare::context('commandData', $this->option('data'));
+
         $dataJson = base64_decode($this->option('data'));
         $data = json_decode(trim($dataJson), true);
 

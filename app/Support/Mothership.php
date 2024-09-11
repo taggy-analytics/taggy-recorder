@@ -29,11 +29,14 @@ class Mothership
             throw new \Exception('User token is revoked.');
         }
 
+        $recorder = Recorder::make();
+
         $this->client = Http::baseUrl(($endpoint ?? self::getEndpoint($userToken)) . '/api/v1')
             ->withUserAgent('TaggyRecorder/' . Recorder::make()->currentSoftwareVersion())
             ->acceptJson()
             ->withHeaders([
-                'Recorder-Id' => Recorder::make()->getSystemId(),
+                'Recorder-Id' => $recorder->getSystemId(),
+                'Recorder-Software' => $recorder->currentSoftwareVersion(),
             ])
             ->withToken($userToken?->token);
     }
