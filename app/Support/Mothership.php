@@ -124,13 +124,14 @@ class Mothership
         $this->post('recordings/' . $recording->key . '/livestream-segments', $postData);
     }
 
-    public function sendRecordingFile(RecordingFile $file)
+    public function sendRecordingFile(RecordingFile $file, $remainingFiles)
     {
         $this->client->timeout(600);
 
         $this->post('videos/' . $file->video_id . '/video-segments', [
             'name' => $file->name,
             'segment' => base64_encode(Storage::disk('public')->get($file->videoPath())),
+            'remainingFiles' => $remainingFiles,
         ]);
     }
 
