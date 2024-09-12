@@ -21,6 +21,8 @@ class SetEnvironment
         DotenvEditor::setKey('PUSHER_MOTHERSHIP_HOST', DotenvEditor::getKey("PUSHER_MOTHERSHIP_{$environment}_HOST")['value']);
         DotenvEditor::setKey('PUSHER_MOTHERSHIP_AUTH_URL', DotenvEditor::getKey("PUSHER_MOTHERSHIP_{$environment}_AUTH_URL")['value']);
 
+        DotenvEditor::save();
+
         return true;
     }
 }
