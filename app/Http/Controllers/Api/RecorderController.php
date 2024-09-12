@@ -66,43 +66,10 @@ class RecorderController extends Controller
     public function networkStatus()
     {
         return [
-            'vpn' => $this->isServerReachable('10.0.0.1'),
             'mothership' => $this->isServerReachable('mothership.taggy.cam'),
             'api' => $this->isServerReachable('api-v2.taggy.cam'),
         ];
     }
-
-    /*
-    public function vpnStatus()
-    {
-        $output = Process::run("ip link show wg0 2>&1")->output();
-
-        return [
-            'connected' => !Str::contains($output, 'does not exist'),
-        ];
-    }
-
-    public function setVpnConfig(Request $request)
-    {
-        Process::run('sudo -S bash -c \'echo "' . $request->get('config') . '" > /etc/wireguard/wg0.conf\'');
-
-        return [
-            'status' => 'OK',
-        ];
-    }
-
-    public function startVpn()
-    {
-        Process::run('sudo wg-quick up wg0');
-        return $this->vpnStatus();
-    }
-
-    public function stopVpn()
-    {
-        Process::run('sudo wg-quick down wg0');
-        return $this->vpnStatus();
-    }
-    */
 
     public function setDotEnv(Request $request)
     {
