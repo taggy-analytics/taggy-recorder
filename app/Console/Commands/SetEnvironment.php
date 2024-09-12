@@ -29,7 +29,7 @@ class SetEnvironment extends Command
     public function handle()
     {
         if(!in_array($this->argument('environment'), ['production', 'local', 'demo', 'test'])) {
-            $this->error("{$this->argument('environment')} is not a known argument.");
+            $this->error("{$this->argument('environment')} is not a known environment.");
             return 1;
         }
 

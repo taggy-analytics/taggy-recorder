@@ -2,11 +2,6 @@
 
 namespace App\Actions;
 
-use App\Models\UserToken;
-use Dotenv\Dotenv;
-use Illuminate\Support\Facades\Artisan;
-use Illuminate\Support\Facades\File;
-use Illuminate\Support\Str;
 use Jackiedo\DotenvEditor\Facades\DotenvEditor;
 
 class SetEnvironment
@@ -20,7 +15,11 @@ class SetEnvironment
         app(TruncateRecorder::class)->execute();
 
         DotenvEditor::setKey('APP_ENV', $environment);
-        DotenvEditor::save();
+
+        $environment = strtoupper($environment);
+        DotenvEditor::setKey('PUSHER_MOTHERSHIP_APP_KEY', DotenvEditor::getKey("PUSHER_MOTHERSHIP_{$environment}_APP_KEY")['value']);
+        DotenvEditor::setKey('PUSHER_MOTHERSHIP_HOST', DotenvEditor::getKey("PUSHER_MOTHERSHIP_{$environment}_HOST")['value']);
+        DotenvEditor::setKey('PUSHER_MOTHERSHIP_AUTH_URL', DotenvEditor::getKey("PUSHER_MOTHERSHIP_{$environment}_AUTH_URL")['value']);
 
         return true;
     }
