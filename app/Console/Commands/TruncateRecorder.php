@@ -4,21 +4,21 @@ namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
 
-class ResetRecorder extends Command
+class TruncateRecorder extends Command
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'taggy:reset-recorder';
+    protected $signature = 'taggy:truncate';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Reset recorder';
+    protected $description = 'Truncate recorder';
 
     /**
      * ra
@@ -28,8 +28,8 @@ class ResetRecorder extends Command
      */
     public function handle()
     {
-        if($this->confirm('This resets everything and deletes all recordings! Are you sure?')) {
-            app(\App\Actions\ResetRecorder::class)->execute();
+        if($this->confirm('This deletes all relevant data and recordings! Are you sure?')) {
+            app(\App\Actions\TruncateRecorder::class)->execute();
             $this->info('Finished!');
         }
     }
