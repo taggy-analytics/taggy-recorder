@@ -11,7 +11,10 @@ class EnsureValidEnvironment
 {
     public function handle(Request $request, Closure $next, string ...$guards): Response
     {
-        info($request->environmentData());
+        $configuredEnv = config('app.env');
+        if($request->environmentData()['key'] !== $configuredEnv) {
+            abort(421, "You are logged in at the {$request->environmentData()['key']} system and therefore can’t use this recorder which is registered at the {$configuredEnv} system.");
+        }
 
         return $next($request);
     }

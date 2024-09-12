@@ -2,8 +2,8 @@
 
 namespace App\Http;
 
+use App\Http\Middleware\EnsureValidEnvironment;
 use App\Http\Middleware\LogRequestAndResponse;
-use Illuminate\Auth\Middleware\EnsureEmailIsVerified;
 use Illuminate\Foundation\Http\Kernel as HttpKernel;
 
 class Kernel extends HttpKernel
@@ -66,6 +66,6 @@ class Kernel extends HttpKernel
         'signed' => \App\Http\Middleware\ValidateSignature::class,
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
-        'valid-environment' => EnsureEmailIsVerified::class,
+        'valid-environment' => EnsureValidEnvironment::class,
     ];
 }
