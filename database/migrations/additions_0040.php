@@ -40,14 +40,14 @@ return new class extends Migration
 
     private function removeFilesFromEnv($linesToRemove)
     {
-        $envFilePath = base_path('.env');
+        $envFilePath = base_path('../../.env');
 
         $envContent = File::get($envFilePath);
 
         $updatedEnvContent = collect(explode(PHP_EOL, $envContent))
             ->reject(function ($line) use ($linesToRemove) {
                 foreach ($linesToRemove as $remove) {
-                    if (str_contains($line, $remove)) {
+                    if (str_contains($line, $remove) || empty(trim($line))) {
                         return true;
                     }
                 }
