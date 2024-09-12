@@ -8,17 +8,6 @@ return new class extends Migration
 {
     public function up()
     {
-        $this->removeFilesFromEnv([
-            '# TEST CONFIGURATION',
-            '# PROD CONFIGURATION',
-            '# PUSHER_MOTHERSHIP_APP_KEY=AFbfwPxLCPqenDmLPWYV49iPAF',
-            '# PUSHER_MOTHERSHIP_APP_KEY=WYV49iPAFbfwPxLCPqenDmLP',
-            '# PUSHER_MOTHERSHIP_HOST=ws.websockets.taggy.cam',
-            '# PUSHER_MOTHERSHIP_HOST=ws.websockets.test.taggy.cam',
-            '# PUSHER_MOTHERSHIP_AUTH_URL=https://api-v2.taggy.cam/broadcasting/auth',
-            '# PUSHER_MOTHERSHIP_AUTH_URL=https://api.test.taggy.cam/broadcasting/auth',
-        ]);
-
         DotenvEditor::setKey('PUSHER_MOTHERSHIP_PRODUCTION_APP_KEY', 'AFbfwPxLCPqenDmLPWYV49iPAF');
         DotenvEditor::setKey('PUSHER_MOTHERSHIP_PRODUCTION_HOST', 'ws.websockets.taggy.cam');
         DotenvEditor::setKey('PUSHER_MOTHERSHIP_PRODUCTION_AUTH_URL', 'https://api-v2.taggy.cam/broadcasting/auth');
@@ -36,6 +25,17 @@ return new class extends Migration
         DotenvEditor::setKey('PUSHER_MOTHERSHIP_LOCAL_AUTH_URL', 'https://api.test.taggy.cam/broadcasting/auth');
 
         DotenvEditor::save();
+
+        $this->removeFilesFromEnv([
+            '# TEST CONFIGURATION',
+            '# PROD CONFIGURATION',
+            '# PUSHER_MOTHERSHIP_APP_KEY=AFbfwPxLCPqenDmLPWYV49iPAF',
+            '# PUSHER_MOTHERSHIP_APP_KEY=WYV49iPAFbfwPxLCPqenDmLP',
+            '# PUSHER_MOTHERSHIP_HOST=ws.websockets.taggy.cam',
+            '# PUSHER_MOTHERSHIP_HOST=ws.websockets.test.taggy.cam',
+            '# PUSHER_MOTHERSHIP_AUTH_URL=https://api-v2.taggy.cam/broadcasting/auth',
+            '# PUSHER_MOTHERSHIP_AUTH_URL=https://api.test.taggy.cam/broadcasting/auth',
+        ]);
     }
 
     private function removeFilesFromEnv($linesToRemove)
