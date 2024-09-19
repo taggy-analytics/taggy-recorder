@@ -9,6 +9,7 @@ use App\Models\UserToken;
 use App\Support\Mothership;
 use App\Support\Recorder;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\File;
 
 
@@ -85,7 +86,7 @@ class SyncTransactionsWithMothership
                             ->hydrateTransactions($userToken->endpoint)
                             ->toArray();
 
-                        Transaction::insertChunked($transactionsToInsert);
+                        Transaction::insertChunked(Arr::encodeValue($transactionsToInsert));
 
                         if($reportResponse['content'] == 'all-transactions') {
                             $uuidsInDatabaseButNotInCleanedTransactions = $databaseUuids->diff($cleanedTransactionsUuids);
