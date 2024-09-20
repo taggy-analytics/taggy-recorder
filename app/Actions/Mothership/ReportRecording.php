@@ -3,12 +3,11 @@
 namespace App\Actions\Mothership;
 
 use App\Enums\RecordingFileStatus;
+use App\Enums\RecordingFileType;
 use App\Enums\RecordingStatus;
 use App\Models\MothershipReport;
 use App\Models\Recording;
 use App\Models\RecordingFile;
-use Illuminate\Support\Arr;
-use Illuminate\Support\Facades\Storage;
 
 class ReportRecording extends Report
 {
@@ -32,7 +31,11 @@ class ReportRecording extends Report
                 $recording->setStatus(RecordingStatus::UNKNOWN_MOTHERSHIP_ERROR);
             }
             else {
-                $livestreamedFiles = $recording->files->whereIn('name', $toVideoResponse['knownFiles'])->pluck('id');
+                $livestreamedFiles = $recording
+                    ->files
+                    ->whereIn('name', $toVideoResponse['knownFiles'])
+                    ->where('type', '!=', RecordingFileType::PLAYLIST)
+                    ->pluck('id');
 
                 $recording->files()->whereIn('id', $livestreamedFiles)->update([
                     'video_id' => $toVideoResponse['video']['id'],

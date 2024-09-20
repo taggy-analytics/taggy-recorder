@@ -50,6 +50,12 @@ class SyncTransactionsWithMothership
                 $checkSync = $mothership
                     ->getTransactionsStatus($userToken->entity_id, $hashes, self::HASH_SUBSTRING_LENGTH);
 
+                if(!Arr::has($checkSync, 'transactions_in_sync')) {
+                    info('Invalid response from mothership:');
+                    info($checkSync);
+                    continue;
+                }
+
                 if(!$checkSync['transactions_in_sync']) {
                     //foreach($userTokenTransactions as $userTokenId => $transactions) {
                         $transactions = $this->getQuery($userToken->entity_id, $userToken->endpoint)
