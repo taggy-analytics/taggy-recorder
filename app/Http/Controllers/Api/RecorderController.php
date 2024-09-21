@@ -51,6 +51,8 @@ class RecorderController extends Controller
     {
         $appKeyWasSet = app(EnsureAppKeyIsSet::class)->execute();
 
+        UserToken::truncate();
+
         return [
             'app_key_refreshed' => !$appKeyWasSet,
         ];
