@@ -39,11 +39,13 @@ class ReportRecording extends Report
 
                 $recording->files()->whereIn('id', $livestreamedFiles)->update([
                     'video_id' => $toVideoResponse['video']['id'],
+                    'video_format_id' => $toVideoResponse['videoFormat']['id'],
                     'status' => RecordingFileStatus::UPLOADED,
                 ]);
 
                 $recording->files()->whereNotIn('id', $livestreamedFiles)->update([
                     'video_id' => $toVideoResponse['video']['id'],
+                    'video_format_id' => $toVideoResponse['videoFormat']['id'],
                     'status' => RecordingFileStatus::TO_BE_UPLOADED,
                 ]);
 

@@ -128,7 +128,7 @@ class Mothership
     {
         $this->client->timeout(600);
 
-        $this->post('videos/' . $file->video_id . '/video-segments', [
+        $this->post('videos/' . $file->video_id . '/formats/' . $file->video_format_id . '/video-segments', [
             'name' => $file->name,
             'segment' => base64_encode(Storage::disk('public')->get($file->videoPath())),
             'remainingFiles' => $remainingFiles,
