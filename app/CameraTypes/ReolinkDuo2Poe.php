@@ -2,6 +2,8 @@
 
 namespace App\CameraTypes;
 
+use App\Enums\VideoFormat;
+
 class ReolinkDuo2Poe extends Reolink
 {
     public CONST VIDEO_WIDTH = 4608;
@@ -9,4 +11,6 @@ class ReolinkDuo2Poe extends Reolink
 
     // used to identify the camera type from the API DevInfo response
     protected const MODEL_NAME = 'Reolink Duo 2 PoE';
+
+    protected const VIDEO_FORMAT = VideoFormat::HlsHevc;
 }

@@ -33,17 +33,6 @@ abstract class RtspCamera extends CameraType
         */
     }
 
-    /*
-    public function startRecording(Camera $camera, Recording $recording)
-    {
-        $outputDirectory = Storage::disk('public')->path($recording->getPath('video'));
-        $outputFile = $outputDirectory . '/video.m3u8';
-        File::makeDirectory($outputDirectory, recursive: true);
-        // Nächster Versuch laut ChatGPT: Audio Reencoding (zu AAC)
-        FFMpegCommand::run($this->getRtspUrl($camera), $outputFile, '-tag:v hvc1 -f hls -hls_time ' . config('taggy-recorder.video-conversion.segment-duration') . ' -hls_list_size 0 -hls_segment_filename ' . $outputDirectory . '/video-%05d.ts -c copy', '-use_wallclock_as_timestamps 1 -fflags +genpts');
-        // FFMpegCommand::run($this->getRtspUrl($camera), $outputFile, '-tag:v hvc1 -f hls -hls_time ' . config('taggy-recorder.video-conversion.segment-duration') . ' -hls_list_size 0 -hls_segment_filename ' . $outputDirectory . '/video-%05d.m4s -c copy');
-    }
-    */
 
     public function startRecording(Camera $camera, Recording $recording)
     {

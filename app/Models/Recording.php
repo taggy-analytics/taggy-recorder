@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Enums\RecordingStatus;
+use App\Enums\VideoFormat;
 use App\Models\Traits\BroadcastsEvents;
 use App\Models\Traits\HasStatus;
 use App\Models\Traits\HasUuid;
@@ -32,6 +33,7 @@ class Recording extends Model
         'status' => RecordingStatus::class,
         'data' => 'array',
         'livestream_enabled' => 'boolean',
+        'video_format' => VideoFormat::class,
     ];
 
     public static function boot() {

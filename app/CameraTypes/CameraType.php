@@ -29,6 +29,11 @@ abstract class CameraType
         return $this->recordingStartDelay;
     }
 
+    public function getVideoFormat()
+    {
+        return static::VIDEO_FORMAT;
+    }
+
     public static function discoverCameras()
     {
         foreach(self::getCameraClasses() as $cameraClass) {

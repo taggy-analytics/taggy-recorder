@@ -26,6 +26,7 @@ class RecordingResource extends JsonResource
             'aborted_at' => $this->aborted_at,
             'thumbnail' => route('image', 'recording.png'),
             'latency' => $this->resource->getLatency(),
+            'video_format' => $this->video_format,
         ];
     }
 }
