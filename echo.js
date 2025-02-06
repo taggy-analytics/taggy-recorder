@@ -13,6 +13,8 @@ if (process.argv.length < 4) {
 const entity = process.argv[2];
 const userToken = process.argv[3];
 
+const postfix = process.env.APP_ENV === 'production' ? '' : '_' + process.env.APP_ENV;
+
 const connectToPusher = () => {
     let echo = new Echo({
         broadcaster: 'pusher',

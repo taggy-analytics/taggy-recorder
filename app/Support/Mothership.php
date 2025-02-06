@@ -119,6 +119,8 @@ class Mothership
             'streamingProtocol' => $recording->getStreamingProtocol(),
             'codec' => $recording->getCodec(),
             'session_uuid' => Arr::get($recording->data, 'session_uuid'),
+            'entityId' => Arr::get($recording->data, 'entity_id'),
+            'recording_uuid' => $recording->uuid,
         ];
 
         $this->post('recordings/' . $recording->key . '/livestream-segments', $postData);
