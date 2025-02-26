@@ -8,10 +8,6 @@
         {
             "type": "vcs",
             "url": "https://github.com/nanuc/laravel-reolink"
-        },
-        {
-            "type": "vcs",
-            "url": "https://github.com/mazur-adam/Laravel-Dotenv-Editor"
         }
     ],
     "require": {
@@ -25,10 +21,10 @@
         "chrisyue/php-m3u8": "^4",
         "dedoc/scramble": "^0.11",
         "guzzlehttp/guzzle": "^7.2",
-        "jackiedo/dotenv-editor": "dev-patch-1",
+        "jackiedo/dotenv-editor": "^1.1",
         "laravel/framework": "^11.0",
         "laravel/horizon": "^5.14",
-        "laravel/reverb": "@beta",
+        "laravel/reverb": "^1.4.0",
         "laravel/sanctum": "^4.0",
         "laravel/telescope": "^5.2",
         "laravel/tinker": "^2.7",
