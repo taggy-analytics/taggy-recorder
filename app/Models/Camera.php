@@ -20,6 +20,7 @@ class Camera extends Model
         'status' => CameraStatus::class,
         'credentials' => AsCollection::class,
         'recording_mode' => RecordingMode::class,
+        'is_recording' => 'boolean',
     ];
 
     public static function boot() {
@@ -69,7 +70,9 @@ class Camera extends Model
 
     public function isRecording()
     {
-        return $this->getType()->isRecording($this);
+        $isRecording = $this->getType()->isRecording($this);
+        $this->update(['is_recording' => $isRecording]);
+        return $isRecording;
     }
 
     public function startRecording($data = [])
@@ -89,6 +92,10 @@ class Camera extends Model
         Process::start('php ' . base_path('artisan') . ' taggy:watch-recording-segments ' . $recording->id);
 
         $this->getType()->startRecording($this, $recording);
+
+        $this->update([
+            'is_recording' => true,
+        ]);
 
         $recording->update(['started_at' => now()->subMilliseconds($this->getType()->getRecordingStartDelay())]);
 
@@ -117,6 +124,10 @@ class Camera extends Model
             $recording->addM3u8EndTag();
 
             app(CalculateLed::class)->execute();
+
+            $this->update([
+                'is_recording' => false,
+            ]);
 
             return $recording;
         }
