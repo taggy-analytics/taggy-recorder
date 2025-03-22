@@ -54,12 +54,18 @@ class UpdateSoftware
                 Process::timeout(120)->run('composer install');
                 Process::run('sudo php artisan migrate --force');
 
-                // Do final checks before activating new release
-                if(!File::exists($releasePath . '/vendor')) {
-                    throw new \Exception('Vendor directory does not exist.');
+                if(!Process::run('php artisan taggy:check-software ' . $releasePath)->successful()) {
+                    return [
+                        'updated' => false,
+                        'version' => Recorder::make()->currentSoftwareVersion(),
+                        'message' => 'Software validation failed.',
+                    ];
                 }
 
+                // ToDo: check for validity of upgrade!!!
+
                 unlink($releasePath . '/../../current');
+
                 symlink($releasePath, $releasePath . '/../../current');
 
                 Process::run('php artisan cache:clear');
