@@ -21,13 +21,11 @@ class SyncTransactionsWithMothership
 
     public function execute()
     {
-        if(blink()->get('sync-transactions-running')) {
+        if(cache()->get('sync-transactions-running')) {
             Recorder::make()->log(LogMessageType::SYNC_TRANSACTIONS_ALREADY_RUNNING);
         }
 
-        blink()->put('sync-transactions-running', true);
-
-        // $entities = UserToken::perEntity();
+        cache()->put('sync-transactions-running', true);
 
         $userTokens = UserToken::byEndpointAndEntity();
 
@@ -109,12 +107,12 @@ class SyncTransactionsWithMothership
                     // ToDo: what to do in this case!?
                     info('Transactions could not be synced for entity #' . $userToken->entity_id . ' (HTTP status ' . $exception->response->status() . ')');
                 }
-                blink()->forget('sync-transactions-running');
+                cache()->forget('sync-transactions-running');
                 throw $exception;
             }
         }
 
-        blink()->forget('sync-transactions-running');
+        cache()->forget('sync-transactions-running');
     }
 
     private function getSegmentsHash($uuids, $factor, $minSize, $entityId) {

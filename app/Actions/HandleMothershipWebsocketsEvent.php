@@ -24,6 +24,14 @@ class HandleMothershipWebsocketsEvent
 
     private function runSubscriptionSucceeded()
     {
+        if(cache()->get('sync-transactions-running')) {
+            info('Sync already running.');
+            return;
+        }
+        else {
+            info('Starting sync');
+        }
+
         app(SyncTransactionsWithMothership::class)
             ->execute();
     }
