@@ -17,9 +17,10 @@
         "ext-posix": "*",
         "ext-simplexml": "*",
         "ext-zip": "*",
-        "chillerlan/php-qrcode": "^4.3",
+        "chillerlan/php-qrcode": "^5.0",
         "chrisyue/php-m3u8": "^4",
         "dedoc/scramble": "^0.12",
+        "filament/filament": "^4.0",
         "guzzlehttp/guzzle": "^7.2",
         "jackiedo/dotenv-editor": "^1.1",
         "laravel/framework": "^12.0",
@@ -73,7 +74,8 @@
     "scripts": {
         "post-autoload-dump": [
             "Illuminate\\Foundation\\ComposerScripts::postAutoloadDump",
-            "@php artisan package:discover --ansi"
+            "@php artisan package:discover --ansi",
+            "@php artisan filament:upgrade"
         ],
         "post-update-cmd": [
             "@php artisan vendor:publish --tag=laravel-assets --ansi --force"
