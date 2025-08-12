@@ -2,6 +2,7 @@
 
 namespace App\Http;
 
+use App\Http\Middleware\EnsureRecorderTimeIsCorrect;
 use App\Http\Middleware\EnsureValidEnvironment;
 use App\Http\Middleware\LogRequestAndResponse;
 use Illuminate\Foundation\Http\Kernel as HttpKernel;
@@ -67,5 +68,6 @@ class Kernel extends HttpKernel
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
         'valid-environment' => EnsureValidEnvironment::class,
+        'valid-recorder-time' => EnsureRecorderTimeIsCorrect::class,
     ];
 }
