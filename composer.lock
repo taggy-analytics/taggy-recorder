@@ -1650,16 +1650,16 @@
         },
         {
             "name": "dedoc/scramble",
-            "version": "v0.12.28",
+            "version": "v0.12.29",
             "source": {
                 "type": "git",
                 "url": "https://github.com/dedoc/scramble.git",
-                "reference": "f06a98d1fd6678544428df7077d73194e2d28de3"
+                "reference": "b1fecfa9f6dc0094cf716d609975b933c5d522f0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/dedoc/scramble/zipball/f06a98d1fd6678544428df7077d73194e2d28de3",
-                "reference": "f06a98d1fd6678544428df7077d73194e2d28de3",
+                "url": "https://api.github.com/repos/dedoc/scramble/zipball/b1fecfa9f6dc0094cf716d609975b933c5d522f0",
+                "reference": "b1fecfa9f6dc0094cf716d609975b933c5d522f0",
                 "shasum": ""
             },
             "require": {
@@ -1718,7 +1718,7 @@
             ],
             "support": {
                 "issues": "https://github.com/dedoc/scramble/issues",
-                "source": "https://github.com/dedoc/scramble/tree/v0.12.28"
+                "source": "https://github.com/dedoc/scramble/tree/v0.12.29"
             },
             "funding": [
                 {
@@ -1726,7 +1726,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2025-08-04T12:20:10+00:00"
+            "time": "2025-08-12T12:17:56+00:00"
         },
         {
             "name": "dflydev/dot-access-data",
@@ -2199,7 +2199,7 @@
         },
         {
             "name": "filament/actions",
-            "version": "v4.0.0-beta25",
+            "version": "v4.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/filamentphp/actions.git",
@@ -2248,7 +2248,7 @@
         },
         {
             "name": "filament/filament",
-            "version": "v4.0.0-beta25",
+            "version": "v4.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/filamentphp/panels.git",
@@ -2305,7 +2305,7 @@
         },
         {
             "name": "filament/forms",
-            "version": "v4.0.0-beta25",
+            "version": "v4.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/filamentphp/forms.git",
@@ -2355,16 +2355,16 @@
         },
         {
             "name": "filament/infolists",
-            "version": "v4.0.0-beta25",
+            "version": "v4.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/filamentphp/infolists.git",
-                "reference": "749e080d195fc94dcaa3b1bc1545e0e4b95d4703"
+                "reference": "43acef5a76da2b6dd05ee480caaca9d3ba4edcd1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/filamentphp/infolists/zipball/749e080d195fc94dcaa3b1bc1545e0e4b95d4703",
-                "reference": "749e080d195fc94dcaa3b1bc1545e0e4b95d4703",
+                "url": "https://api.github.com/repos/filamentphp/infolists/zipball/43acef5a76da2b6dd05ee480caaca9d3ba4edcd1",
+                "reference": "43acef5a76da2b6dd05ee480caaca9d3ba4edcd1",
                 "shasum": ""
             },
             "require": {
@@ -2396,11 +2396,11 @@
                 "issues": "https://github.com/filamentphp/filament/issues",
                 "source": "https://github.com/filamentphp/filament"
             },
-            "time": "2025-08-11T19:29:15+00:00"
+            "time": "2025-08-12T13:17:14+00:00"
         },
         {
             "name": "filament/notifications",
-            "version": "v4.0.0-beta25",
+            "version": "v4.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/filamentphp/notifications.git",
@@ -2447,7 +2447,7 @@
         },
         {
             "name": "filament/schemas",
-            "version": "v4.0.0-beta25",
+            "version": "v4.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/filamentphp/schemas.git",
@@ -2492,7 +2492,7 @@
         },
         {
             "name": "filament/support",
-            "version": "v4.0.0-beta25",
+            "version": "v4.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/filamentphp/support.git",
@@ -2550,16 +2550,16 @@
         },
         {
             "name": "filament/tables",
-            "version": "v4.0.0-beta25",
+            "version": "v4.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/filamentphp/tables.git",
-                "reference": "a2d45bc8741044a0409e8e9fd81abcc3999e24ef"
+                "reference": "55b96c365ec5d50dcadb996515557ced08ce7b27"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/filamentphp/tables/zipball/a2d45bc8741044a0409e8e9fd81abcc3999e24ef",
-                "reference": "a2d45bc8741044a0409e8e9fd81abcc3999e24ef",
+                "url": "https://api.github.com/repos/filamentphp/tables/zipball/55b96c365ec5d50dcadb996515557ced08ce7b27",
+                "reference": "55b96c365ec5d50dcadb996515557ced08ce7b27",
                 "shasum": ""
             },
             "require": {
@@ -2591,11 +2591,11 @@
                 "issues": "https://github.com/filamentphp/filament/issues",
                 "source": "https://github.com/filamentphp/filament"
             },
-            "time": "2025-08-11T19:29:31+00:00"
+            "time": "2025-08-12T13:17:20+00:00"
         },
         {
             "name": "filament/widgets",
-            "version": "v4.0.0-beta25",
+            "version": "v4.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/filamentphp/widgets.git",
