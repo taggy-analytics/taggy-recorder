@@ -38,12 +38,11 @@ class SetSystemTime
             // Disable NTP synchronization temporarily to allow manual time setting
             $commands[] = "sudo timedatectl set-ntp false";
 
-            // Format datetime for timedatectl (YYYY-MM-DD HH:MM:SS)
             $formattedDateTime = $carbonDateTime->format('Y-m-d H:i:s');
-            $commands[] = "sudo timedatectl set-time '{$formattedDateTime}'";
+            $commands[] = "sudo date -u -s '{$formattedDateTime}'";
 
-            // Re-enable NTP if it was previously enabled (optional)
-            // $commands[] = "sudo timedatectl set-ntp true";
+            // Re-enable NTP
+            $commands[] = "sudo timedatectl set-ntp true";
 
             $results = [];
 
