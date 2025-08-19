@@ -22,6 +22,9 @@ return [
         'logging-level' => env('FFMPEG_LOGGING_LEVEL', 'info'),
         'record-audio' => env('FFMPEG_RECORD_AUDIO', true),
     ],
-    'date-time-tolerance' => 2000,    // if the time difference between recorder and device is > x, recorder time will be set to device time
-    'software-repository' => 'taggy-analytics/taggy-recorder',
+    'date-time-tolerance' => 2000,    // if the time difference between recorder and device is > x milliseconds, recorder time will be set to device time
+    'software' => [
+        'repository' => 'taggy-analytics/taggy-recorder',
+        'update-channel' => env('UPDATE_CHANNEL', 'prod'),
+    ]
 ];
