@@ -1,5 +1,8 @@
 <?php
 
+use App\Exceptions\NotInProMode;
+use App\Support\Recorder;
+
 if (! function_exists('reportToMothership')) {
     function reportToMothership(\App\Enums\LogMessageType $type, $message = '', $data = [])
     {
@@ -44,6 +47,16 @@ if (! function_exists('preventMemoryLeak')) {
         if(memory_get_usage() > $limit) {
             info(($message ?? 'Memory leak prevented') .  ' (Memory: ' . memory_get_usage() .')');
             exit;
+        }
+    }
+}
+
+if (! function_exists('requireProMode')) {
+    function requireProMode($message = null)
+    {
+        if(!Recorder::make()->inProMode()) {
+            $message ??= 'Pro mode needed for this functionality.';
+            throw new NotInProMode($message);
         }
     }
 }

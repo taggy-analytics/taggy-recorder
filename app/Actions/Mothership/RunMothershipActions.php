@@ -2,6 +2,7 @@
 
 namespace App\Actions\Mothership;
 
+use App\Exceptions\NotInProMode;
 use App\Models\Camera;
 use App\Support\Mothership;
 use App\Support\Recorder;
@@ -11,11 +12,7 @@ class RunMothershipActions
 {
     public function execute()
     {
-        /*
-        if(!Storage::exists(Mothership::MOTHERSHIP_TOKEN_FILENAME)) {
-            return;
-        }
-        */
+        requireProMode('Recorder must be in pro mode to connect to mothership.');
 
         if(!Mothership::make()->isOnline()) {
             return;

@@ -10,6 +10,7 @@ use App\Models\LivestreamSegment;
 use App\Models\RecorderLog;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Jackiedo\DotenvEditor\Facades\DotenvEditor;
@@ -28,11 +29,6 @@ class Recorder
 
     public function getSystemId()
     {
-        if(!DotenvEditor::keyExists('SYSTEM_ID')) {
-            DotenvEditor::setKey('SYSTEM_ID', Str::random(16));
-            DotenvEditor::save();
-        }
-
         return DotenvEditor::getValue('SYSTEM_ID');
     }
 
@@ -161,5 +157,17 @@ class Recorder
     public function currentSoftwareVersion()
     {
         return Storage::get(self::CURRENT_SOFTWARE_VERSION_FILENAME);
+    }
+
+    public function inProMode()
+    {
+        return filled($this->getSystemId());
+    }
+
+    public function connectedToInternet()
+    {
+        return Http::timeout(1)
+            ->get('https://www.google.com')
+            ->successful();
     }
 }

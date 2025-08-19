@@ -6,6 +6,7 @@ use App\Actions\UpdateSoftware;
 use App\Enums\RecordingFileStatus;
 use App\Enums\RecordingStatus;
 use App\Exceptions\MothershipException;
+use App\Exceptions\NotInProMode;
 use App\Models\Recording;
 use App\Models\RecordingFile;
 use App\Models\UserToken;
@@ -25,6 +26,8 @@ class Mothership
 
     public function __construct(private ?UserToken $userToken = null, $endpoint = null)
     {
+        requireProMode('Recorder must be in pro mode to connect to mothership.');
+        
         if($userToken?->isRevoked()) {
             throw new \Exception('User token is revoked.');
         }
