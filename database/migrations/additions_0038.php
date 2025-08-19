@@ -8,12 +8,6 @@ return new class extends Migration
 {
     public function up()
     {
-        $supervisorConfPath = '/etc/supervisor/conf.d/watch.conf';
-
-        if (file_exists($supervisorConfPath)) {
-            unlink($supervisorConfPath);
-
-            exec('sudo supervisorctl reread && sudo supervisorctl update');
-        }
+        // deprecated
     }
 };
