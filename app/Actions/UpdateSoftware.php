@@ -2,7 +2,6 @@
 
 namespace App\Actions;
 
-use App\Exceptions\MothershipException;
 use App\Support\Mothership;
 use App\Support\Recorder;
 use Illuminate\Support\Facades\File;

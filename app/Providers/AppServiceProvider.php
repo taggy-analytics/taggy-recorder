@@ -4,6 +4,10 @@ namespace App\Providers;
 
 use App\Support\Recorder;
 use Carbon\Carbon;
+use Filament\Support\Assets\Css;
+use Filament\Support\Colors\Color;
+use Filament\Support\Facades\FilamentAsset;
+use Filament\Support\Facades\FilamentColor;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
