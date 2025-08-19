@@ -25,10 +25,6 @@ class CheckIfAllNeededServicesAreUpAndRunning
             }
         }
 
-        if(!Recorder::make()->installationIsFinished()) {
-            return false;
-        }
-
         return true;
     }
 }

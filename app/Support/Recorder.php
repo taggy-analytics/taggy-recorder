@@ -18,7 +18,6 @@ use Spatie\Crypto\Rsa\KeyPair;
 class Recorder
 {
     public const CURRENT_SOFTWARE_VERSION_FILENAME = 'software-version.txt';
-    public const INSTALLATION_FINISHED_FILENAME = 'installation-finished.txt';
     public const RUNNING_UPLOAD_FILENAME = 'running-upload.txt';
     public const CURRENT_LEDS_FILENAME = 'current-leds.txt';
 
@@ -71,11 +70,6 @@ class Recorder
 
             $this->currentLeds($status);
         }
-    }
-
-    public function installationIsFinished()
-    {
-        return Storage::exists(self::INSTALLATION_FINISHED_FILENAME);
     }
 
     public function allNeededServicesAreUpAndRunning()

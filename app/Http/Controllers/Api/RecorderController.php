@@ -34,19 +34,6 @@ class RecorderController extends Controller
             ->execute();
     }
 
-    public function installationFinished()
-    {
-        if(!Recorder::make()->installationIsFinished()) {
-            Storage::put(Recorder::INSTALLATION_FINISHED_FILENAME, '');
-        }
-
-        UserToken::where('entity_id', 999999)->delete();
-
-        return [
-            'status' => 'OK',
-        ];
-    }
-
     public function refreshAppKey()
     {
         $appKeyWasSet = app(EnsureAppKeyIsSet::class)->execute();
