@@ -12,6 +12,7 @@ use App\Console\Commands\MeasureTemperature;
 use App\Console\Commands\MonitorRecordings;
 use App\Console\Commands\RunHealthChecks;
 use App\Console\Commands\RunMothershipActions;
+use App\Support\Recorder;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 
@@ -38,10 +39,12 @@ class Kernel extends ConsoleKernel
             ->withoutOverlapping()
             ->everyTwentySeconds();
 
-        $schedule->command(RunMothershipActions::class)
-            ->runInBackground()
-            ->withoutOverlapping()
-            ->everyTwentySeconds();
+        if(Recorder::make()->inProMode()) {
+            $schedule->command(RunMothershipActions::class)
+                ->runInBackground()
+                ->withoutOverlapping()
+                ->everyTwentySeconds();
+        }
 
         $schedule->command(MonitorRecordings::class)
             ->runInBackground()
