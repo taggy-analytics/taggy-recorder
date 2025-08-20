@@ -9,6 +9,8 @@ use Livewire\Component;
 
 class InitialSetup extends Component
 {
+    public const InitialSetupIsRunningSessionKey = 'initial-setup-is-running';
+
     public UserForm $userData;
 
     public $stage = 'recoveryPassword';
@@ -18,6 +20,8 @@ class InitialSetup extends Component
         if(!Recorder::make()->needsInitialSetup()) {
             return redirect('');
         }
+
+        $this->initialSetupStarted();
     }
 
     public function render()
@@ -39,6 +43,18 @@ class InitialSetup extends Component
 
         auth()->guard('web')->login($user);
 
+        $this->initialSetupFinished();
+
         return redirect('/');
+    }
+
+    private function initialSetupStarted()
+    {
+        session()->put(self::InitialSetupIsRunningSessionKey, true);
+    }
+
+    private function initialSetupFinished()
+    {
+        session()->forget(self::InitialSetupIsRunningSessionKey);
     }
 }

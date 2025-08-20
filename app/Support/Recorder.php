@@ -6,6 +6,7 @@ use App\Actions\CalculateLed;
 use App\Actions\CheckIfAllNeededServicesAreUpAndRunning;
 use App\Enums\LogMessageType;
 use App\Jobs\UpdateSoftware;
+use App\Livewire\InitialSetup;
 use App\Models\LivestreamSegment;
 use App\Models\RecorderLog;
 use App\Models\User;
@@ -176,6 +177,11 @@ class Recorder
     public function needsInitialSetup()
     {
         return User::count() == 0;
+    }
+
+    public function initialSetupIsRunning(): bool
+    {
+        return session()->get(InitialSetup::InitialSetupIsRunningSessionKey, false);
     }
 
     public function currentSoftwareVersion()

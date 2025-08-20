@@ -62,6 +62,10 @@ class SoftwareUpdate extends Page implements HasForms, HasActions
 
     private function getUpdateVersion()
     {
+        if(!Recorder::make()->connectedToInternet()) {
+            return false;
+        }
+
         $repo = 'https://api.github.com/repos/' . config('taggy-recorder.software.repository');
         if(config('taggy-recorder.software.update-channel') === 'prod') {
             $updateVersion = Http::get($repo . '/releases/tags/prod')->json();

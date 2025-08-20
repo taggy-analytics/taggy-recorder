@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\Livewire\InitialSetup;
 use App\Models\User;
 use App\Support\Recorder;
 use Closure;
@@ -19,7 +20,9 @@ class CheckBoxIsSetUp
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if(Recorder::make()->needsInitialSetup() && !Str::endsWith($request->header('referer'), '/initial-setup')) {
+        $recorder = Recorder::make();
+
+        if($recorder->needsInitialSetup() && !$recorder->initialSetupIsRunning()) {
             return redirect()->route('initial-setup');
         }
 
