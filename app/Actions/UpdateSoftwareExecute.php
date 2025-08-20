@@ -35,7 +35,9 @@ class UpdateSoftwareExecute
             chdir($releasePath);
             Process::timeout(180)->run('npm install');
             Process::timeout(180)->run('npm run build');
-            Process::timeout(120)->run('composer install');
+            Process::timeout(120)
+                ->env(['HOME' => '/home/taggy'])
+                ->run('/usr/local/bin/composer install');
             Process::run('sudo php artisan migrate --force');
 
             if(!Process::run('php artisan taggy:check-software ' . $releasePath)->successful()) {
@@ -45,8 +47,6 @@ class UpdateSoftwareExecute
                     'message' => 'Software validation failed.',
                 ];
             }
-
-            // ToDo: check for validity of upgrade!!!
 
             unlink($releasePath . '/../../current');
 
@@ -62,6 +62,8 @@ class UpdateSoftwareExecute
             Storage::put(Recorder::CURRENT_SOFTWARE_VERSION_FILENAME, $version);
 
             info('Updated software to ' . $version);
+
+            app(CalculateLed::class)->execute();
 
             return [
                 'updated' => true,

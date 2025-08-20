@@ -25,8 +25,10 @@ class UpdateSoftware implements ShouldQueue
 
         Storage::put('releases/' . $filename, file_get_contents($this->updateVersion['url']));
 
-        app(UpdateSoftwareExecute::class)
+        $updateResult = app(UpdateSoftwareExecute::class)
             ->execute($this->updateVersion['name'], $filename);
+
+        info($updateResult);
 
         self::removeLock();
     }
@@ -41,7 +43,7 @@ class UpdateSoftware implements ShouldQueue
         Storage::put(self::UpdateLockFileName, 'running...');
     }
 
-    private static function removeLock()
+    public static function removeLock()
     {
         Storage::delete(self::UpdateLockFileName);
     }

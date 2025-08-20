@@ -4,7 +4,7 @@
             @lang('gui.settings.software-update.current-version'): <strong>{{ $currentRecorderVersion }}</strong>
         </div>
         @if(!$updateVersion)
-            <div class="text-sm italic mt-2">
+            <div class="text-sm italic mt-2" wire:poll>
                 @lang('gui.settings.software-update.offline')
             </div>
         @elseif(\App\Support\Recorder::make()->isUpdatingFirmware())
@@ -19,7 +19,7 @@
         @else
             <div>
                 <div>
-                    @lang('gui.settings.software-update.new-software-available', ['version' => $updateVersion['name']]))
+                    @lang('gui.settings.software-update.new-software-available', ['version' => $updateVersion['name']])
                 </div>
                 <div class="mt-4">
                     {{ $this->updateAction }}

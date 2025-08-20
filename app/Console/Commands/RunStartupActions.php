@@ -50,6 +50,11 @@ class RunStartupActions extends Command
         }
 
         $this->call(CleanLivestreamSegments::class);
-        app(UpdateSoftware::class)->execute();
+
+        \App\Jobs\UpdateSoftware::removeLock();
+
+        if(Recorder::make()->inProMode()) {
+            app(UpdateSoftware::class)->execute();
+        }
     }
 }
