@@ -33,11 +33,12 @@ class UpdateSoftwareExecute
             symlink(realpath($releasePath . '/../../.env'), $releasePath . '/.env');
 
             chdir($releasePath);
-            Process::timeout(180)->run('npm install');
-            Process::timeout(180)->run('npm run build');
+
             Process::timeout(120)
                 ->env(['HOME' => '/home/taggy'])
                 ->run('/usr/local/bin/composer install');
+            Process::timeout(180)->run('npm install');
+            Process::timeout(180)->run('npm run build');
             Process::run('sudo php artisan migrate --force');
 
             if(!Process::run('php artisan taggy:check-software ' . $releasePath)->successful()) {
