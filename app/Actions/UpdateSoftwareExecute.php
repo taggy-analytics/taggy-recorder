@@ -34,6 +34,7 @@ class UpdateSoftwareExecute
 
             chdir($releasePath);
             Process::timeout(180)->run('npm install');
+            Process::timeout(180)->run('npm run build');
             Process::timeout(120)->run('composer install');
             Process::run('sudo php artisan migrate --force');
 

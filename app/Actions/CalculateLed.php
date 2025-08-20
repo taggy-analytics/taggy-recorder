@@ -60,9 +60,12 @@ class CalculateLed
         elseif(!Camera::noCameraIsRecording()) {
             $recorder->led(LedColor::RED, $recorder->isLivestreaming() ? 0.25 : 0.5);
         }
+        // ToDo: fix when we upload to cloud
+        /*
         elseif($recorder->isUploading(calculateLed: false)) {
             $recorder->led(LedColor::BLUE, 0.5);
         }
+        */
         elseif(Recorder::make()->connectedToInternet() && $this->cameraIsAvailable()) {
             $recorder->led([LedColor::BLUE, LedColor::RED], 1);
         }

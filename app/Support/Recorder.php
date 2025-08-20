@@ -4,12 +4,12 @@ namespace App\Support;
 
 use App\Actions\CalculateLed;
 use App\Actions\CheckIfAllNeededServicesAreUpAndRunning;
-use App\Enums\LedColor;
 use App\Enums\LogMessageType;
 use App\Jobs\UpdateSoftware;
 use App\Models\LivestreamSegment;
 use App\Models\RecorderLog;
 use App\Models\User;
+use Exception;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Http;
@@ -190,8 +190,13 @@ class Recorder
 
     public function connectedToInternet()
     {
-        return Http::timeout(1)
-            ->get('https://www.google.com')
-            ->successful();
+        try {
+            return Http::timeout(1)
+                ->get('https://www.google.com')
+                ->successful();
+        }
+        catch(Exception $exception) {
+            return false;
+        }
     }
 }

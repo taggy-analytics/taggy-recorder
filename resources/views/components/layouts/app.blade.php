@@ -6,9 +6,11 @@
 
         <title>Taggy</title>
 
-        <link rel="icon" type="image/png" href="{{ asset('images/favicon.png') }}">
+        <link rel="icon" type="image/png" href="{{ Vite::asset('resources/images/favicon.png') }}">
 
-        @vite(['resources/css/app.css', 'resources/js/app.js', 'resources/css/filament/admin/theme.css'])
+        @fluxAppearance
+
+        @vite(['resources/css/app.css', 'resources/js/app.js'])
     </head>
     <body>
     <div class="flex items-center justify-center min-h-screen bg-gray-100">
@@ -16,6 +18,6 @@
             {{ $slot }}
         </div>
     </div>
-
+    @fluxScripts
     </body>
 </html>

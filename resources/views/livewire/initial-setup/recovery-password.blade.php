@@ -50,7 +50,7 @@
             <button
                 wire:click="$set('stage', 'setupUser')"
                 :disabled="!hasCopied"
-                class="px-4 py-2 text-sm rounded font-semibold text-white transition-colors"
+                class="px-4 py-2 text-sm rounded font-semibold text-white transition-colors "
                 :class="hasCopied ? 'bg-sky-600 hover:bg-sky-700 focus:outline-none cursor-pointer' : 'bg-gray-400 cursor-not-allowed'"
             >
                 @lang('gui.initial-setup.recovery-password.continue')
