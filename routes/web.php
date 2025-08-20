@@ -3,6 +3,7 @@
 use App\Http\Controllers\Api\RecordingController;
 use App\Http\Controllers\EnableApiController;
 use App\Http\Controllers\ImageController;
+use App\Livewire\InitialSetup;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -22,3 +23,5 @@ Route::get('storage/recordings/{recording}/{key}/scenes/{startTime}/{duration}/{
 Route::get('docs/api/enable/{key}', EnableApiController::class);
 
 Route::get('images/{image}', ImageController::class)->name('image');
+
+Route::get('initial-setup', InitialSetup::class)->name('initial-setup')->withoutMiddleware(\App\Http\Middleware\CheckBoxIsSetUp::class);

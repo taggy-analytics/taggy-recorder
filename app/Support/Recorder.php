@@ -9,6 +9,7 @@ use App\Enums\LogMessageType;
 use App\Jobs\UpdateSoftware;
 use App\Models\LivestreamSegment;
 use App\Models\RecorderLog;
+use App\Models\User;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Http;
@@ -20,6 +21,7 @@ use Spatie\Crypto\Rsa\KeyPair;
 class Recorder
 {
     public const CURRENT_SOFTWARE_VERSION_FILENAME = 'software-version.txt';
+    public const RECOVERY_PASSWORD_FILENAME = 'recovery-password.txt';
     public const RUNNING_UPLOAD_FILENAME = 'running-upload.txt';
     public const CURRENT_LEDS_FILENAME = 'current-leds.txt';
 
@@ -30,7 +32,9 @@ class Recorder
 
     public function getSystemId()
     {
-        return DotenvEditor::getValue('SYSTEM_ID');
+        if(DotenvEditor::keyExists('SYSTEM_ID')) {
+            return DotenvEditor::getValue('SYSTEM_ID');
+        }
     }
 
     public function getRunningFfmpegProcesses()
@@ -149,11 +153,30 @@ class Recorder
         return File::get($keysDirectory . '/public.key');
     }
 
+    public function getRecoveryPassword()
+    {
+        if(!Storage::has(self::RECOVERY_PASSWORD_FILENAME)) {
+            $passwordParts = [
+                Str::random(4),
+                Str::random(4),
+                Str::random(4),
+                Str::random(4),
+            ];
+            Storage::put(self::RECOVERY_PASSWORD_FILENAME, encrypt(implode('-', $passwordParts)));
+        }
+
+        return decrypt(Storage::get(self::RECOVERY_PASSWORD_FILENAME));
+    }
+
     public function log(LogMessageType $type, $message = '', $data = [])
     {
         RecorderLog::firstOrCreate(compact('type', 'message'), compact('data'));
     }
 
+    public function needsInitialSetup()
+    {
+        return User::count() == 0;
+    }
 
     public function currentSoftwareVersion()
     {

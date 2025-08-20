@@ -2,6 +2,8 @@
 
 namespace App\Http;
 
+use App\Http\Middleware\CheckBoxIsSetUp;
+use App\Http\Middleware\CheckBoxNotInProMode;
 use App\Http\Middleware\EnsureRecorderTimeIsCorrect;
 use App\Http\Middleware\EnsureValidEnvironment;
 use App\Http\Middleware\LogRequestAndResponse;
@@ -40,6 +42,8 @@ class Kernel extends HttpKernel
             \Illuminate\View\Middleware\ShareErrorsFromSession::class,
             \App\Http\Middleware\VerifyCsrfToken::class,
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
+            CheckBoxNotInProMode::class,
+            CheckBoxIsSetUp::class,
         ],
 
         'api' => [

@@ -2,6 +2,8 @@
 
 namespace App\Providers\Filament;
 
+use App\Http\Middleware\CheckBoxIsSetUp;
+use App\Http\Middleware\CheckBoxNotInProMode;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\AuthenticateSession;
 use Filament\Http\Middleware\DisableBladeIconComponents;
@@ -33,6 +35,7 @@ class AdminPanelProvider extends PanelProvider
             ])
             ->viteTheme('resources/css/filament/admin/theme.css')
             ->brandLogo(asset('images/logo.png'))
+            ->favicon(asset('images/favicon.png'))
             ->discoverResources(in: app_path('Filament/Resources'), for: 'App\Filament\Resources')
             ->discoverPages(in: app_path('Filament/Pages'), for: 'App\Filament\Pages')
             ->pages([
@@ -53,6 +56,8 @@ class AdminPanelProvider extends PanelProvider
                 SubstituteBindings::class,
                 DisableBladeIconComponents::class,
                 DispatchServingFilamentEvent::class,
+                CheckBoxNotInProMode::class,
+                CheckBoxIsSetUp::class,
             ])
             ->authMiddleware([
                 Authenticate::class,
