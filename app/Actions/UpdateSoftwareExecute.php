@@ -63,9 +63,7 @@ class UpdateSoftwareExecute
             Storage::put(Recorder::CURRENT_SOFTWARE_VERSION_FILENAME, $version);
 
             info('Updated software to ' . $version);
-
-            app(CalculateLed::class)->execute();
-
+            
             return [
                 'updated' => true,
                 'version' => $version,
