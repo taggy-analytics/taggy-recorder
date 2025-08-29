@@ -194,6 +194,16 @@ class Recorder
         return filled($this->getSystemId());
     }
 
+    public function activateProMode()
+    {
+        if($this->inProMode()) {
+            throw new Exception('Recorder already in pro mode.');
+        }
+
+        DotenvEditor::setKey('SYSTEM_ID', Str::random());
+        DotenvEditor::save();
+    }
+
     public function connectedToInternet()
     {
         try {

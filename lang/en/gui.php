@@ -32,5 +32,12 @@ return [
             'update-was-started' => 'Update to version :version was started in the background. Please don\'t power off the Taggy box.',
             'update-is-running' => 'Update is running.',
         ],
+        'pro-mode' => [
+            'description-1' => 'Before switching to pro mode, make sure to have a valid (paid) Taggy account.',
+            'description-2' => 'After switching, this GUI won\'t be available any more and all settings will have to be managed centrally at https://admin.taggy.cam.',
+            'description-3' => 'You should be absolutely aware of what you are doing!',
+            'are-you-sure' => 'Are you sure you want to switch to pro mode now?',
+            'switched-to-pro-mode' => 'The recorder has been switched to pro mode. After you leave this page, this GUI is not reachable anymore.'
+        ],
     ],
 ];
