@@ -228,6 +228,18 @@ class Recording extends Model
         return Str::contains(Process::run($command)->output(), 'hls_time');
     }
 
+    public function regenerateM3u8BasedOnSegments()
+    {
+        // ToDo: the m3u8 might be broken, e.g. when the recorder is powered off during writing of the file
+    }
+
+    public function rereport()
+    {
+        $this->update(['uuid' => Str::uuid()->toString()]);
+        $this->setStatus(RecordingStatus::PREPARING_PREPROCESSING);
+        $this->mothershipReport?->update(['processed_at' => null]);
+    }
+
     public function getData($key, $default = null)
     {
         return Arr::get($this->data, $key, $default);
