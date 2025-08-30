@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Support\Recorder;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Foundation\Support\Providers\RouteServiceProvider as ServiceProvider;
 use Illuminate\Http\Request;
@@ -35,6 +36,12 @@ class RouteServiceProvider extends ServiceProvider
             Route::middleware(['api', 'auth:api', 'valid-environment', 'valid-recorder-time'])
                 ->prefix('api')
                 ->group(base_path('routes/api.php'));
+
+            if(!Recorder::make()->inProMode()) {
+                Route::middleware(['api', 'valid-recorder-time'])
+                    ->prefix('community-api')
+                    ->group(base_path('routes/community-api.php'));
+            }
         });
     }
 

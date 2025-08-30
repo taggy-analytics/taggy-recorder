@@ -45,6 +45,10 @@ return [
         'api' => [
             'driver' => 'mothership',
         ],
+        'community-api' => [
+            'driver' => 'sanctum',
+            'provider' => 'users',
+        ],
     ],
 
     /*
