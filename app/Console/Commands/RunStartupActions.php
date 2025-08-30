@@ -42,7 +42,9 @@ class RunStartupActions extends Command
         app(EnsureNetworkIsSetup::class)->execute();
         app(EnsureAppKeyIsSet::class)->execute();
 
-        Mothership::make()->waitToComeOnline();
+        if(Recorder::make()->inProMode()) {
+            Mothership::make()->waitToComeOnline();
+        }
 
         $this->call(CleanLivestreamSegments::class);
 

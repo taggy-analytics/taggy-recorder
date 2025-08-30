@@ -24,7 +24,7 @@ class UploadLivestreamSegments extends Command
 
         while(true) {
             if(!Recorder::make()->inProMode()) {
-                sleep(600);
+                sleep(60);
                 continue;
             }
 

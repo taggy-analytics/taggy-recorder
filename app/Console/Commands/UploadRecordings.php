@@ -28,8 +28,9 @@ class UploadRecordings extends Command
         while (true) {
             preventMemoryLeak('UploadRecordingSegments');
 
-            if(!Recorder::make()->inProMode()) {
-                sleep(600);
+            if(!$recorder->inProMode()) {
+                info('UploadRecordings: not in pro Mode.');
+                sleep(60);
                 continue;
             }
 
