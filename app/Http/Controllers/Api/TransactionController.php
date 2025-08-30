@@ -20,6 +20,8 @@ class TransactionController extends Controller
 {
     public function status($entityId, TransactionsStatusRequest $request)
     {
+        info('TransactionController@status ' . $entityId);
+
         $uuids = $this->getUuids(Mothership::getEndpoint(), $entityId, $request->last_transactions_reset_at);
 
         $uuidsConcatenated = $uuids
@@ -67,6 +69,8 @@ class TransactionController extends Controller
 
     public function store($entityId, StoreTransactionsRequest $request)
     {
+        info('TransactionController@store ' . $entityId);
+
         $userToken = UserToken::firstOrCreate([
             'entity_id' => $entityId,
             'user_id' => $request->user()->id,
