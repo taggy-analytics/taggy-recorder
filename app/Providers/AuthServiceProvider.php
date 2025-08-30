@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use App\Models\User;
 use App\Support\PublicKey;
+use App\Support\Recorder;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -31,6 +32,10 @@ class AuthServiceProvider extends ServiceProvider
         $this->registerPolicies();
 
         Auth::viaRequest('mothership', function (Request $request) {
+            if(!Recorder::make()->inProMode()) {
+                return null;
+            }
+
             try {
                 $userData = base64_decode($request->header('User-Data'));
                 if(empty($userData)) {
