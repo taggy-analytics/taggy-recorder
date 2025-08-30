@@ -28,6 +28,11 @@ class UploadRecordings extends Command
         while (true) {
             preventMemoryLeak('UploadRecordingSegments');
 
+            if(!Recorder::make()->inProMode()) {
+                sleep(600);
+                continue;
+            }
+
             if(!Mothership::make()->isOnline(disableCache: true)) {
                 sleep(10);
                 continue;
