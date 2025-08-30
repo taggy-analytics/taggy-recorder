@@ -186,7 +186,7 @@ class Recorder
 
     public function currentSoftwareVersion()
     {
-        return Storage::get(self::CURRENT_SOFTWARE_VERSION_FILENAME);
+        return trim(Storage::get(self::CURRENT_SOFTWARE_VERSION_FILENAME));
     }
 
     public function inProMode()
