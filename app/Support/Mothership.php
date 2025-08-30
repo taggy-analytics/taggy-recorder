@@ -199,6 +199,19 @@ class Mothership
         return $this->post('recorders/' . Recorder::make()->getSystemId() . '/temperature?key=' . config('taggy-recorder.mothership-logging-key'), ['measurements' => $data]);
     }
 
+    public function waitToComeOnline($tries = 5, $sleep = 5)
+    {
+        if(!Recorder::make()->inProMode()) {
+            return;
+        }
+
+        $counter = 0;
+        while(!$this->isOnline(disableCache: true) && $counter < $tries) {
+            sleep($sleep);
+            $counter++;
+        }
+    }
+
     private function get($url, $type = 'json')
     {
         return $this->request('get', $url, type: $type);

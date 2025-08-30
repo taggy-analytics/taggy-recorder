@@ -22,7 +22,6 @@ class RunStartupActions extends Command
         info('Running startup actions');
         $this->call('cache:clear');
 
-
         $mutexCleared = false;
 
         foreach ($schedule->events($this->laravel) as $event) {
@@ -43,11 +42,7 @@ class RunStartupActions extends Command
         app(EnsureNetworkIsSetup::class)->execute();
         app(EnsureAppKeyIsSet::class)->execute();
 
-        $counter = 0;
-        while(!Mothership::make()->isOnline(disableCache: true) && $counter < 5) {
-            sleep(5);
-            $counter++;
-        }
+        Mothership::make()->waitToComeOnline();
 
         $this->call(CleanLivestreamSegments::class);
 
