@@ -4,7 +4,6 @@ namespace App\Http\Requests;
 
 use Dedoc\Scramble\Support\OperationExtensions\RulesExtractor\FormRequestRulesExtractor;
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Support\Arr;
 
 class StoreTransactionsRequest extends FormRequest
 {
@@ -32,7 +31,7 @@ class StoreTransactionsRequest extends FormRequest
             // 'last_transactions_reset_at' => 'required',
         ];
 
-        if(debug_backtrace()[1]['class'] == FormRequestRulesExtractor::class) {
+        if (debug_backtrace()[1]['class'] == FormRequestRulesExtractor::class) {
             // The array validation takes very long. Let's just skip it - all consumers are controlled by us.
             // We only show it in the docs.
 

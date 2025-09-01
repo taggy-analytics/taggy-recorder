@@ -2,7 +2,7 @@
 
 namespace App\Enums;
 
-enum WebsocketEventType : string
+enum WebsocketEventType: string
 {
     case TRANSACTIONS_ADDED = 'TransactionsAdded';
     case DISCONNECTED = 'Disconnected';

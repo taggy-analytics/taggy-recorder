@@ -7,7 +7,6 @@ use App\Http\Controllers\Controller;
 use App\Http\Resources\RecordingResource;
 use App\Models\Recording;
 use App\Support\Mothership;
-use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
@@ -32,12 +31,12 @@ class RecordingController extends Controller
         $sceneFilename = $recording->sceneFilename($startTime, $duration);
 
         Cache::lock($sceneFilename, 10)->block(30, function () use ($sceneFilename, $recording, $startTime, $duration) {
-            if(!Storage::exists('scenes/' . $sceneFilename)) {
+            if (! Storage::exists('scenes/'.$sceneFilename)) {
                 app(CreateSceneVideo::class)->execute($recording, $startTime, $duration);
             }
         });
 
-        return response()->download(Storage::path('scenes/' . $sceneFilename), $name);
+        return response()->download(Storage::path('scenes/'.$sceneFilename), $name);
     }
 
     public function videoVod(Recording $recording, $key)
@@ -47,12 +46,12 @@ class RecordingController extends Controller
 
         $appendix = Str::contains($m3u8, '#EXT-X-ENDLIST') ? '' : '#EXT-X-ENDLIST';
 
-        return $m3u8 . $appendix;
+        return $m3u8.$appendix;
     }
 
     private function authorizeRecording(Recording $recording)
     {
-        if(!$this->getAllowedRecordings()->contains($recording)) {
+        if (! $this->getAllowedRecordings()->contains($recording)) {
             abort(403);
         }
     }

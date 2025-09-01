@@ -2,7 +2,7 @@
 
 namespace App\Enums;
 
-enum TransitionError : string
+enum TransitionError: string
 {
     case CANNOT_UPDATE_MODEL_THAT_DOESNT_EXIST = 'cannot-update-model-that-doesnt-exist';
     case CANNOT_UPDATE_MODEL_THAT_WAS_DELETED = 'cannot-update-model-that-was-deleted';

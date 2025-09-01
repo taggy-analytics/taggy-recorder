@@ -9,6 +9,7 @@ use Laravel\Horizon\Console\HorizonCommand;
 class Horizon extends Command
 {
     protected $signature = 'taggy:horizon';
+
     protected $description = 'Start a master supervisor in the foreground';
 
     public function handle()

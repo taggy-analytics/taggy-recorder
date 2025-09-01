@@ -4,10 +4,6 @@ namespace App\Providers;
 
 use App\Support\Recorder;
 use Carbon\Carbon;
-use Filament\Support\Assets\Css;
-use Filament\Support\Colors\Color;
-use Filament\Support\Facades\FilamentAsset;
-use Filament\Support\Facades\FilamentColor;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
@@ -25,30 +21,32 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        Flare::determineVersionUsing(function() {
+        Flare::determineVersionUsing(function () {
             return Recorder::make()->currentSoftwareVersion();
         });
 
         Model::unguard();
         JsonResource::withoutWrapping();
 
-        Collection::macro('hydrateTransactions', function($mothershipEndpoint) {
+        Collection::macro('hydrateTransactions', function ($mothershipEndpoint) {
             return $this->map(function ($transaction) use ($mothershipEndpoint) {
                 $transaction['created_at'] = Carbon::parse($transaction['created_at'])->toDateTimeString('milliseconds');
                 $transaction['endpoint'] = $mothershipEndpoint;
+
                 return $transaction;
             });
         });
 
-        Arr::macro('encodeValue', function($array) {
+        Arr::macro('encodeValue', function ($array) {
             return array_map(function ($item) {
                 $item['value'] = json_encode($item['value']);
+
                 return $item;
             }, $array);
         });
 
-        Request::macro('environmentData', function() {
-            if(request()->hasHeader('Environment-Data')) {
+        Request::macro('environmentData', function () {
+            if (request()->hasHeader('Environment-Data')) {
                 return json_decode(base64_decode(request()->header('Environment-Data')), true);
             }
 

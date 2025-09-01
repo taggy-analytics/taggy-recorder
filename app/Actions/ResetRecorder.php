@@ -12,7 +12,7 @@ class ResetRecorder
     {
         $userToken = UserToken::first();
 
-        if(empty($userToken)) {
+        if (empty($userToken)) {
             dd('Recorder must have user token to be able to reset');
         }
 

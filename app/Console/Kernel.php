@@ -21,7 +21,6 @@ class Kernel extends ConsoleKernel
     /**
      * Define the application's command schedule.
      *
-     * @param  \Illuminate\Console\Scheduling\Schedule  $schedule
      * @return void
      */
     protected function schedule(Schedule $schedule)
@@ -39,7 +38,7 @@ class Kernel extends ConsoleKernel
             ->withoutOverlapping()
             ->everyTwentySeconds();
 
-        if(Recorder::make()->inProMode()) {
+        if (Recorder::make()->inProMode()) {
             $schedule->command(RunMothershipActions::class)
                 ->runInBackground()
                 ->withoutOverlapping()

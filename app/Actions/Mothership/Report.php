@@ -12,13 +12,14 @@ abstract class Report
     {
         try {
             $this->mothership = Mothership::make($model->mothershipReport->userToken);
-            if($this->executeReport($model)) {
+            if ($this->executeReport($model)) {
                 $model->mothershipReport->update(['processed_at' => now()]);
             }
+
             return true;
-        }
-        catch(\Exception $exception) {
-            info('Error while running mothership report #' . $model->mothershipReport->id . ': ' . $exception->getMessage());
+        } catch (\Exception $exception) {
+            info('Error while running mothership report #'.$model->mothershipReport->id.': '.$exception->getMessage());
+
             return false;
         }
     }

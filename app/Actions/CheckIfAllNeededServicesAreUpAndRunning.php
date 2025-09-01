@@ -2,10 +2,6 @@
 
 namespace App\Actions;
 
-use App\Enums\TransactionAction;
-use App\Models\Transaction;
-use App\Support\Recorder;
-use Illuminate\Support\Arr;
 use Spatie\Health\Checks\Checks\DatabaseCheck;
 use Spatie\Health\Checks\Checks\RedisCheck;
 use Spatie\Health\Enums\Status;
@@ -19,8 +15,8 @@ class CheckIfAllNeededServicesAreUpAndRunning
             RedisCheck::new(),
         ];
 
-        foreach($checks as $check) {
-            if($check->run()->status !== Status::ok()) {
+        foreach ($checks as $check) {
+            if ($check->run()->status !== Status::ok()) {
                 return false;
             }
         }

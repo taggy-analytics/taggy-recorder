@@ -13,8 +13,8 @@ class ManageWebsocketsConnection
         $entities = UserToken::perEntity()
             ->whereNull('last_rejected_at');
 
-        foreach($entities as $entityId => $userTokens) {
-            if(!$this->entityHasRunningProcess($entityId)) {
+        foreach ($entities as $entityId => $userTokens) {
+            if (! $this->entityHasRunningProcess($entityId)) {
                 foreach ($userTokens as $userToken) {
                     $command = "node echo.js {$entityId} '{$userToken->token}' > /dev/null 2>&1 &";
                     exec($command);
@@ -22,7 +22,8 @@ class ManageWebsocketsConnection
                     sleep(2);
                     if ($this->entityHasRunningProcess($entityId)) {
                         $userToken->update(['last_successfully_used_at' => now()]);
-                        continue(2);
+
+                        continue 2;
                     }
                 }
             }
@@ -39,8 +40,8 @@ class ManageWebsocketsConnection
     private function entitiesWithRunningProcess(): Collection
     {
         return collect($this->getProcesses())
-            ->filter(fn($process) => preg_match('/node echo\.js \d+ \w+/', $process['command']))
-            ->map(fn($process) => (int) explode(' ', $process['command'])[2]);
+            ->filter(fn ($process) => preg_match('/node echo\.js \d+ \w+/', $process['command']))
+            ->map(fn ($process) => (int) explode(' ', $process['command'])[2]);
     }
 
     private function getProcesses()
@@ -53,7 +54,7 @@ class ManageWebsocketsConnection
             // Parse each line into columns
             preg_match_all('/\S+/', $line, $columns);
 
-            if (!empty($columns[0])) {
+            if (! empty($columns[0])) {
                 $processes[] = [
                     'user' => $columns[0][0],
                     'pid' => $columns[0][1],
@@ -65,7 +66,7 @@ class ManageWebsocketsConnection
                     'stat' => $columns[0][7],
                     'start' => $columns[0][8],
                     'time' => $columns[0][9],
-                    'command' => implode(' ', array_slice($columns[0], 10))
+                    'command' => implode(' ', array_slice($columns[0], 10)),
                 ];
             }
         }

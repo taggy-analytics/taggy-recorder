@@ -8,7 +8,7 @@ class GliNet
 {
     public static function make()
     {
-        return new self();
+        return new self;
     }
 
     public function getClients()

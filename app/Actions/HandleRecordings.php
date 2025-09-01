@@ -28,8 +28,8 @@ class HandleRecordings
 
     private function setPreprocessingStatusForFinishedRecordings()
     {
-        if(Camera::noCameraIsRecording()) {
-            foreach(Recording::withStatus(RecordingStatus::CREATED) as $recording) {
+        if (Camera::noCameraIsRecording()) {
+            foreach (Recording::withStatus(RecordingStatus::CREATED) as $recording) {
                 $recording->setStatus(RecordingStatus::PREPARING_PREPROCESSING);
             }
         }
@@ -37,16 +37,16 @@ class HandleRecordings
 
     private function createRecordingFilesInDB()
     {
-        if(Camera::noCameraIsRecording()) {
-            foreach(Recording::withStatus(RecordingStatus::PREPARING_PREPROCESSING) as $recording) {
+        if (Camera::noCameraIsRecording()) {
+            foreach (Recording::withStatus(RecordingStatus::PREPARING_PREPROCESSING) as $recording) {
                 $recording->files()->delete();
-                $parser = new ParserFacade();
+                $parser = new ParserFacade;
 
                 $currentTime = now()->toDateTimeString();
 
                 $files = collect(Arr::get($parser->parse(new TextStream(Storage::disk('public')->get($recording->getM3u8Path()))), 'mediaSegments'))
                     ->pluck('uri')
-                    ->map(fn($file) => [
+                    ->map(fn ($file) => [
                         'recording_id' => $recording->id,
                         'name' => $file,
                         'type' => RecordingFileType::VIDEO_M4S,
@@ -91,7 +91,7 @@ class HandleRecordings
                 $mothershipReports = $recording->load('files')
                     ->files()
                     ->pluck('id')
-                    ->map(fn($fileId) => [
+                    ->map(fn ($fileId) => [
                         'model_type' => RecordingFile::class,
                         'model_id' => $fileId,
                         'updated_at' => $currentTime,
@@ -101,7 +101,7 @@ class HandleRecordings
                 MothershipReport::insertChunked($mothershipReports);
 
                 DB::table('livestream_segments')
-                    ->where('file', 'LIKE', '%' . $recording->key . '%')
+                    ->where('file', 'LIKE', '%'.$recording->key.'%')
                     ->delete();
 
                 $recording->setStatus(RecordingStatus::CREATED_RECORDING_FILES_IN_DB);
@@ -111,8 +111,8 @@ class HandleRecordings
 
     private function reportUnreportedRecordingsToMothership()
     {
-        if(Camera::noCameraIsRecording()) {
-            foreach(Recording::withStatus(RecordingStatus::CREATED_RECORDING_FILES_IN_DB) as $recording) {
+        if (Camera::noCameraIsRecording()) {
+            foreach (Recording::withStatus(RecordingStatus::CREATED_RECORDING_FILES_IN_DB) as $recording) {
                 $userToken = UserToken::forEndpointAndEntity($recording->data['endpoint'], $recording->data['entity_id']);
                 $recording->reportToMothership($userToken);
                 $recording->setStatus(RecordingStatus::READY_FOR_REPORTING_TO_MOTHERSHIP);
@@ -122,7 +122,7 @@ class HandleRecordings
 
     private function deleteRecordings()
     {
-        if(Camera::noCameraIsRecording()) {
+        if (Camera::noCameraIsRecording()) {
             foreach (Recording::withStatus(RecordingStatus::TO_BE_DELETED) as $recording) {
                 $recording->delete();
             }

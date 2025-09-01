@@ -17,7 +17,7 @@ class InitialSetup extends Component
 
     public function mount()
     {
-        if(!Recorder::make()->needsInitialSetup()) {
+        if (! Recorder::make()->needsInitialSetup()) {
             return redirect('');
         }
 

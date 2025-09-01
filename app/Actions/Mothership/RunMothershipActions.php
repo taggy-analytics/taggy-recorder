@@ -5,6 +5,7 @@ namespace App\Actions\Mothership;
 use App\Models\Camera;
 use App\Support\Mothership;
 use App\Support\Recorder;
+use Illuminate\Http\Client\ConnectionException;
 
 class RunMothershipActions
 {
@@ -12,15 +13,15 @@ class RunMothershipActions
     {
         requireProMode('Recorder must be in pro mode to connect to mothership.');
 
-        if(!Mothership::make()->isOnline()) {
+        if (! Mothership::make()->isOnline()) {
             return;
         }
 
-        if(Recorder::make()->isLivestreaming()) {
+        if (Recorder::make()->isLivestreaming()) {
             return;
         }
 
-        if(!Camera::noCameraIsRecording()) {
+        if (! Camera::noCameraIsRecording()) {
             return;
         }
 
@@ -41,9 +42,10 @@ class RunMothershipActions
     {
         try {
             app($action)->execute();
-        }
-        catch(\Exception $exception) {
-            report($exception);
+        } catch (\Exception $exception) {
+            if (! $exception instanceof ConnectionException) {
+                report($exception);
+            }
         }
     }
 }

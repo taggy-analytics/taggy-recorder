@@ -24,16 +24,16 @@ trait IsReportedToMothership
         return $this->morphOne(MothershipReport::class, 'model');
     }
 
-    public function reportToMothership(UserToken $userToken = null)
+    public function reportToMothership(?UserToken $userToken = null)
     {
         $data['ready_to_send'] = true;
 
-        if($userToken) {
+        if ($userToken) {
             $data['user_token_id'] = $userToken->id;
         }
 
-        if(!$this->mothershipReport) {
-            info($this::class . '#' . $this->id . ' has no associated mothership report.');
+        if (! $this->mothershipReport) {
+            info($this::class.'#'.$this->id.' has no associated mothership report.');
             $this->createMothershipReport();
             $this->load('mothershipReport');
         }
@@ -47,7 +47,7 @@ trait IsReportedToMothership
             'model_type' => $this::class,
             'model_id' => $this->id,
             'endpoint' => Mothership::getEndpoint(),
-        ],[
+        ], [
             'ready_to_send' => false,
         ]);
     }

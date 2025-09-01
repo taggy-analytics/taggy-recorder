@@ -14,8 +14,8 @@ use Illuminate\Support\Str;
 class RecordingFile extends Model
 {
     use HasStatus;
-    use IsReportedToMothership;
     use InsertsChunked;
+    use IsReportedToMothership;
 
     protected $casts = [
         'status' => RecordingFileStatus::class,
@@ -36,7 +36,7 @@ class RecordingFile extends Model
 
     private function getPath($type)
     {
-        return $this->recording->getPath() . $type . '/' . $this->name;
+        return $this->recording->getPath().$type.'/'.$this->name;
     }
 
     public function thumbnailPath()

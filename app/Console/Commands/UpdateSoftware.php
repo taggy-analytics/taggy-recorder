@@ -2,15 +2,8 @@
 
 namespace App\Console\Commands;
 
-use App\Exceptions\RecorderNotAssociatedException;
 use App\Models\Camera;
-use App\Support\Mothership;
-use App\Support\Recorder;
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\File;
-use Illuminate\Support\Facades\Process;
-use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Str;
 
 class UpdateSoftware extends Command
 {
@@ -36,8 +29,9 @@ class UpdateSoftware extends Command
      */
     public function handle()
     {
-        if(!Camera::noCameraIsRecording()) {
+        if (! Camera::noCameraIsRecording()) {
             $this->error('Cannot update software while a camera is recording');
+
             return 1;
         }
 

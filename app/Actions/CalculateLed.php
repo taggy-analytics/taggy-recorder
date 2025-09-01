@@ -27,25 +27,19 @@ class CalculateLed
     {
         $recorder = Recorder::make();
 
-        if($recorder->isUpdatingFirmware()) {
+        if ($recorder->isUpdatingFirmware()) {
             $recorder->led(LedColor::GREEN, 0.5);
-        }
-        elseif(!Camera::noCameraIsRecording()) {
+        } elseif (! Camera::noCameraIsRecording()) {
             $recorder->led(LedColor::RED, $recorder->isLivestreaming() ? 0.25 : 0.5);
-        }
-        elseif($recorder->isUploading(calculateLed: false)) {
+        } elseif ($recorder->isUploading(calculateLed: false)) {
             $recorder->led(LedColor::BLUE, 0.5);
-        }
-        elseif(Mothership::make()->isOnline(1) && $this->cameraIsAvailable()) {
+        } elseif (Mothership::make()->isOnline(1) && $this->cameraIsAvailable()) {
             $recorder->led([LedColor::BLUE, LedColor::RED], 1);
-        }
-        elseif(Mothership::make()->isOnline(1)) {
+        } elseif (Mothership::make()->isOnline(1)) {
             $recorder->led(LedColor::BLUE);
-        }
-        elseif($this->cameraIsAvailable()) {
+        } elseif ($this->cameraIsAvailable()) {
             $recorder->led(LedColor::RED);
-        }
-        else {
+        } else {
             $recorder->led(LedColor::GREEN);
         }
     }
@@ -54,10 +48,9 @@ class CalculateLed
     {
         $recorder = Recorder::make();
 
-        if($recorder->isUpdatingFirmware()) {
+        if ($recorder->isUpdatingFirmware()) {
             $recorder->led(LedColor::GREEN, 0.5);
-        }
-        elseif(!Camera::noCameraIsRecording()) {
+        } elseif (! Camera::noCameraIsRecording()) {
             $recorder->led(LedColor::RED, $recorder->isLivestreaming() ? 0.25 : 0.5);
         }
         // ToDo: fix when we upload to cloud
@@ -66,16 +59,13 @@ class CalculateLed
             $recorder->led(LedColor::BLUE, 0.5);
         }
         */
-        elseif(Recorder::make()->connectedToInternet() && $this->cameraIsAvailable()) {
+        elseif (Recorder::make()->connectedToInternet() && $this->cameraIsAvailable()) {
             $recorder->led([LedColor::BLUE, LedColor::RED], 1);
-        }
-        elseif(Recorder::make()->connectedToInternet()) {
+        } elseif (Recorder::make()->connectedToInternet()) {
             $recorder->led(LedColor::BLUE);
-        }
-        elseif($this->cameraIsAvailable()) {
+        } elseif ($this->cameraIsAvailable()) {
             $recorder->led(LedColor::RED);
-        }
-        else {
+        } else {
             $recorder->led(LedColor::GREEN);
         }
     }

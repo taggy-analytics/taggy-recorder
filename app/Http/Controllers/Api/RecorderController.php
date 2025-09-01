@@ -9,8 +9,6 @@ use App\Models\UserToken;
 use App\Support\Mothership;
 use App\Support\Recorder;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Str;
 use Jackiedo\DotenvEditor\Facades\DotenvEditor;
 
 class RecorderController extends Controller
@@ -41,7 +39,7 @@ class RecorderController extends Controller
         UserToken::truncate();
 
         return [
-            'app_key_refreshed' => !$appKeyWasSet,
+            'app_key_refreshed' => ! $appKeyWasSet,
         ];
     }
 
@@ -72,7 +70,7 @@ class RecorderController extends Controller
 
     public function tokens(StoreTokensRequest $request)
     {
-        foreach($request->entities as $entity) {
+        foreach ($request->entities as $entity) {
             UserToken::updateOrCreate([
                 'entity_id' => $entity['id'],
                 'user_id' => $request->user_id,

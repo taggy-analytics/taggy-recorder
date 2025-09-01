@@ -7,6 +7,7 @@ use App\Enums\LogMessageType;
 class Rtc extends HealthCheck
 {
     protected LogMessageType $logMessageType = LogMessageType::RTC_ISSUES;
+
     protected $message = 'RTC failure';
 
     public function shouldReport()

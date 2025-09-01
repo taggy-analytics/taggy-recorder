@@ -2,7 +2,7 @@
 
 namespace App\Enums;
 
-enum TransactionAction : string
+enum TransactionAction: string
 {
     case CREATE = 'create';
     case UPDATE = 'update';

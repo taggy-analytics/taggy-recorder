@@ -13,23 +13,22 @@ if (! function_exists('reportToMothership')) {
 if (! function_exists('checkMemory')) {
     function checkMemory($key = null, $initialize = false)
     {
-        if($initialize) {
+        if ($initialize) {
             cache()->forget('memoryConsumers');
             cache()->forget('lastMemoryUsage');
         }
 
         $backtrace = debug_backtrace()[0];
-        $key ??= basename($backtrace['file']) . '-' . $backtrace['line'];
+        $key ??= basename($backtrace['file']).'-'.$backtrace['line'];
         $memoryConsumers = cache()->get('memoryConsumers', []);
 
         $memoryUsage = memory_get_usage();
 
-        if(cache()->has('lastMemoryUsage')) {
+        if (cache()->has('lastMemoryUsage')) {
             $memoryAdded = $memoryUsage - cache()->get('lastMemoryUsage');
-            if(Arr::has($memoryConsumers, $key)) {
+            if (Arr::has($memoryConsumers, $key)) {
                 $memoryConsumers[$key] += $memoryAdded;
-            }
-            else {
+            } else {
                 $memoryConsumers[$key] = $memoryAdded;
             }
         }
@@ -44,8 +43,8 @@ if (! function_exists('checkMemory')) {
 if (! function_exists('preventMemoryLeak')) {
     function preventMemoryLeak($message = null, $limit = 300000000)
     {
-        if(memory_get_usage() > $limit) {
-            info(($message ?? 'Memory leak prevented') .  ' (Memory: ' . memory_get_usage() .')');
+        if (memory_get_usage() > $limit) {
+            info(($message ?? 'Memory leak prevented').' (Memory: '.memory_get_usage().')');
             exit;
         }
     }
@@ -54,7 +53,7 @@ if (! function_exists('preventMemoryLeak')) {
 if (! function_exists('requireProMode')) {
     function requireProMode($message = null)
     {
-        if(!Recorder::make()->inProMode()) {
+        if (! Recorder::make()->inProMode()) {
             $message ??= 'Pro mode needed for this functionality.';
             throw new NotInProMode($message);
         }

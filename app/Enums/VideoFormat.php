@@ -2,7 +2,7 @@
 
 namespace App\Enums;
 
-enum VideoFormat : string
+enum VideoFormat: string
 {
     case DashAv1MultiStream = 'DashAv1MultiStream';
     case DashAv1SingleStream = 'DashAv1SingleStream';

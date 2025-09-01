@@ -2,13 +2,9 @@
 
 namespace App\Http\Middleware;
 
-use App\Livewire\InitialSetup;
-use App\Models\User;
 use App\Support\Recorder;
 use Closure;
 use Illuminate\Http\Request;
-use Illuminate\Support\Arr;
-use Illuminate\Support\Str;
 use Symfony\Component\HttpFoundation\Response;
 
 class CheckBoxIsSetUp
@@ -22,7 +18,7 @@ class CheckBoxIsSetUp
     {
         $recorder = Recorder::make();
 
-        if($recorder->needsInitialSetup() && !$recorder->initialSetupIsRunning()) {
+        if ($recorder->needsInitialSetup() && ! $recorder->initialSetupIsRunning()) {
             return redirect()->route('initial-setup');
         }
 

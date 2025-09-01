@@ -28,8 +28,7 @@ class CreateThumbnailForRecordingFile
                 ->height(320)
                 ->quality(50)
                 ->save();
-        }
-        catch(RuntimeException $e) {
+        } catch (RuntimeException $e) {
 
         }
 

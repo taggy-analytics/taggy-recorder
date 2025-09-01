@@ -11,15 +11,19 @@ use Illuminate\Support\Str;
 abstract class CameraType
 {
     abstract public static function discover();
+
     abstract public function getName();
 
     abstract public function getStatus(Camera $camera);
 
-    abstract public static function getDefaultCredentials() : array;
+    abstract public static function getDefaultCredentials(): array;
 
     abstract public function isAvailable(Camera $camera);
+
     abstract public function startRecording(Camera $camera, Recording $recording);
+
     abstract public function stopRecording(Camera $camera);
+
     abstract public function isRecording(Camera $camera);
 
     protected $recordingStartDelay = 0;
@@ -36,14 +40,14 @@ abstract class CameraType
 
     public static function discoverCameras()
     {
-        foreach(self::getCameraClasses() as $cameraClass) {
+        foreach (self::getCameraClasses() as $cameraClass) {
             $camerasForClass = $cameraClass::discover();
 
-            foreach($camerasForClass as $aCamera) {
+            foreach ($camerasForClass as $aCamera) {
                 Camera::updateOrCreate([
                     'type' => $cameraClass::class,
                     'identifier' => $aCamera['identifier'],
-                ],[
+                ], [
                     'name' => self::hydrateName($aCamera['name']),
                     'ip_address' => $aCamera['ipAddress'],
                     'rotation' => $cameraClass::getRotation(),
@@ -68,19 +72,20 @@ abstract class CameraType
     {
         $cameras = [];
         foreach (File::files(__DIR__) as $file) {
-            $className = __NAMESPACE__ . '\\' . $file->getFilenameWithoutExtension();
-            if (!(new \ReflectionClass($className))->isAbstract()) {
-                $cameras[] = new $className();
+            $className = __NAMESPACE__.'\\'.$file->getFilenameWithoutExtension();
+            if (! (new \ReflectionClass($className))->isAbstract()) {
+                $cameras[] = new $className;
             }
         }
+
         return collect($cameras);
     }
 
     protected static function discoverByVendorMac($mac)
     {
         return Network::make()->getClients()
-            ->filter(fn($device) => filled($device['identifier']) && Str::startsWith(strtolower($device['identifier']), strtolower($mac)))
-            ->filter(fn($device) => !Camera::pluck('ip_address')->contains($device['ipAddress']))
+            ->filter(fn ($device) => filled($device['identifier']) && Str::startsWith(strtolower($device['identifier']), strtolower($mac)))
+            ->filter(fn ($device) => ! Camera::pluck('ip_address')->contains($device['ipAddress']))
             ->values();
     }
 

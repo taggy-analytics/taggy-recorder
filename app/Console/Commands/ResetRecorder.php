@@ -28,7 +28,7 @@ class ResetRecorder extends Command
      */
     public function handle()
     {
-        if($this->confirm('This resets everything and deletes all recordings! Are you sure?')) {
+        if ($this->confirm('This resets everything and deletes all recordings! Are you sure?')) {
             app(\App\Actions\ResetRecorder::class)->execute();
             $this->info('Finished!');
         }

@@ -37,7 +37,7 @@ class RouteServiceProvider extends ServiceProvider
                 ->prefix('api')
                 ->group(base_path('routes/api.php'));
 
-            if(!Recorder::make()->inProMode()) {
+            if (! Recorder::make()->inProMode()) {
                 Route::middleware(['api', 'valid-recorder-time'])
                     ->prefix('community-api')
                     ->group(base_path('routes/community-api.php'));

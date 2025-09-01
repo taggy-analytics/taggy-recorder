@@ -2,16 +2,10 @@
 
 namespace App\Console\Commands;
 
-use App\Models\Camera;
-use App\Models\LivestreamSegment;
 use App\Models\MothershipReport;
-use App\Models\UserToken;
 use App\Support\Mothership;
 use App\Support\Recorder;
 use Illuminate\Console\Command;
-use Illuminate\Support\Arr;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Storage;
 use Spatie\LaravelIgnition\Facades\Flare;
 
 class UploadRecordings extends Command
@@ -28,24 +22,27 @@ class UploadRecordings extends Command
         while (true) {
             preventMemoryLeak('UploadRecordingSegments');
 
-            if(!$recorder->inProMode()) {
+            if (! $recorder->inProMode()) {
                 info('UploadRecordings: not in pro Mode.');
                 sleep(60);
+
                 continue;
             }
 
-            if(!Mothership::make()->isOnline(disableCache: true)) {
+            if (! Mothership::make()->isOnline(disableCache: true)) {
                 sleep(10);
+
                 continue;
             }
 
             $unreportedReports = MothershipReport::unreported();
 
             if ($unreportedReports->count() == 0) {
-                if($recorder->isUploading()) {
+                if ($recorder->isUploading()) {
                     $recorder->isUploading(false);
                 }
                 sleep(10);
+
                 continue;
             }
 
@@ -54,20 +51,22 @@ class UploadRecordings extends Command
             foreach ($unreportedReports as $mothershipReport) {
                 if ($recorder->isLivestreaming()) {
                     sleep(10);
+
                     continue;
                 }
 
                 Flare::context('mothershipReport', $mothershipReport);
-                if (!$recorder->isUploading()) {
+                if (! $recorder->isUploading()) {
                     $recorder->isUploading(true);
                 }
-                if (!$mothershipReport->model) {
+                if (! $mothershipReport->model) {
                     $mothershipReport->delete();
+
                     continue;
                 }
-                $actionClass = 'App\\Actions\\Mothership\\Report' . (new \ReflectionClass($mothershipReport->model))->getShortName();
+                $actionClass = 'App\\Actions\\Mothership\\Report'.(new \ReflectionClass($mothershipReport->model))->getShortName();
                 $mothershipReport->update(['reported_at' => now()]);
-                if (!app($actionClass)->execute($mothershipReport->model)) {
+                if (! app($actionClass)->execute($mothershipReport->model)) {
                     $errored = true;
                 }
             }

@@ -12,7 +12,8 @@ class LivestreamSegment extends Model
 
     public function getRecording()
     {
-        $recordingId = array_slice(explode("/", $this->file), -4, 1)[0];
+        $recordingId = array_slice(explode('/', $this->file), -4, 1)[0];
+
         return Recording::find($recordingId);
     }
 }

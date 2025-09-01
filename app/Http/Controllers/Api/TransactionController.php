@@ -20,25 +20,25 @@ class TransactionController extends Controller
 {
     public function status($entityId, TransactionsStatusRequest $request)
     {
-        info('TransactionController@status ' . $entityId);
+        info('TransactionController@status '.$entityId);
 
         $uuids = $this->getUuids(Mothership::getEndpoint(), $entityId, $request->last_transactions_reset_at);
 
         $uuidsConcatenated = $uuids
-            ->map(fn($uuid) => substr($uuid, -$request->hash_substring_length))
+            ->map(fn ($uuid) => substr($uuid, -$request->hash_substring_length))
             ->implode('');
 
         $lastUuidInSync = -1;
 
         // Log::channel('transactions')->info('UUIDs Concatenated', compact('uuids'));
 
-        foreach($request->hashes as $index => $hash) {
+        foreach ($request->hashes as $index => $hash) {
             $offset = $request->hash_substring_length * ($lastUuidInSync + 1);
             $length = $request->hash_substring_length * ($index - $lastUuidInSync);
             // Log::channel('transactions')->info('Checking Hash', compact('index', 'hash', 'offset', 'length'));
             // Log::channel('transactions')->info('Calculated Hash', ['hash' => crc32(substr($uuidsConcatenated, $offset, $length))]);
 
-            if($hash !== crc32(substr($uuidsConcatenated, $offset, $length))) {
+            if ($hash !== crc32(substr($uuidsConcatenated, $offset, $length))) {
                 return [
                     'transactions_in_sync' => false,
                     'last_transaction_in_sync' => $lastUuidInSync > 0 ? $uuids[$lastUuidInSync] : null,
@@ -48,14 +48,14 @@ class TransactionController extends Controller
             $lastUuidInSync = $index;
         }
 
-        if($lastUuidInSync == -1) {
+        if ($lastUuidInSync == -1) {
             return [
                 'transactions_in_sync' => false,
                 'last_transaction_in_sync' => null,
             ];
         }
 
-        if(count($uuids) > $lastUuidInSync + 1) {
+        if (count($uuids) > $lastUuidInSync + 1) {
             return [
                 'transactions_in_sync' => false,
                 'last_transaction_in_sync' => $uuids[$lastUuidInSync],
@@ -69,7 +69,7 @@ class TransactionController extends Controller
 
     public function store($entityId, StoreTransactionsRequest $request)
     {
-        info('TransactionController@store ' . $entityId);
+        info('TransactionController@store '.$entityId);
 
         $userToken = UserToken::firstOrCreate([
             'entity_id' => $entityId,
@@ -81,13 +81,14 @@ class TransactionController extends Controller
 
         $mothership = Mothership::make($userToken);
 
-        if($this->cleanupNeeded($entityId, $request->transactions)) {
+        if ($this->cleanupNeeded($entityId, $request->transactions)) {
             $newTransactions = collect($request->transactions)
                 ->whereNotIn('id', $this->getUuids($userToken->endpoint, $entityId, $request->last_transactions_reset_at))
                 ->hydrateTransactions($userToken->endpoint)
                 ->map(function ($transaction) use ($userToken) {
                     $transaction['user_token_id'] = $userToken->id;
                     $transaction['endpoint'] = $userToken->endpoint;
+
                     return $transaction;
                 })
                 ->toArray();
@@ -97,37 +98,36 @@ class TransactionController extends Controller
             $transactions = app(CleanTransactions::class)
                 ->execute($userToken->endpoint, $entityId, $request->last_transactions_reset_at);
 
-            if(count($newTransactions) > 0) {
+            if (count($newTransactions) > 0) {
                 broadcast(new TransactionsAdded($entityId, $newTransactions, $request->origin));
                 broadcast(new TransactionsRecalculated($entityId, $request->origin));
 
-                if($mothership->isOnline()) {
+                if ($mothership->isOnline()) {
                     $mothership->reportTransactions($entityId, $newTransactions);
                 }
             }
 
             $content = 'all-transactions';
-        }
-        else {
+        } else {
             $transactions = [];
-            foreach($request->transactions ?? [] as $transaction) {
+            foreach ($request->transactions ?? [] as $transaction) {
                 $transaction['user_token_id'] = $userToken->id;
                 $transaction['endpoint'] = $userToken->endpoint;
                 $transaction = Transaction::firstOrCreate(['id' => $transaction['id']], $transaction);
-                if($transaction->wasRecentlyCreated) {
+                if ($transaction->wasRecentlyCreated) {
                     $transactions[] = $transaction;
                 }
             }
 
-            if(count($transactions) > 0) {
+            if (count($transactions) > 0) {
                 broadcast(new TransactionsAdded($entityId, $transactions, $request->origin));
 
-                if($mothership->isOnline()) {
+                if ($mothership->isOnline()) {
                     $mothership->reportTransactions($entityId, $transactions);
                 }
             }
 
-            $transactions = match($request->last_transaction_in_sync) {
+            $transactions = match ($request->last_transaction_in_sync) {
                 true => [],
                 null => Transaction::query()
                     ->where('entity_id', $entityId)
@@ -153,7 +153,7 @@ class TransactionController extends Controller
         return Transaction::query()
             ->where('endpoint', $endpoint)
             ->where('entity_id', $entity)
-            ->when(filled($lastTransactionsResetAt), fn($query) => $query->where('created_at', '>', Carbon::parse($lastTransactionsResetAt)))
+            ->when(filled($lastTransactionsResetAt), fn ($query) => $query->where('created_at', '>', Carbon::parse($lastTransactionsResetAt)))
             ->orderBy('created_at')
             ->orderBy('id')
             ->pluck('id');
@@ -161,7 +161,7 @@ class TransactionController extends Controller
 
     private function cleanupNeeded($entityId, $transactions)
     {
-        if(is_null($transactions) || count($transactions) == 0) {
+        if (is_null($transactions) || count($transactions) == 0) {
             return false;
         }
 
@@ -170,6 +170,7 @@ class TransactionController extends Controller
             ->max('created_at');
 
         $newTransactionsDate = collect($transactions)->min('created_at');
+
         return $existingTransactionsDate > $newTransactionsDate;
     }
 }

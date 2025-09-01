@@ -11,9 +11,9 @@ class DeleteOldReleases
     {
         $releasesToKeep = ReleaseManager::releasesToKeep();
 
-        foreach(ReleaseManager::getReleases() as $release) {
-            if(!in_array($release, $releasesToKeep)) {
-                info('Deleting old release: ' . $release);
+        foreach (ReleaseManager::getReleases() as $release) {
+            if (! in_array($release, $releasesToKeep)) {
+                info('Deleting old release: '.$release);
                 File::deleteDirectory($release);
             }
         }

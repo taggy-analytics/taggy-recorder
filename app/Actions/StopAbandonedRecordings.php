@@ -12,9 +12,9 @@ class StopAbandonedRecordings
         $cameras = Camera::whereNot('status', CameraStatus::READY)
             ->get();
 
-        foreach($cameras as $camera) {
-            if($camera->isRecording()) {
-                info('Stopping recording for camera #' . $camera->id);
+        foreach ($cameras as $camera) {
+            if ($camera->isRecording()) {
+                info('Stopping recording for camera #'.$camera->id);
 
                 // Don't stop me now!
                 // $camera->stopRecording();

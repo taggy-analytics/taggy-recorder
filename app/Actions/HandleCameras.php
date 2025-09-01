@@ -8,7 +8,7 @@ class HandleCameras
 {
     public function execute()
     {
-        foreach(Camera::all() as $camera) {
+        foreach (Camera::all() as $camera) {
             $camera->getStatus();
         }
 

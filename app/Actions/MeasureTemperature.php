@@ -13,7 +13,7 @@ class MeasureTemperature
 
         if (preg_match($pattern, Process::run('vcgencmd measure_temp')->output(), $matches)) {
             $temperature = $matches[1];
-            if($temperature > config('taggy-recorder.temperature-log-min')) {
+            if ($temperature > config('taggy-recorder.temperature-log-min')) {
                 Recorder::make()->logMeasure('temperature', $temperature);
             }
         }

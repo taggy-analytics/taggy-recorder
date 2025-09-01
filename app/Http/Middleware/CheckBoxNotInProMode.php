@@ -2,7 +2,6 @@
 
 namespace App\Http\Middleware;
 
-use App\Models\User;
 use App\Support\Recorder;
 use Closure;
 use Illuminate\Http\Request;
@@ -17,7 +16,7 @@ class CheckBoxNotInProMode
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if(Recorder::make()->inProMode()){
+        if (Recorder::make()->inProMode()) {
             abort(404);
         }
 

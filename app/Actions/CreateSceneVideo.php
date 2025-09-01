@@ -25,7 +25,7 @@ class CreateSceneVideo
             '-t', FFMpegCommand::convertSeconds($duration),
             '-c', 'copy',
             '-f', 'mp4',
-            Storage::path('scenes/' . $filename),
+            Storage::path('scenes/'.$filename),
         ];
 
         FFMpegCommand::runRaw(implode(' ', $command), async: false);
@@ -35,22 +35,20 @@ class CreateSceneVideo
         // ToDo: push video available event to clients
     }
 
-    private function ensureScenesDirectoryExists()
-    {
-
-    }
+    private function ensureScenesDirectoryExists() {}
 
     private function m3u8PathWithEndTag(Recording $recording, $filename)
     {
         // FFmpeg doesn't like it if live HLS streams' m3u8s are used. So let's copy it first.
-        $m3u8Path = $recording->getPath('video/' . $filename . '.m3u8');
+        $m3u8Path = $recording->getPath('video/'.$filename.'.m3u8');
 
         Storage::disk('public')
             ->copy($recording->getM3u8Path(), $m3u8Path);
 
-        if(!Str::contains(Storage::disk('public')->get($m3u8Path), '#EXT-X-ENDLIST')) {
-            Storage::disk('public')->append($m3u8Path, PHP_EOL . '#EXT-X-ENDLIST');
+        if (! Str::contains(Storage::disk('public')->get($m3u8Path), '#EXT-X-ENDLIST')) {
+            Storage::disk('public')->append($m3u8Path, PHP_EOL.'#EXT-X-ENDLIST');
         }
+
         return $m3u8Path;
     }
 }

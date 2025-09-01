@@ -15,18 +15,15 @@ use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Http;
 use UnitEnum;
 
-class SoftwareUpdate extends Page implements HasForms, HasActions
+class SoftwareUpdate extends Page implements HasActions, HasForms
 {
-    use InteractsWithForms;
     use InteractsWithActions;
+    use InteractsWithForms;
 
     protected string $view = 'filament.pages.software-update';
 
     public $updateVersion;
 
-    /**
-     * @return string|UnitEnum|null
-     */
     public static function getNavigationGroup(): UnitEnum|string|null
     {
         return __('gui.settings.heading');
@@ -44,7 +41,7 @@ class SoftwareUpdate extends Page implements HasForms, HasActions
         ];
     }
 
-    public function updateAction() : Action
+    public function updateAction(): Action
     {
         return Action::make('update')
             ->requiresConfirmation()
@@ -62,26 +59,25 @@ class SoftwareUpdate extends Page implements HasForms, HasActions
 
     private function getUpdateVersion()
     {
-        if(!Recorder::make()->connectedToInternet()) {
+        if (! Recorder::make()->connectedToInternet()) {
             return false;
         }
 
-        $repo = 'https://api.github.com/repos/' . config('taggy-recorder.software.repository');
-        if(config('taggy-recorder.software.update-channel') === 'prod') {
-            $updateVersion = Http::get($repo . '/releases/tags/prod')->json();
+        $repo = 'https://api.github.com/repos/'.config('taggy-recorder.software.repository');
+        if (config('taggy-recorder.software.update-channel') === 'prod') {
+            $updateVersion = Http::get($repo.'/releases/tags/prod')->json();
 
             return [
                 'name' => $updateVersion['name'],
                 'url' => $updateVersion['tarball_url'],
             ];
-        }
-        else {
-            $updateVersion = Http::get($repo . '/commits?sha=master')->json();
+        } else {
+            $updateVersion = Http::get($repo.'/commits?sha=master')->json();
             $sha = Arr::get($updateVersion, '0.sha');
 
             return [
                 'name' => $sha,
-                'url' => 'https://github.com/' . config('taggy-recorder.software.repository') . '/archive/' . $sha . '.zip',
+                'url' => 'https://github.com/'.config('taggy-recorder.software.repository').'/archive/'.$sha.'.zip',
             ];
         }
     }

@@ -3,7 +3,6 @@
 namespace App\Http\Middleware;
 
 use App\Http\Controllers\EnableApiController;
-use Illuminate\Support\Facades\Gate;
 
 class RestrictedApiDocsAccess
 {

@@ -13,16 +13,17 @@ class SendTemperatureLogToMothership
 
         $mothership = Mothership::make(endpoint: config('services.mothership.production.endpoint'));
 
-        if(File::exists($logfile) && File::size($logfile) >= config('taggy-recorder.temperature-log-min-size')) {
+        if (File::exists($logfile) && File::size($logfile) >= config('taggy-recorder.temperature-log-min-size')) {
             $data = collect(explode(PHP_EOL, trim(File::get($logfile))))
-                ->mapWithKeys(function($line) {
+                ->mapWithKeys(function ($line) {
                     $parts = explode(' ', $line);
-                    return [$parts[0] . ' ' . $parts[1] => $parts[2]];
+
+                    return [$parts[0].' '.$parts[1] => $parts[2]];
                 });
 
             $mothership->sendTemperatureLog($data);
 
-            if($mothership->lastResponseStatus() == 200) {
+            if ($mothership->lastResponseStatus() == 200) {
                 File::delete($logfile);
             }
         }

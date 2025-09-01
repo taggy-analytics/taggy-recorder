@@ -28,7 +28,7 @@ class TruncateRecorder extends Command
      */
     public function handle()
     {
-        if($this->confirm('This deletes all relevant data and recordings! Are you sure?')) {
+        if ($this->confirm('This deletes all relevant data and recordings! Are you sure?')) {
             app(\App\Actions\TruncateRecorder::class)->execute();
             $this->info('Finished!');
         }

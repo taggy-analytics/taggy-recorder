@@ -8,7 +8,7 @@ class SetEnvironment
 {
     public function execute($environment)
     {
-        if($environment == config('app.env')){
+        if ($environment == config('app.env')) {
             throw new \Exception("Recorder is already running in {$environment} environment");
         }
 

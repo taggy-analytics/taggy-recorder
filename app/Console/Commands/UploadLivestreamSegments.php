@@ -22,14 +22,16 @@ class UploadLivestreamSegments extends Command
     {
         Recorder::make()->waitUntilAllNeededServicesAreUpAndRunning();
 
-        while(true) {
-            if(!Recorder::make()->inProMode()) {
+        while (true) {
+            if (! Recorder::make()->inProMode()) {
                 sleep(60);
+
                 continue;
             }
 
-            if(!Mothership::make()->isOnline(disableCache: true)) {
+            if (! Mothership::make()->isOnline(disableCache: true)) {
                 sleep(10);
+
                 continue;
             }
 
@@ -45,18 +47,15 @@ class UploadLivestreamSegments extends Command
                     ->take(5)
                     ->get();
 
-                if(count($livestreamSegments) > 0) {
-                    $livestreamSegments->each(fn($livestreamSegment) => $this->sendFile($livestreamSegment));
+                if (count($livestreamSegments) > 0) {
+                    $livestreamSegments->each(fn ($livestreamSegment) => $this->sendFile($livestreamSegment));
                     sleep(1);
-                }
-                elseif(Camera::noCameraIsRecording()) {
+                } elseif (Camera::noCameraIsRecording()) {
                     sleep(10);
-                }
-                else {
+                } else {
                     sleep(1);
                 }
-            }
-            catch(\Exception $exception) {
+            } catch (\Exception $exception) {
                 sleep(10);
             }
         }
@@ -70,15 +69,14 @@ class UploadLivestreamSegments extends Command
             preventMemoryLeak('sendFile');
             Log::channel('memory')->info(memory_get_usage());
 
-            if($recording->livestream_enabled && Arr::has($recording->data, ['endpoint'])) {
+            if ($recording->livestream_enabled && Arr::has($recording->data, ['endpoint'])) {
                 $userToken = UserToken::forEndpointAndEntity($recording->data['endpoint'], $recording->data['entity_id']);
-                $m3u8Content = explode(PHP_EOL, trim(Storage::get('segments-m3u8/segment-m3u8-' . $segment->id)));
-                Storage::delete('segments-m3u8/segment-m3u8-' . $segment->id);
+                $m3u8Content = explode(PHP_EOL, trim(Storage::get('segments-m3u8/segment-m3u8-'.$segment->id)));
+                Storage::delete('segments-m3u8/segment-m3u8-'.$segment->id);
                 Mothership::make($userToken)->sendLivestreamFile($recording, $segment->file, $segment->content, implode(PHP_EOL, array_slice($m3u8Content, 0, -2)));
                 $segment->update(['uploaded_at' => now()]);
             }
-        }
-        catch(\Exception $exception) {
+        } catch (\Exception $exception) {
             $segment->update(['last_failed_at' => now()]);
             report($exception);
         }

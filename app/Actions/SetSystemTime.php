@@ -13,9 +13,10 @@ class SetSystemTime
     /**
      * Set the system time on Ubuntu OS
      *
-     * @param CarbonImmutable $datetime Carbon datetime instance
-     * @param string|null $timezone Optional timezone to apply (e.g., 'UTC', 'America/New_York', 'Europe/London')
+     * @param  CarbonImmutable  $datetime  Carbon datetime instance
+     * @param  string|null  $timezone  Optional timezone to apply (e.g., 'UTC', 'America/New_York', 'Europe/London')
      * @return array Result with success status and message
+     *
      * @throws Exception
      */
     public function execute(CarbonImmutable $datetime, ?string $timezone = null): array
@@ -24,7 +25,7 @@ class SetSystemTime
             $carbonDateTime = $timezone ? $datetime->setTimezone($timezone) : $datetime;
 
             // Validate timezone if provided
-            if ($timezone && !$this->isValidTimezone($timezone)) {
+            if ($timezone && ! $this->isValidTimezone($timezone)) {
                 throw new Exception("Invalid timezone: {$timezone}");
             }
 
@@ -36,13 +37,13 @@ class SetSystemTime
             }
 
             // Disable NTP synchronization temporarily to allow manual time setting
-            $commands[] = "sudo timedatectl set-ntp false";
+            $commands[] = 'sudo timedatectl set-ntp false';
 
             $formattedDateTime = $carbonDateTime->format('Y-m-d H:i:s');
             $commands[] = "sudo date -u -s '{$formattedDateTime}'";
 
             // Re-enable NTP
-            $commands[] = "sudo timedatectl set-ntp true";
+            $commands[] = 'sudo timedatectl set-ntp true';
 
             $results = [];
 
@@ -50,17 +51,17 @@ class SetSystemTime
                 $output = [];
                 $returnCode = 0;
 
-                exec($command . ' 2>&1', $output, $returnCode);
+                exec($command.' 2>&1', $output, $returnCode);
 
                 $results[] = [
                     'command' => $command,
                     'output' => implode("\n", $output),
                     'return_code' => $returnCode,
-                    'success' => $returnCode === 0
+                    'success' => $returnCode === 0,
                 ];
 
                 if ($returnCode !== 0) {
-                    $errorMessage = "Command failed: {$command}. Output: " . implode("\n", $output);
+                    $errorMessage = "Command failed: {$command}. Output: ".implode("\n", $output);
                     Log::error($errorMessage);
                     throw new Exception($errorMessage);
                 }
@@ -69,39 +70,37 @@ class SetSystemTime
             // Verify the time was set correctly
             $currentTime = $this->getCurrentSystemTime();
 
-            Log::info("System time successfully set", [
+            Log::info('System time successfully set', [
                 'requested_datetime' => $carbonDateTime->toISOString(),
                 'formatted_datetime' => $formattedDateTime,
                 'timezone' => $timezone ?? $carbonDateTime->getTimezone()->getName(),
                 'current_system_time' => $currentTime->toISOString(),
-                'commands_executed' => array_column($results, 'command')
+                'commands_executed' => array_column($results, 'command'),
             ]);
 
             return [
                 'success' => true,
-                'message' => "System time successfully set to: {$formattedDateTime}" . ($timezone ? " ({$timezone})" : ""),
+                'message' => "System time successfully set to: {$formattedDateTime}".($timezone ? " ({$timezone})" : ''),
                 'requested_datetime' => $carbonDateTime->toISOString(),
                 'formatted_datetime' => $formattedDateTime,
                 'current_time' => $currentTime->toISOString(),
                 'timezone' => $timezone ?? $carbonDateTime->getTimezone()->getName(),
-                'commands_executed' => $results
+                'commands_executed' => $results,
             ];
 
         } catch (Exception $e) {
-            Log::error("Failed to set system time: " . $e->getMessage(), [
+            Log::error('Failed to set system time: '.$e->getMessage(), [
                 'datetime' => $datetime->toISOString(),
-                'timezone' => $timezone
+                'timezone' => $timezone,
             ]);
 
             return [
                 'success' => false,
                 'message' => $e->getMessage(),
-                'error' => $e->getMessage()
+                'error' => $e->getMessage(),
             ];
         }
     }
-
-
 
     /**
      * Validate timezone using Carbon
@@ -110,6 +109,7 @@ class SetSystemTime
     {
         try {
             new CarbonTimeZone($timezone);
+
             return true;
         } catch (Exception $e) {
             return false;
@@ -152,7 +152,7 @@ class SetSystemTime
             'formatted_time' => $currentSystemTime->format('Y-m-d H:i:s T'),
             'human_readable' => $currentSystemTime->toDayDateTimeString(),
             'timedatectl_output' => implode("\n", $output),
-            'available_timezones_sample' => $this->getAvailableTimezones()
+            'available_timezones_sample' => $this->getAvailableTimezones(),
         ];
     }
 
@@ -172,7 +172,7 @@ class SetSystemTime
             'Europe/Paris',
             'Asia/Tokyo',
             'Asia/Shanghai',
-            'Australia/Sydney'
+            'Australia/Sydney',
         ];
 
         // Also get system available timezones
@@ -181,7 +181,7 @@ class SetSystemTime
 
         return [
             'common' => $commonTimezones,
-            'system_sample' => $output
+            'system_sample' => $output,
         ];
     }
 
@@ -204,7 +204,7 @@ class SetSystemTime
                 Log::info('NTP synchronization enabled', [
                     'before_enable' => $beforeTime->toISOString(),
                     'after_enable' => $afterTime->toISOString(),
-                    'time_difference' => $beforeTime->diffInSeconds($afterTime) . ' seconds'
+                    'time_difference' => $beforeTime->diffInSeconds($afterTime).' seconds',
                 ]);
 
                 return [
@@ -212,17 +212,18 @@ class SetSystemTime
                     'message' => 'NTP synchronization enabled',
                     'before_time' => $beforeTime->toISOString(),
                     'current_time' => $afterTime->toISOString(),
-                    'output' => implode("\n", $output)
+                    'output' => implode("\n", $output),
                 ];
             } else {
-                throw new Exception('Failed to enable NTP: ' . implode("\n", $output));
+                throw new Exception('Failed to enable NTP: '.implode("\n", $output));
             }
 
         } catch (Exception $e) {
-            Log::error('Failed to enable NTP: ' . $e->getMessage());
+            Log::error('Failed to enable NTP: '.$e->getMessage());
+
             return [
                 'success' => false,
-                'message' => $e->getMessage()
+                'message' => $e->getMessage(),
             ];
         }
     }
@@ -246,8 +247,8 @@ class SetSystemTime
                 'days' => $now->diffInDays($targetTime),
                 'hours' => $now->diffInHours($targetTime),
                 'minutes' => $now->diffInMinutes($targetTime),
-                'seconds' => $now->diffInSeconds($targetTime)
-            ]
+                'seconds' => $now->diffInSeconds($targetTime),
+            ],
         ];
     }
 }

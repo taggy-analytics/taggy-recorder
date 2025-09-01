@@ -10,8 +10,9 @@ class EnsureAppKeyIsSet
 {
     public function execute()
     {
-        if(!Str::contains(DotenvEditor::getValue('APP_KEY'), 'base64')) {
+        if (! Str::contains(DotenvEditor::getValue('APP_KEY'), 'base64')) {
             Artisan::call('key:generate');
+
             return false;
         }
 

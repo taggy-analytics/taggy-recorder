@@ -13,6 +13,7 @@ use Illuminate\Console\Scheduling\Schedule;
 class RunStartupActions extends Command
 {
     protected $signature = 'taggy:run-startup-actions';
+
     protected $description = 'Run startup actions';
 
     public function handle(Schedule $schedule)
@@ -25,7 +26,7 @@ class RunStartupActions extends Command
         $mutexCleared = false;
 
         foreach ($schedule->events($this->laravel) as $event) {
-            info('Checking ' . $event->command);
+            info('Checking '.$event->command);
             if ($event->mutex->exists($event)) {
                 info(sprintf('Deleting mutex for [%s]', $event->command));
 
@@ -36,13 +37,13 @@ class RunStartupActions extends Command
         }
 
         if (! $mutexCleared) {
-           info('No mutex files were found.');
+            info('No mutex files were found.');
         }
 
         app(EnsureNetworkIsSetup::class)->execute();
         app(EnsureAppKeyIsSet::class)->execute();
 
-        if(Recorder::make()->inProMode()) {
+        if (Recorder::make()->inProMode()) {
             Mothership::make()->waitToComeOnline();
         }
 
@@ -50,7 +51,7 @@ class RunStartupActions extends Command
 
         \App\Jobs\UpdateSoftware::removeLock();
 
-        if(Recorder::make()->inProMode()) {
+        if (Recorder::make()->inProMode()) {
             app(UpdateSoftware::class)->execute();
         }
     }

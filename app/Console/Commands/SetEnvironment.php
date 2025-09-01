@@ -28,17 +28,19 @@ class SetEnvironment extends Command
      */
     public function handle()
     {
-        if(!in_array($this->argument('environment'), ['production', 'local', 'demo', 'test'])) {
+        if (! in_array($this->argument('environment'), ['production', 'local', 'demo', 'test'])) {
             $this->error("{$this->argument('environment')} is not a known environment.");
+
             return 1;
         }
 
-        if($this->argument('environment') == config('app.env')) {
+        if ($this->argument('environment') == config('app.env')) {
             $this->warn("Recorder is already running on {$this->argument('environment')}.");
+
             return 1;
         }
 
-        if($this->confirm('This deletes all data and all recordings! Are you sure?')) {
+        if ($this->confirm('This deletes all data and all recordings! Are you sure?')) {
             app(\App\Actions\SetEnvironment::class)->execute($this->argument('environment'));
             $this->info('Finished!');
         }

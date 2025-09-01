@@ -9,16 +9,16 @@ class FFMpegCommand
 {
     public static function run($inputFile, $outputFile, $command, $beforeInputOptions = '')
     {
-        if(is_array($command)) {
+        if (is_array($command)) {
             $command = implode(' ', $command);
         }
-        if(is_array($beforeInputOptions)) {
+        if (is_array($beforeInputOptions)) {
             $beforeInputOptions = implode(' ', $beforeInputOptions);
         }
 
         $command = "$beforeInputOptions -i $inputFile $command $outputFile";
 
-        if(config('taggy-recorder.ffmpeg.logging')) {
+        if (config('taggy-recorder.ffmpeg.logging')) {
             $logFile = Str::replaceLast(basename($outputFile), 'ffmpeg.log', $outputFile);
             $command .= " > $logFile 2>&1";
         }
@@ -28,7 +28,7 @@ class FFMpegCommand
 
     public static function runRaw($command, $app = 'ffmpeg', $async = true)
     {
-        $command = $app . ' ' . trim($command);
+        $command = $app.' '.trim($command);
         info($command);
         $process = $async ? Process::start($command) : Process::run($command);
 

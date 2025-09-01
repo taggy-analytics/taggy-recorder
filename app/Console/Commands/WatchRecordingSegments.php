@@ -4,7 +4,6 @@ namespace App\Console\Commands;
 
 use App\Models\LivestreamSegment;
 use App\Models\Recording;
-use Carbon\Carbon;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Storage;
@@ -24,9 +23,9 @@ class WatchRecordingSegments extends Command
         $startTime = now();
 
         Watch::path($path)
-            ->shouldContinue(fn() => $startTime->diffInSeconds() < 10 || $recording->isRecordingProcessRunning())
+            ->shouldContinue(fn () => $startTime->diffInSeconds() < 10 || $recording->isRecordingProcessRunning())
             ->onFileCreated(function (string $newFilePath) {
-                if(Str::endsWith($newFilePath, '.ts')) {
+                if (Str::endsWith($newFilePath, '.ts')) {
                     $m3u8Path = preg_replace('/video-\d+\.ts$/', 'video.m3u8', $newFilePath);
                     $this->sendFile($newFilePath, m3u8Content: File::get($m3u8Path));
                 }
@@ -41,6 +40,6 @@ class WatchRecordingSegments extends Command
             'content' => $content,
         ]);
 
-        Storage::put('segments-m3u8/segment-m3u8-' . $segment->id, $m3u8Content);
+        Storage::put('segments-m3u8/segment-m3u8-'.$segment->id, $m3u8Content);
     }
 }

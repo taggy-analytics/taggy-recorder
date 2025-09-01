@@ -22,16 +22,15 @@ class CheckSoftware extends Command
         $errors = [];
 
         foreach ($this->checks() as $name => $check) {
-            if($check()) {
-                $this->info($name . ' succeeded.');
-            }
-            else {
+            if ($check()) {
+                $this->info($name.' succeeded.');
+            } else {
                 $errors[] = $name;
-                $this->error($name . ' failed.');
+                $this->error($name.' failed.');
             }
         }
 
-        if(count($errors) > 0) {
+        if (count($errors) > 0) {
             return Command::FAILURE;
         }
 
@@ -41,8 +40,8 @@ class CheckSoftware extends Command
     private function checks()
     {
         return [
-            'vendorFolderExists' => fn() => File::exists($this->path . '/vendor'),
-            'ledPyFileSize' => fn() => File::size($this->path . '/led.py') > 0,
+            'vendorFolderExists' => fn () => File::exists($this->path.'/vendor'),
+            'ledPyFileSize' => fn () => File::size($this->path.'/led.py') > 0,
         ];
     }
 }

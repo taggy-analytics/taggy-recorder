@@ -12,8 +12,8 @@ class MothershipException extends Exception
         public $url,
         public $data,
         public $response,
-    ){
+    ) {
         Log::channel('mothership')->error($response?->getBody());
-        parent::__construct($response?->status() . ': ' . $method . ' ' . $url);
+        parent::__construct($response?->status().': '.$method.' '.$url);
     }
 }

@@ -20,14 +20,14 @@ class ProMode extends Page
         return __('gui.settings.heading');
     }
 
-    public function switchToProModeAction() : Action
+    public function switchToProModeAction(): Action
     {
         return Action::make('switchToProMode')
             ->requiresConfirmation()
             ->modalDescription(__('gui.settings.software-update.are-you-sure'))
             ->action(function () {
                 $this->switchedToProMode = true;
-                dispatch(fn() => Recorder::make()->activateProMode())->delay(now()->addSeconds(2));
+                dispatch(fn () => Recorder::make()->activateProMode())->delay(now()->addSeconds(2));
             });
     }
 }

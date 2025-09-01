@@ -8,7 +8,6 @@ use App\Support\Recorder;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Storage;
 use Spatie\Crypto\Rsa\Exceptions\CouldNotDecryptData;
 
 class AuthServiceProvider extends ServiceProvider
@@ -32,13 +31,13 @@ class AuthServiceProvider extends ServiceProvider
         $this->registerPolicies();
 
         Auth::viaRequest('mothership', function (Request $request) {
-            if(!Recorder::make()->inProMode()) {
+            if (! Recorder::make()->inProMode()) {
                 return null;
             }
 
             try {
                 $userData = base64_decode($request->header('User-Data'));
-                if(empty($userData)) {
+                if (empty($userData)) {
                     return null;
                 }
                 $userData = json_decode(PublicKey::get()->decrypt($userData), true);

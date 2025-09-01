@@ -10,11 +10,12 @@ class EnableApiController
 
     public function __invoke($key, Request $request)
     {
-        if($key != config('taggy-recorder.enable-api-docs-key')) {
+        if ($key != config('taggy-recorder.enable-api-docs-key')) {
             abort(403);
         }
 
         session()->put(self::SESSION_KEY, true);
+
         return redirect()->route('scramble.docs.api');
     }
 }

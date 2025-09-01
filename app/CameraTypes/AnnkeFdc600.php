@@ -7,8 +7,6 @@ use App\Enums\Codec;
 use App\Enums\StreamingProtocol;
 use App\Enums\StreamQuality;
 use App\Models\Camera;
-use Illuminate\Http\Client\ConnectionException;
-use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
 use Symfony\Component\Process\Exception\ProcessTimedOutException;
@@ -16,12 +14,14 @@ use Symfony\Component\Process\Process;
 
 class AnnkeFdc600 extends RtspCamera
 {
-    public CONST VIDEO_WIDTH = 3632;
-    public CONST VIDEO_HEIGHT = 1632;
+    public const VIDEO_WIDTH = 3632;
+
+    public const VIDEO_HEIGHT = 1632;
 
     protected $latency = 2;
 
     public $streamingProtocol = StreamingProtocol::HLS;
+
     public $codec = Codec::H264;
 
     protected const MODEL_NAME = 'Annke FDC600';
@@ -29,7 +29,7 @@ class AnnkeFdc600 extends RtspCamera
     public static function discover()
     {
         // ToDo: reactivate when/if Annke is used
-        return new Collection();
+        return new Collection;
 
         return self::discoverByVendorMac('80:be:af');
     }
@@ -39,7 +39,7 @@ class AnnkeFdc600 extends RtspCamera
         return static::MODEL_NAME;
     }
 
-    public static function getDefaultCredentials() : array
+    public static function getDefaultCredentials(): array
     {
         return [
             'user' => 'admin',
@@ -47,11 +47,10 @@ class AnnkeFdc600 extends RtspCamera
         ];
     }
 
-
     public function getRtspUrl(Camera $camera, StreamQuality $quality = StreamQuality::HIGH)
     {
         $password = $camera->credentials['password'];
-        $passwordPart = strlen($password) > 0 ? ':' . $password : '';
+        $passwordPart = strlen($password) > 0 ? ':'.$password : '';
 
         return "rtsp://{$camera->credentials['user']}{$passwordPart}@{$camera->ip_address}:554/Streaming/Channels/101";
     }
@@ -66,12 +65,11 @@ class AnnkeFdc600 extends RtspCamera
             $process->run(function ($type, $buffer) use (&$output) {
                 return $output .= $buffer;
             });
-        }
-        catch(ProcessTimedOutException $e) {
+        } catch (ProcessTimedOutException $e) {
             return CameraStatus::NOT_REACHABLE;
         }
 
-        $status = match(true) {
+        $status = match (true) {
             Str::contains($output, 'No route to host') => CameraStatus::OFFLINE,
             Str::contains($output, '401 Unauthorized') => CameraStatus::AUTHENTICATION_FAILED,
             Str::contains($output, '404 Stream Not Found') => CameraStatus::STREAM_NOT_FOUND,
@@ -81,7 +79,7 @@ class AnnkeFdc600 extends RtspCamera
             default => CameraStatus::UNKNOWN_ERROR,
         };
 
-        if($status == CameraStatus::UNKNOWN_ERROR) {
+        if ($status == CameraStatus::UNKNOWN_ERROR) {
             info('Camera unknown error');
             info($output);
         }

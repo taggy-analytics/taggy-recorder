@@ -13,7 +13,7 @@ class SendLogToMothership
         $mothership = Mothership::make(endpoint: config('services.mothership.production.endpoint'));
 
         try {
-            foreach(RecorderLog::whereNull('reported_at')->get() as $logEntry) {
+            foreach (RecorderLog::whereNull('reported_at')->get() as $logEntry) {
                 $response = $mothership->log([
                     'occurred_at' => $logEntry->created_at->toDateTimeString(),
                     'type' => $logEntry->type->value,
@@ -21,14 +21,13 @@ class SendLogToMothership
                     'data' => $logEntry->data,
                 ]);
 
-                if($response == 'OK') {
+                if ($response == 'OK') {
                     $logEntry->update([
                         'reported_at' => now(),
                     ]);
                 }
             }
-        }
-        catch(MothershipException $exception) {
+        } catch (MothershipException $exception) {
 
         }
 

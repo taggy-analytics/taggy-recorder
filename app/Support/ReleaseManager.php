@@ -3,7 +3,6 @@
 namespace App\Support;
 
 use Illuminate\Support\Facades\File;
-use Illuminate\Support\Arr;
 
 class ReleaseManager
 {
@@ -11,6 +10,7 @@ class ReleaseManager
     {
         $directories = File::directories(base_path('..'));
         sort($directories);
+
         return $directories;
     }
 
@@ -21,6 +21,6 @@ class ReleaseManager
 
     public static function currentRelease()
     {
-        return trim(shell_exec('readlink ' . escapeshellarg(base_path('../../current'))));
+        return trim(shell_exec('readlink '.escapeshellarg(base_path('../../current'))));
     }
 }

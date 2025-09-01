@@ -66,6 +66,6 @@ class UserToken extends Model
                 ->on('user_tokens.entity_id', '=', 'latest_tokens.entity_id')
                 ->on('user_tokens.last_successfully_used_at', '=', 'latest_tokens.last_successfully_used_at');
         })->whereNull('last_rejected_at')
-        ->get();
+            ->get();
     }
 }

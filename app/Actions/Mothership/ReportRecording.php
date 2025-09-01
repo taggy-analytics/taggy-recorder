@@ -20,17 +20,14 @@ class ReportRecording extends Report
         // Maybe we have an issue when two syncs run in parallel?! Should not hurt.
         app(SyncTransactionsWithMothership::class)->execute();
 
-        if($toVideoResponse = $this->mothership->reportRecording($recording)) {
-            if($toVideoResponse == RecordingStatus::SESSION_NOT_FOUND_ON_MOTHERSHIP) {
+        if ($toVideoResponse = $this->mothership->reportRecording($recording)) {
+            if ($toVideoResponse == RecordingStatus::SESSION_NOT_FOUND_ON_MOTHERSHIP) {
                 $recording->setStatus(RecordingStatus::SESSION_NOT_FOUND_ON_MOTHERSHIP);
-            }
-            elseif($toVideoResponse == RecordingStatus::RECORDER_NOT_FOUND_ON_MOTHERSHIP) {
+            } elseif ($toVideoResponse == RecordingStatus::RECORDER_NOT_FOUND_ON_MOTHERSHIP) {
                 $recording->setStatus(RecordingStatus::RECORDER_NOT_FOUND_ON_MOTHERSHIP);
-            }
-            elseif($toVideoResponse == RecordingStatus::UNKNOWN_MOTHERSHIP_ERROR) {
+            } elseif ($toVideoResponse == RecordingStatus::UNKNOWN_MOTHERSHIP_ERROR) {
                 $recording->setStatus(RecordingStatus::UNKNOWN_MOTHERSHIP_ERROR);
-            }
-            else {
+            } else {
                 $livestreamedFiles = $recording
                     ->files
                     ->whereIn('name', $toVideoResponse['knownFiles'])

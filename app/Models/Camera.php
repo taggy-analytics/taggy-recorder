@@ -9,7 +9,6 @@ use App\Enums\RecordingMode;
 use App\Models\Traits\BroadcastsEvents;
 use Illuminate\Database\Eloquent\Casts\AsCollection;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Process;
 
 class Camera extends Model
@@ -23,10 +22,11 @@ class Camera extends Model
         'is_recording' => 'boolean',
     ];
 
-    public static function boot() {
+    public static function boot()
+    {
         parent::boot();
 
-        static::creating(function(Camera $camera) {
+        static::creating(function (Camera $camera) {
             $camera->credentials = $camera->getType()->getDefaultCredentials();
             $camera->status = $camera->status ?? CameraStatus::DISCOVERED;
         });
@@ -44,24 +44,23 @@ class Camera extends Model
 
     public function getStatus($refresh = true)
     {
-        if($refresh) {
+        if ($refresh) {
             $oldStatus = $this->status;
 
             // Workaround for slow ffprobe on RTSP stream on Reolink
             // ToDo: works only for RTSP currently
-            if($oldStatus == CameraStatus::READY && $this->isPortOpen(554)) {
+            if ($oldStatus == CameraStatus::READY && $this->isPortOpen(554)) {
                 $newStatus = CameraStatus::READY;
-            }
-            else {
+            } else {
                 $newStatus = $this->getType()->getStatus($this);
             }
 
             $this->status = $newStatus;
 
-            if($this->isDirty('status')) {
+            if ($this->isDirty('status')) {
                 $this->save();
                 app(CalculateLed::class)->execute();
-                info('Camera #' . $this->id . ' changed status: ' . $oldStatus->value . ' --> ' . $this->status->value);
+                info('Camera #'.$this->id.' changed status: '.$oldStatus->value.' --> '.$this->status->value);
             }
         }
 
@@ -72,6 +71,7 @@ class Camera extends Model
     {
         $isRecording = $this->getType()->isRecording($this);
         $this->update(['is_recording' => $isRecording]);
+
         return $isRecording;
     }
 
@@ -87,9 +87,9 @@ class Camera extends Model
             'video_format' => $this->getType()->getVideoFormat(),
         ]);
 
-        info('Starting recording # ' . $recording->id . ' for camera #' . $this->id);
+        info('Starting recording # '.$recording->id.' for camera #'.$this->id);
 
-        Process::start('php ' . base_path('artisan') . ' taggy:watch-recording-segments ' . $recording->id);
+        Process::start('php '.base_path('artisan').' taggy:watch-recording-segments '.$recording->id);
 
         $this->getType()->startRecording($this, $recording);
 
@@ -110,7 +110,7 @@ class Camera extends Model
             [
                 'type' => 'rtsp',
                 'url' => $this->getType()->getRtspUrl($this), // ToDo: works only for RTSP cameras for now
-            ]
+            ],
         ];
     }
 
@@ -118,7 +118,7 @@ class Camera extends Model
     {
         info('Stopping recording...');
 
-        if($this->getType()->stopRecording($this)) {
+        if ($this->getType()->stopRecording($this)) {
             $recording = $this->getLatestRecording();
             $recording->update(['stopped_at' => now()]);
             $recording->addM3u8EndTag();
@@ -142,9 +142,9 @@ class Camera extends Model
         return $this->recordings()->latest()->first();
     }
 
-    public function getType() : CameraType
+    public function getType(): CameraType
     {
-        return (new $this->type);
+        return new $this->type;
     }
 
     public static function noCameraIsRecording()
@@ -154,6 +154,7 @@ class Camera extends Model
                 return false;
             }
         }
+
         return true;
     }
 

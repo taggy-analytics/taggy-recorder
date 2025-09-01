@@ -25,16 +25,13 @@ class CleanTransactions
         $modalTransactions
             ->where('action', '<>', TransactionAction::DELETE)
             ->each(function (Transaction $transaction) use (&$cleanedTransactions) {
-                if(Arr::has($cleanedTransactions, $transaction->model_type . '.' . $transaction->model_id . '.delete')) {
+                if (Arr::has($cleanedTransactions, $transaction->model_type.'.'.$transaction->model_id.'.delete')) {
                     return;
-                }
-                elseif($transaction->action == TransactionAction::CREATE) {
+                } elseif ($transaction->action == TransactionAction::CREATE) {
                     $cleanedTransactions[$transaction->model_type][$transaction->model_id]['create'] = $transaction;
-                }
-                elseif($transaction->action == TransactionAction::UPDATE) {
+                } elseif ($transaction->action == TransactionAction::UPDATE) {
                     $cleanedTransactions[$transaction->model_type][$transaction->model_id]['update'][$transaction->property] = $transaction;
-                }
-                else {
+                } else {
                     $cleanedTransactions[$transaction->model_type][$transaction->model_id]['relation'][$transaction->property][serialize($transaction->value)] = $transaction;
                 }
             });
@@ -53,6 +50,6 @@ class CleanTransactions
         return Transaction::query()
             ->where('endpoint', $endpoint)
             ->where('entity_id', $entityId)
-            ->when(filled($lastTransactionsResetAt), fn($query) => $query->where('created_at', '>', $lastTransactionsResetAt));
+            ->when(filled($lastTransactionsResetAt), fn ($query) => $query->where('created_at', '>', $lastTransactionsResetAt));
     }
 }

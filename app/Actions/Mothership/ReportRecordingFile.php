@@ -9,9 +9,9 @@ class ReportRecordingFile extends Report
 {
     public function executeReport(RecordingFile $recordingFile): bool
     {
-        if($recordingFile->status == RecordingFileStatus::TO_BE_UPLOADED) {
+        if ($recordingFile->status == RecordingFileStatus::TO_BE_UPLOADED) {
             $remainingFiles = $recordingFile->recording->files()
-                ->where("status", RecordingFileStatus::TO_BE_UPLOADED)
+                ->where('status', RecordingFileStatus::TO_BE_UPLOADED)
                 ->count();
 
             $this->mothership->sendRecordingFile($recordingFile, $remainingFiles);

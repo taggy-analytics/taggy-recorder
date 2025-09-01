@@ -13,10 +13,10 @@ class EnsureRecorderTimeIsCorrect
 {
     public function handle(Request $request, Closure $next, string ...$guards): Response
     {
-        if($request->hasHeader('device-time')) {
+        if ($request->hasHeader('device-time')) {
             $timeDiffBetweenDeviceAndRecorder = abs(Carbon::parse($request->header('device-time'))->diffInMilliseconds());
 
-            if($timeDiffBetweenDeviceAndRecorder > config('taggy-recorder.date-time-tolerance')) {
+            if ($timeDiffBetweenDeviceAndRecorder > config('taggy-recorder.date-time-tolerance')) {
                 app(SetSystemTime::class)->execute(CarbonImmutable::parse($request->header('device-time')));
             }
         }

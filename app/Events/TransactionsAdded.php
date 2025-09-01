@@ -10,8 +10,8 @@ class TransactionsAdded extends EntityBroadcastEvent
         protected $entityId,
         public $transactions,
         public $origin,
-    ){
-        $this->transactions = Arr::map($this->transactions, fn($transaction) => Arr::except($transaction, 'user_token_id'));
+    ) {
+        $this->transactions = Arr::map($this->transactions, fn ($transaction) => Arr::except($transaction, 'user_token_id'));
         parent::__construct($entityId, $origin);
     }
 

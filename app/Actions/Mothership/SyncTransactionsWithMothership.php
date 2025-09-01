@@ -12,16 +12,17 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\File;
 
-
 class SyncTransactionsWithMothership
 {
     public const HASH_SUBSTRING_LENGTH = 3;
+
     public const SEGMENT_SIZE_FACTOR = 0.2;
+
     public const SEGMENT_MIN_SIZE = 20;
 
     public function execute()
     {
-        if(cache()->get('sync-transactions-running')) {
+        if (cache()->get('sync-transactions-running')) {
             Recorder::make()->log(LogMessageType::SYNC_TRANSACTIONS_ALREADY_RUNNING);
         }
 
@@ -29,7 +30,7 @@ class SyncTransactionsWithMothership
 
         $userTokens = UserToken::byEndpointAndEntity();
 
-        foreach($userTokens as $userToken) {
+        foreach ($userTokens as $userToken) {
             try {
                 // Let's make sure we have a valid user token
                 // ToDo: we could iterate through all tokens until we don't get a 401/403
@@ -48,64 +49,65 @@ class SyncTransactionsWithMothership
                 $checkSync = $mothership
                     ->getTransactionsStatus($userToken->entity_id, $hashes, self::HASH_SUBSTRING_LENGTH);
 
-                if(!Arr::has($checkSync, 'transactions_in_sync')) {
+                if (! Arr::has($checkSync, 'transactions_in_sync')) {
                     info('Invalid response from mothership:');
                     info($checkSync);
+
                     continue;
                 }
 
-                if(!$checkSync['transactions_in_sync']) {
-                    //foreach($userTokenTransactions as $userTokenId => $transactions) {
-                        $transactions = $this->getQuery($userToken->entity_id, $userToken->endpoint)
-                            //->where('reported_to_mothership', false)
-                            ->when(filled($checkSync['last_transaction_in_sync']),
-                                fn(Builder $query) => $query->where('created_at', '>', Transaction::firstWhere('id', $checkSync['last_transaction_in_sync'])->created_at))
-                            ->get(['id', 'entity_id', 'user_id', 'parent_1', 'parent_2', 'model_type', 'model_id', 'action', 'property', 'value', 'created_at']);
+                if (! $checkSync['transactions_in_sync']) {
+                    // foreach($userTokenTransactions as $userTokenId => $transactions) {
+                    $transactions = $this->getQuery($userToken->entity_id, $userToken->endpoint)
+                        // ->where('reported_to_mothership', false)
+                        ->when(filled($checkSync['last_transaction_in_sync']),
+                            fn (Builder $query) => $query->where('created_at', '>', Transaction::firstWhere('id', $checkSync['last_transaction_in_sync'])->created_at))
+                        ->get(['id', 'entity_id', 'user_id', 'parent_1', 'parent_2', 'model_type', 'model_id', 'action', 'property', 'value', 'created_at']);
 
-                        $reportResponse = $mothership
-                            ->reportTransactions($userToken->entity_id, $transactions, $checkSync['last_transaction_in_sync']);
+                    $reportResponse = $mothership
+                        ->reportTransactions($userToken->entity_id, $transactions, $checkSync['last_transaction_in_sync']);
 
-                        if(!$reportResponse) {
-                            Recorder::make()->log(LogMessageType::REPORTING_TRANSACTIONS_FAILED, 'Reporting failed', [
-                                'entity' => $userToken->entity_id,
-                                'transactions' => $transactions,
-                                'lastTransactionInSync' => $checkSync['last_transaction_in_sync'],
-                            ]);
-                            return;
-                        }
+                    if (! $reportResponse) {
+                        Recorder::make()->log(LogMessageType::REPORTING_TRANSACTIONS_FAILED, 'Reporting failed', [
+                            'entity' => $userToken->entity_id,
+                            'transactions' => $transactions,
+                            'lastTransactionInSync' => $checkSync['last_transaction_in_sync'],
+                        ]);
 
-                        if(count($reportResponse['transactions']) == 0) {
-                            return;
-                        }
+                        return;
+                    }
 
-                        $cleanedTransactions = collect($reportResponse['transactions']);
+                    if (count($reportResponse['transactions']) == 0) {
+                        return;
+                    }
 
-                        $databaseUuids = $this->getQuery($userToken->entity_id, $userToken->endpoint)->pluck('id');
+                    $cleanedTransactions = collect($reportResponse['transactions']);
 
-                        $cleanedTransactionsUuids = $cleanedTransactions->pluck('id');
-                        $uuidsInCleanedTransactionsButNotInDatabase = $cleanedTransactionsUuids->diff($databaseUuids);
+                    $databaseUuids = $this->getQuery($userToken->entity_id, $userToken->endpoint)->pluck('id');
 
-                        $transactionsToInsert = $cleanedTransactions
-                            ->whereIn('id', $uuidsInCleanedTransactionsButNotInDatabase)
-                            ->hydrateTransactions($userToken->endpoint)
-                            ->toArray();
+                    $cleanedTransactionsUuids = $cleanedTransactions->pluck('id');
+                    $uuidsInCleanedTransactionsButNotInDatabase = $cleanedTransactionsUuids->diff($databaseUuids);
 
-                        Transaction::insertChunked(Arr::encodeValue($transactionsToInsert));
+                    $transactionsToInsert = $cleanedTransactions
+                        ->whereIn('id', $uuidsInCleanedTransactionsButNotInDatabase)
+                        ->hydrateTransactions($userToken->endpoint)
+                        ->toArray();
 
-                        if($reportResponse['content'] == 'all-transactions') {
-                            $uuidsInDatabaseButNotInCleanedTransactions = $databaseUuids->diff($cleanedTransactionsUuids);
+                    Transaction::insertChunked(Arr::encodeValue($transactionsToInsert));
 
-                            Transaction::query()
-                                ->whereIn('id', $uuidsInDatabaseButNotInCleanedTransactions)
-                                ->delete();
-                        }
-                    //}
+                    if ($reportResponse['content'] == 'all-transactions') {
+                        $uuidsInDatabaseButNotInCleanedTransactions = $databaseUuids->diff($cleanedTransactionsUuids);
+
+                        Transaction::query()
+                            ->whereIn('id', $uuidsInDatabaseButNotInCleanedTransactions)
+                            ->delete();
+                    }
+                    // }
                 }
-            }
-            catch(MothershipException $exception) {
-                if($exception->response->status() < 500) {
+            } catch (MothershipException $exception) {
+                if ($exception->response->status() < 500) {
                     // ToDo: what to do in this case!?
-                    info('Transactions could not be synced for entity #' . $userToken->entity_id . ' (HTTP status ' . $exception->response->status() . ')');
+                    info('Transactions could not be synced for entity #'.$userToken->entity_id.' (HTTP status '.$exception->response->status().')');
                 }
                 cache()->forget('sync-transactions-running');
                 throw $exception;
@@ -115,12 +117,13 @@ class SyncTransactionsWithMothership
         cache()->forget('sync-transactions-running');
     }
 
-    private function getSegmentsHash($uuids, $factor, $minSize, $entityId) {
+    private function getSegmentsHash($uuids, $factor, $minSize, $entityId)
+    {
         $segments = [];
 
         $currentIndex = -1;
 
-        $debug = implode(PHP_EOL, $uuids) . PHP_EOL . PHP_EOL;
+        $debug = implode(PHP_EOL, $uuids).PHP_EOL.PHP_EOL;
 
         while (count($uuids) > 0) {
             $hashData = '';
@@ -133,13 +136,13 @@ class SyncTransactionsWithMothership
                 $currentIndex++;
             }
 
-            $debug .= crc32($hashData) . ' ' . $hashData . PHP_EOL;
+            $debug .= crc32($hashData).' '.$hashData.PHP_EOL;
 
             $segments[$currentIndex] = crc32($hashData);
         }
 
-        if(config('app.debug')) {
-            File::put(storage_path('logs/transactions-' . $entityId . '.log'), $debug);
+        if (config('app.debug')) {
+            File::put(storage_path('logs/transactions-'.$entityId.'.log'), $debug);
         }
 
         return $segments;

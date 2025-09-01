@@ -3,7 +3,6 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
-use Illuminate\Support\Arr;
 
 class HandleLed extends Command
 {
@@ -39,13 +38,13 @@ class HandleLed extends Command
         $this->deluminate(collect($colors)->flatten()->diff($pins));
         $this->illuminate($pins);
 
-        if($interval = $this->argument('interval')) {
+        if ($interval = $this->argument('interval')) {
             do {
                 usleep($interval * 1000);
                 $this->deluminate($pins);
                 usleep($interval * 1000);
                 $this->illuminate($pins);
-            } while(true);
+            } while (true);
         }
 
         return 0;
@@ -63,7 +62,7 @@ class HandleLed extends Command
 
     private function setPins($pins, $value)
     {
-        foreach($pins as $pin) {
+        foreach ($pins as $pin) {
             exec("gpioset gpiochip0 {$pin}={$value}");
         }
     }

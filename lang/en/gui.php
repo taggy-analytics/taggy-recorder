@@ -37,7 +37,7 @@ return [
             'description-2' => 'After switching, this GUI won\'t be available any more and all settings will have to be managed centrally at https://admin.taggy.cam.',
             'description-3' => 'You should be absolutely aware of what you are doing!',
             'are-you-sure' => 'Are you sure you want to switch to pro mode now?',
-            'switched-to-pro-mode' => 'The recorder has been switched to pro mode. After you leave this page, this GUI is not reachable anymore.'
+            'switched-to-pro-mode' => 'The recorder has been switched to pro mode. After you leave this page, this GUI is not reachable anymore.',
         ],
     ],
 ];

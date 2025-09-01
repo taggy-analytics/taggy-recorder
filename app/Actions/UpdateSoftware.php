@@ -16,24 +16,22 @@ class UpdateSoftware
 
             try {
                 $newVersion = $mothership->checkForUpdateFile();
-            }
-            catch(\Exception $exception) {
+            } catch (\Exception $exception) {
                 return [
                     'updated' => false,
                     'version' => Recorder::make()->currentSoftwareVersion(),
-                    'message' => 'Error while connecting to mothership: ' . $exception->getMessage(),
+                    'message' => 'Error while connecting to mothership: '.$exception->getMessage(),
                 ];
             }
 
-            if($newVersion) {
+            if ($newVersion) {
                 return app(UpdateSoftwareExecute::class)
                     ->execute($newVersion['version'], $newVersion['filename']);
-            }
-            else {
+            } else {
                 return [
                     'updated' => false,
                     'version' => Recorder::make()->currentSoftwareVersion(),
-                    'message' => 'Recorder is already running on latest software (' . Recorder::make()->currentSoftwareVersion() . ').',
+                    'message' => 'Recorder is already running on latest software ('.Recorder::make()->currentSoftwareVersion().').',
                 ];
             }
         });

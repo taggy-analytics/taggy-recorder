@@ -22,8 +22,11 @@ use Spatie\Crypto\Rsa\KeyPair;
 class Recorder
 {
     public const CURRENT_SOFTWARE_VERSION_FILENAME = 'software-version.txt';
+
     public const RECOVERY_PASSWORD_FILENAME = 'recovery-password.txt';
+
     public const RUNNING_UPLOAD_FILENAME = 'running-upload.txt';
+
     public const CURRENT_LEDS_FILENAME = 'current-leds.txt';
 
     public static function make()
@@ -33,7 +36,7 @@ class Recorder
 
     public function getSystemId()
     {
-        if(DotenvEditor::keyExists('SYSTEM_ID')) {
+        if (DotenvEditor::keyExists('SYSTEM_ID')) {
             return DotenvEditor::getValue('SYSTEM_ID');
         }
     }
@@ -45,15 +48,15 @@ class Recorder
 
     private function getRunningProcesses($string)
     {
-        exec('ps ahxwwo pid:1,command:1 |grep "' . $string .'"', $processes);
+        exec('ps ahxwwo pid:1,command:1 |grep "'.$string.'"', $processes);
 
         return collect($processes)
-            ->map(fn($process) => preg_split('/\s+/', trim($process)))
-            ->map(fn($process) => [
+            ->map(fn ($process) => preg_split('/\s+/', trim($process)))
+            ->map(fn ($process) => [
                 'processId' => Arr::get($process, 0),
                 'input' => Arr::get($process, 3),
             ])
-            ->filter(fn($process) => !in_array($process['input'], [null, 'ps']));
+            ->filter(fn ($process) => ! in_array($process['input'], [null, 'ps']));
     }
 
     public function led($colors, $interval = 0)
@@ -62,8 +65,8 @@ class Recorder
 
         $status = [$colors, $interval];
 
-        if($this->currentLeds() != $status || count($this->getRunningProcesses('led.py')) == 1) {
-            foreach($this->getRunningProcesses('led.py') as $process) {
+        if ($this->currentLeds() != $status || count($this->getRunningProcesses('led.py')) == 1) {
+            foreach ($this->getRunningProcesses('led.py') as $process) {
                 posix_kill($process['processId'], 9);
             }
 
@@ -81,14 +84,14 @@ class Recorder
 
     public function waitUntilAllNeededServicesAreUpAndRunning()
     {
-        while(!Recorder::make()->allNeededServicesAreUpAndRunning()) {
+        while (! Recorder::make()->allNeededServicesAreUpAndRunning()) {
             sleep(5);
-        };
+        }
     }
 
     private function currentLeds($leds = null)
     {
-        if(is_null($leds)) {
+        if (is_null($leds)) {
             return json_decode(Storage::get(self::CURRENT_LEDS_FILENAME), true);
         }
 
@@ -112,34 +115,33 @@ class Recorder
     {
         $exists = Storage::exists(self::RUNNING_UPLOAD_FILENAME);
 
-        if(!Mothership::make()->isOnline()) {
+        if (! Mothership::make()->isOnline()) {
             Storage::delete(self::RUNNING_UPLOAD_FILENAME);
         }
 
-        if(is_null($uploading)) {
+        if (is_null($uploading)) {
             return Storage::exists(self::RUNNING_UPLOAD_FILENAME);
-        }
-        elseif($uploading) {
+        } elseif ($uploading) {
             Storage::put(self::RUNNING_UPLOAD_FILENAME, '');
-        }
-        else {
+        } else {
             Storage::delete(self::RUNNING_UPLOAD_FILENAME);
         }
 
-        if($calculateLed) {
+        if ($calculateLed) {
             app(CalculateLed::class)->execute();
         }
     }
 
     public function logMeasure($type, $message)
     {
-        File::append(storage_path('logs/' . $type . '.log'), now()->toDateTimeString() . ' ' . $message . PHP_EOL);
+        File::append(storage_path('logs/'.$type.'.log'), now()->toDateTimeString().' '.$message.PHP_EOL);
     }
 
     public function getUptime()
     {
         $uptime = explode(' ', file_get_contents('/proc/uptime'));
         $uptime_seconds = floatval($uptime[0]);
+
         return $uptime_seconds;
     }
 
@@ -147,16 +149,16 @@ class Recorder
     {
         $keysDirectory = storage_path('app/keys');
 
-        if(!File::exists($keysDirectory . '/public.key')) {
-            (new KeyPair())->generate($keysDirectory . '/private.key', $keysDirectory . '/public.key');
+        if (! File::exists($keysDirectory.'/public.key')) {
+            (new KeyPair)->generate($keysDirectory.'/private.key', $keysDirectory.'/public.key');
         }
 
-        return File::get($keysDirectory . '/public.key');
+        return File::get($keysDirectory.'/public.key');
     }
 
     public function getRecoveryPassword()
     {
-        if(!Storage::has(self::RECOVERY_PASSWORD_FILENAME)) {
+        if (! Storage::has(self::RECOVERY_PASSWORD_FILENAME)) {
             $passwordParts = [
                 Str::random(4),
                 Str::random(4),
@@ -196,7 +198,7 @@ class Recorder
 
     public function activateProMode()
     {
-        if($this->inProMode()) {
+        if ($this->inProMode()) {
             throw new Exception('Recorder already in pro mode.');
         }
 
@@ -210,8 +212,7 @@ class Recorder
             return Http::timeout(1)
                 ->get('https://www.google.com')
                 ->successful();
-        }
-        catch(Exception $exception) {
+        } catch (Exception $exception) {
             return false;
         }
     }

@@ -37,7 +37,7 @@ class CameraController extends Controller
 
     public function startRecording(Camera $camera, StartRecordingRequest $request)
     {
-        if($camera->isRecording()) {
+        if ($camera->isRecording()) {
             abort(409, 'Camera is already recording.');
         }
 
@@ -49,12 +49,12 @@ class CameraController extends Controller
 
     public function stopRecording(Camera $camera)
     {
-        if(!$camera->isRecording()) {
+        if (! $camera->isRecording()) {
             abort(409, 'Camera is not recording.');
         }
         $recording = $camera->stopRecording();
 
-        if(!$recording) {
+        if (! $recording) {
             abort(422, 'Recording could not be stopped.');
         }
 
@@ -63,7 +63,7 @@ class CameraController extends Controller
 
     public function currentRecording(Camera $camera)
     {
-        if(!$camera->isRecording()) {
+        if (! $camera->isRecording()) {
             return null;
         }
 

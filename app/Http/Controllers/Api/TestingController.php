@@ -12,7 +12,7 @@ class TestingController extends Controller
     {
         cache()->put('connectedToMothership', $request->connected, now()->addDay());
 
-        if($request->connected) {
+        if ($request->connected) {
             app(SyncTransactionsWithMothership::class)
                 ->execute();
         }

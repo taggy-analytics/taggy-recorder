@@ -11,8 +11,8 @@ class CreateFakeUserForBroadcastingAuth
 {
     public function handle(Request $request, Closure $next, string ...$guards): Response
     {
-        if(auth()->guest()) {
-            auth()->login(new User());
+        if (auth()->guest()) {
+            auth()->login(new User);
         }
 
         return $next($request);

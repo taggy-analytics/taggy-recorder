@@ -5,7 +5,7 @@ return [
         'segment-duration' => env('HLS_SEGMENT_DURATION', 6),
         'thumbnails' => [
             'nth' => 20,
-        ]
+        ],
     ],
     'releases-to-keep' => 4,
     'mothership-logging-key' => env('MOTHERSHIP_LOGGING_KEY'),
@@ -26,5 +26,5 @@ return [
     'software' => [
         'repository' => 'taggy-analytics/taggy-recorder',
         'update-channel' => env('UPDATE_CHANNEL', 'prod'),
-    ]
+    ],
 ];

@@ -14,9 +14,9 @@ class UserResource extends JsonResource
             'name' => $this->name,
             'email' => $this->email,
             'is_super_admin' => false,
-            //'memberships' => EntityMembershipResource::collection($this->entityMemberships),
-            //'disks' => StorageDiskResource::collection(StorageDisk::all()),
-            //'data' => Mothership::make()
+            // 'memberships' => EntityMembershipResource::collection($this->entityMemberships),
+            // 'disks' => StorageDiskResource::collection(StorageDisk::all()),
+            // 'data' => Mothership::make()
             //    // Only around 245 characters can be used (https://stackoverflow.com/a/18845100/9289888)
             //    ->encrypt([
             //        'id' => $this->id,

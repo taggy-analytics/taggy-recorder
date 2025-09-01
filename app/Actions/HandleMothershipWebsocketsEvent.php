@@ -15,20 +15,20 @@ class HandleMothershipWebsocketsEvent
 {
     public function execute(WebsocketEventType $eventType, $entityId, $data)
     {
-        $method = 'run' . Str::studly(strtolower($eventType->name));
+        $method = 'run'.Str::studly(strtolower($eventType->name));
 
-        if(method_exists($this, $method)) {
+        if (method_exists($this, $method)) {
             $this->$method($entityId, $data);
         }
     }
 
     private function runSubscriptionSucceeded()
     {
-        if(cache()->get('sync-transactions-running')) {
+        if (cache()->get('sync-transactions-running')) {
             info('Sync already running.');
+
             return;
-        }
-        else {
+        } else {
             info('Starting sync');
         }
 
@@ -43,7 +43,7 @@ class HandleMothershipWebsocketsEvent
             ->hydrateTransactions(Mothership::getEndpoint())
             ->toArray();
 
-        if(count($newTransactions) > 0) {
+        if (count($newTransactions) > 0) {
             Transaction::insertChunked(Arr::encodeValue($newTransactions));
 
             broadcast(new TransactionsAdded($entityId, $newTransactions, Recorder::make()->getSystemId()));

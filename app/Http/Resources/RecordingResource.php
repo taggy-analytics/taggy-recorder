@@ -2,7 +2,6 @@
 
 namespace App\Http\Resources;
 
-use App\Enums\RecordingStatus;
 use App\Enums\RecordingType;
 use Illuminate\Http\Resources\Json\JsonResource;
 

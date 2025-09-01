@@ -10,12 +10,12 @@ trait BashMigration
 {
     protected function removeFile($path)
     {
-        Process::run('sudo rm ' . $path);
+        Process::run('sudo rm '.$path);
     }
 
     protected function writeFileIfNotExists($path, $content)
     {
-        if(!File::exists($path)) {
+        if (! File::exists($path)) {
             $escapedContent = escapeshellarg($content);
             $command = "echo $escapedContent | sudo tee $path";
             shell_exec($command);
