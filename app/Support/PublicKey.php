@@ -7,9 +7,9 @@ use Illuminate\Support\Facades\Storage;
 
 class PublicKey extends \Spatie\Crypto\Rsa\PublicKey
 {
-    public static function get()
+    public static function get($environment = null)
     {
-        $environment = request()->environmentData();
+        $environment ??= request()->environmentData();
 
         if (empty($environment)) {
             return null;
