@@ -14,6 +14,7 @@ return [
     'enable-api-docs-key' => env('ENABLE_API_DOCS_KEY'),
     'recording' => [
         'restart-aborted-recordings-timeout' => 15,
+        'stream-quality' => env('STREAM_QUALITY', 'HIGH'),
     ],
     'log-requests' => env('LOG_REQUESTS', false),
     'hostname' => env('HOSTNAME', 'taggy'),

@@ -47,7 +47,7 @@ abstract class RtspCamera extends CameraType
         ];
 
         $options = [
-            '-tag:v hvc1',
+            // '-tag:v hvc1',
             '-f hls',
             '-hls_time '.$segmentDuration,
             '-hls_list_size 0',
@@ -57,13 +57,16 @@ abstract class RtspCamera extends CameraType
         ];
 
         if (config('taggy-recorder.ffmpeg.record-audio')) {
-            $options[] = '-c:a aac';
-            $options[] = '-b:a 96k';
+            // $options[] = '-c:a aac';
+            // $options[] = '-b:a 96k';
+            $options[] = '-c:a copy';
         } else {
             $options[] = '-an';
         }
 
-        FFMpegCommand::run($this->getRtspUrl($camera), $outputFile, $options, $beforeInputOptions);
+        $streamQuality = StreamQuality::{config('taggy-recorder.recording.stream-quality')};
+
+        FFMpegCommand::run($this->getRtspUrl($camera, $streamQuality), $outputFile, $options, $beforeInputOptions);
     }
 
     public function stopRecording(Camera $camera)
