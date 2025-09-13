@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\MothershipReportStatus;
 use App\Models\Traits\InsertsChunked;
 use Illuminate\Database\Eloquent\Model;
 
@@ -14,6 +15,7 @@ class MothershipReport extends Model
         'reported_at' => 'datetime',
         'processed_at' => 'datetime',
         'ready_to_send' => 'boolean',
+        'status' => MothershipReportStatus::class,
     ];
 
     public function model()

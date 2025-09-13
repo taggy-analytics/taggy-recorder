@@ -2,6 +2,7 @@
 
 namespace App\Actions\Mothership;
 
+use App\Enums\MothershipReportStatus;
 use App\Support\Mothership;
 
 abstract class Report
@@ -13,7 +14,10 @@ abstract class Report
         try {
             $this->mothership = Mothership::make($model->mothershipReport->userToken);
             if ($this->executeReport($model)) {
-                $model->mothershipReport->update(['processed_at' => now()]);
+                $model->mothershipReport->update([
+                    'processed_at' => now(),
+                    'status' => MothershipReportStatus::Processed,
+                ]);
             }
 
             return true;
