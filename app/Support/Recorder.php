@@ -14,6 +14,7 @@ use Exception;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Process;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Jackiedo\DotenvEditor\Facades\DotenvEditor;
@@ -204,6 +205,11 @@ class Recorder
 
         DotenvEditor::setKey('SYSTEM_ID', Str::random());
         DotenvEditor::save();
+
+        File::replaceInFile('{recorderId}', $this->getSystemId(), '/etc/frp/frpc.toml');
+        File::replaceInFile('autostart=false', 'autostart=true', '/etc/supervisor/conf.d/frpc.conf');
+        Process::run('sudo supervisorctl update');
+        Process::run('sudo supervisorctl start frpc');
     }
 
     public function connectedToInternet()
