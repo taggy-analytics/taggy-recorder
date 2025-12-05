@@ -54,9 +54,9 @@ class GliNet
             ]);
 
             $cipherPassword = match ($data['alg']) {
-                1 => crypt($password, '$1$'.$data['salt']),
-                5 => crypt($password, '$5$rounds=5000$'.$data['salt']),
-                6 => crypt($password, '$6$rounds=5000$'.$data['salt']),
+                1 => crypt($password, '$1$' . $data['salt']),
+                5 => crypt($password, '$5$rounds=5000$' . $data['salt']),
+                6 => crypt($password, '$6$rounds=5000$' . $data['salt']),
             };
 
             $hash = md5("{$username}:{$cipherPassword}:{$data['nonce']}");

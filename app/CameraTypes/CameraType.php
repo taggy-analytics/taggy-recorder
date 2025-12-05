@@ -73,7 +73,7 @@ abstract class CameraType
     {
         $cameras = [];
         foreach (File::files(__DIR__) as $file) {
-            $className = __NAMESPACE__.'\\'.$file->getFilenameWithoutExtension();
+            $className = __NAMESPACE__ . '\\' . $file->getFilenameWithoutExtension();
             if (! (new \ReflectionClass($className))->isAbstract()) {
                 $cameras[] = new $className;
             }

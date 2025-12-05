@@ -18,7 +18,7 @@ class SendTemperatureLogToMothership
                 ->mapWithKeys(function ($line) {
                     $parts = explode(' ', $line);
 
-                    return [$parts[0].' '.$parts[1] => $parts[2]];
+                    return [$parts[0] . ' ' . $parts[1] => $parts[2]];
                 });
 
             $mothership->sendTemperatureLog($data);

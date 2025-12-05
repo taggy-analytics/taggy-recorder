@@ -22,7 +22,7 @@ class Network
             return new Collection;
         }
 
-        $nmap = Process::run('sudo nmap -sn -PR -T5 -oX - '.$subnet)
+        $nmap = Process::run('sudo nmap -sn -PR -T5 -oX - ' . $subnet)
             ->output();
 
         $xml = simplexml_load_string($nmap);
@@ -75,8 +75,8 @@ class Network
         [$ip, $netmask] = explode('/', trim($cidr));
 
         $ipParts = explode('.', $ip);
-        $subnetStart = implode('.', array_slice($ipParts, 0, -1)).'.0';
+        $subnetStart = implode('.', array_slice($ipParts, 0, -1)) . '.0';
 
-        return $subnetStart.'/'.$netmask;
+        return $subnetStart . '/' . $netmask;
     }
 }

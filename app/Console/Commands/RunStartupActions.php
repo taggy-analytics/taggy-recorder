@@ -26,7 +26,7 @@ class RunStartupActions extends Command
         $mutexCleared = false;
 
         foreach ($schedule->events($this->laravel) as $event) {
-            info('Checking '.$event->command);
+            info('Checking ' . $event->command);
             if ($event->mutex->exists($event)) {
                 info(sprintf('Deleting mutex for [%s]', $event->command));
 

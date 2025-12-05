@@ -63,21 +63,21 @@ class SoftwareUpdate extends Page implements HasActions, HasForms
             return false;
         }
 
-        $repo = 'https://api.github.com/repos/'.config('taggy-recorder.software.repository');
+        $repo = 'https://api.github.com/repos/' . config('taggy-recorder.software.repository');
         if (config('taggy-recorder.software.update-channel') === 'prod') {
-            $updateVersion = Http::get($repo.'/releases/tags/prod')->json();
+            $updateVersion = Http::get($repo . '/releases/tags/prod')->json();
 
             return [
                 'name' => $updateVersion['name'],
                 'url' => $updateVersion['tarball_url'],
             ];
         } else {
-            $updateVersion = Http::get($repo.'/commits?sha=master')->json();
+            $updateVersion = Http::get($repo . '/commits?sha=master')->json();
             $sha = Arr::get($updateVersion, '0.sha');
 
             return [
                 'name' => $sha,
-                'url' => 'https://github.com/'.config('taggy-recorder.software.repository').'/archive/'.$sha.'.zip',
+                'url' => 'https://github.com/' . config('taggy-recorder.software.repository') . '/archive/' . $sha . '.zip',
             ];
         }
     }

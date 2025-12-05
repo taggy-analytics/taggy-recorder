@@ -20,7 +20,7 @@ class UpdateSoftware
                 return [
                     'updated' => false,
                     'version' => Recorder::make()->currentSoftwareVersion(),
-                    'message' => 'Error while connecting to mothership: '.$exception->getMessage(),
+                    'message' => 'Error while connecting to mothership: ' . $exception->getMessage(),
                 ];
             }
 
@@ -31,7 +31,7 @@ class UpdateSoftware
                 return [
                     'updated' => false,
                     'version' => Recorder::make()->currentSoftwareVersion(),
-                    'message' => 'Recorder is already running on latest software ('.Recorder::make()->currentSoftwareVersion().').',
+                    'message' => 'Recorder is already running on latest software (' . Recorder::make()->currentSoftwareVersion() . ').',
                 ];
             }
         });

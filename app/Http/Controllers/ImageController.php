@@ -6,6 +6,6 @@ class ImageController extends Controller
 {
     public function __invoke($image)
     {
-        return response()->download(resource_path('images/'.$image));
+        return response()->download(resource_path('images/' . $image));
     }
 }

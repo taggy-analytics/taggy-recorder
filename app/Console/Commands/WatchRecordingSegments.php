@@ -40,6 +40,6 @@ class WatchRecordingSegments extends Command
             'content' => $content,
         ]);
 
-        Storage::put('segments-m3u8/segment-m3u8-'.$segment->id, $m3u8Content);
+        Storage::put('segments-m3u8/segment-m3u8-' . $segment->id, $m3u8Content);
     }
 }

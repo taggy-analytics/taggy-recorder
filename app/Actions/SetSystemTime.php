@@ -51,7 +51,7 @@ class SetSystemTime
                 $output = [];
                 $returnCode = 0;
 
-                exec($command.' 2>&1', $output, $returnCode);
+                exec($command . ' 2>&1', $output, $returnCode);
 
                 $results[] = [
                     'command' => $command,
@@ -61,7 +61,7 @@ class SetSystemTime
                 ];
 
                 if ($returnCode !== 0) {
-                    $errorMessage = "Command failed: {$command}. Output: ".implode("\n", $output);
+                    $errorMessage = "Command failed: {$command}. Output: " . implode("\n", $output);
                     Log::error($errorMessage);
                     throw new Exception($errorMessage);
                 }
@@ -80,7 +80,7 @@ class SetSystemTime
 
             return [
                 'success' => true,
-                'message' => "System time successfully set to: {$formattedDateTime}".($timezone ? " ({$timezone})" : ''),
+                'message' => "System time successfully set to: {$formattedDateTime}" . ($timezone ? " ({$timezone})" : ''),
                 'requested_datetime' => $carbonDateTime->toISOString(),
                 'formatted_datetime' => $formattedDateTime,
                 'current_time' => $currentTime->toISOString(),
@@ -89,7 +89,7 @@ class SetSystemTime
             ];
 
         } catch (Exception $e) {
-            Log::error('Failed to set system time: '.$e->getMessage(), [
+            Log::error('Failed to set system time: ' . $e->getMessage(), [
                 'datetime' => $datetime->toISOString(),
                 'timezone' => $timezone,
             ]);
@@ -204,7 +204,7 @@ class SetSystemTime
                 Log::info('NTP synchronization enabled', [
                     'before_enable' => $beforeTime->toISOString(),
                     'after_enable' => $afterTime->toISOString(),
-                    'time_difference' => $beforeTime->diffInSeconds($afterTime).' seconds',
+                    'time_difference' => $beforeTime->diffInSeconds($afterTime) . ' seconds',
                 ]);
 
                 return [
@@ -215,11 +215,11 @@ class SetSystemTime
                     'output' => implode("\n", $output),
                 ];
             } else {
-                throw new Exception('Failed to enable NTP: '.implode("\n", $output));
+                throw new Exception('Failed to enable NTP: ' . implode("\n", $output));
             }
 
         } catch (Exception $e) {
-            Log::error('Failed to enable NTP: '.$e->getMessage());
+            Log::error('Failed to enable NTP: ' . $e->getMessage());
 
             return [
                 'success' => false,

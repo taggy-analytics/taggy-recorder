@@ -49,7 +49,7 @@ class Recorder
 
     private function getRunningProcesses($string)
     {
-        exec('ps ahxwwo pid:1,command:1 |grep "'.$string.'"', $processes);
+        exec('ps ahxwwo pid:1,command:1 |grep "' . $string . '"', $processes);
 
         return collect($processes)
             ->map(fn ($process) => preg_split('/\s+/', trim($process)))
@@ -135,7 +135,7 @@ class Recorder
 
     public function logMeasure($type, $message)
     {
-        File::append(storage_path('logs/'.$type.'.log'), now()->toDateTimeString().' '.$message.PHP_EOL);
+        File::append(storage_path('logs/' . $type . '.log'), now()->toDateTimeString() . ' ' . $message . PHP_EOL);
     }
 
     public function getUptime()
@@ -150,11 +150,11 @@ class Recorder
     {
         $keysDirectory = storage_path('app/keys');
 
-        if (! File::exists($keysDirectory.'/public.key')) {
-            (new KeyPair)->generate($keysDirectory.'/private.key', $keysDirectory.'/public.key');
+        if (! File::exists($keysDirectory . '/public.key')) {
+            (new KeyPair)->generate($keysDirectory . '/private.key', $keysDirectory . '/public.key');
         }
 
-        return File::get($keysDirectory.'/public.key');
+        return File::get($keysDirectory . '/public.key');
     }
 
     public function getRecoveryPassword()

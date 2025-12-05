@@ -64,7 +64,7 @@ class UploadRecordings extends Command
 
                     continue;
                 }
-                $actionClass = 'App\\Actions\\Mothership\\Report'.(new \ReflectionClass($mothershipReport->model))->getShortName();
+                $actionClass = 'App\\Actions\\Mothership\\Report' . (new \ReflectionClass($mothershipReport->model))->getShortName();
                 $mothershipReport->update(['reported_at' => now()]);
                 if (! app($actionClass)->execute($mothershipReport->model)) {
                     $errored = true;

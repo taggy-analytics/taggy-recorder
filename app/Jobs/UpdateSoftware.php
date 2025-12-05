@@ -21,9 +21,9 @@ class UpdateSoftware implements ShouldQueue
     {
         self::putLock();
 
-        $filename = $this->updateVersion['name'].'.zip';
+        $filename = $this->updateVersion['name'] . '.zip';
 
-        Storage::put('releases/'.$filename, file_get_contents($this->updateVersion['url']));
+        Storage::put('releases/' . $filename, file_get_contents($this->updateVersion['url']));
 
         $updateResult = app(UpdateSoftwareExecute::class)
             ->execute($this->updateVersion['name'], $filename);

@@ -25,7 +25,7 @@ class CleanTransactions
         $modalTransactions
             ->where('action', '<>', TransactionAction::DELETE)
             ->each(function (Transaction $transaction) use (&$cleanedTransactions) {
-                if (Arr::has($cleanedTransactions, $transaction->model_type.'.'.$transaction->model_id.'.delete')) {
+                if (Arr::has($cleanedTransactions, $transaction->model_type . '.' . $transaction->model_id . '.delete')) {
                     return;
                 } elseif ($transaction->action == TransactionAction::CREATE) {
                     $cleanedTransactions[$transaction->model_type][$transaction->model_id]['create'] = $transaction;

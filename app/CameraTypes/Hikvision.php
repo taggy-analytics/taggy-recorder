@@ -35,7 +35,7 @@ abstract class Hikvision extends RtspCamera
         $cameras = new Collection;
 
         // For now we create two "virtual" cameras - one with PANORAMA and one with BROADCAST
-        foreach($hikvisionCameras as $camera) {
+        foreach ($hikvisionCameras as $camera) {
             $name = self::getApiClient($camera)->getDeviceInfo()['name'];
 
             $cameras[] = [
@@ -103,9 +103,9 @@ abstract class Hikvision extends RtspCamera
     public function getRtspUrl(Camera $camera, StreamQuality $quality = StreamQuality::PANORAMA)
     {
         $password = $camera->credentials['password'];
-        $passwordPart = strlen($password) > 0 ? ':'.$password : '';
+        $passwordPart = strlen($password) > 0 ? ':' . $password : '';
 
-        $channel = match($quality) {
+        $channel = match ($quality) {
             StreamQuality::PANORAMA => 101,
             StreamQuality::BROADCAST => 201,
         };

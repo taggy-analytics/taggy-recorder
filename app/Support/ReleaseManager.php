@@ -21,6 +21,6 @@ class ReleaseManager
 
     public static function currentRelease()
     {
-        return trim(shell_exec('readlink '.escapeshellarg(base_path('../../current'))));
+        return trim(shell_exec('readlink ' . escapeshellarg(base_path('../../current'))));
     }
 }

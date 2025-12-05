@@ -33,8 +33,8 @@ class Mothership
 
         $recorder = Recorder::make();
 
-        $this->client = Http::baseUrl(($endpoint ?? self::getEndpoint($userToken)).'/api/v1')
-            ->withUserAgent('TaggyRecorder/'.Recorder::make()->currentSoftwareVersion())
+        $this->client = Http::baseUrl(($endpoint ?? self::getEndpoint($userToken)) . '/api/v1')
+            ->withUserAgent('TaggyRecorder/' . Recorder::make()->currentSoftwareVersion())
             ->acceptJson()
             ->withHeaders([
                 'Recorder-Id' => $recorder->getSystemId(),
@@ -84,7 +84,7 @@ class Mothership
 
     public function getTransactionsStatus($entityId, $hashes, $hashSubstringLength)
     {
-        return $this->post('entities/'.$entityId.'/transactions/status', [
+        return $this->post('entities/' . $entityId . '/transactions/status', [
             'hashes' => $hashes,
             'hash_substring_length' => $hashSubstringLength,
             'debug' => config('app.debug'),
@@ -94,7 +94,7 @@ class Mothership
     public function reportTransactions($entityId, $transactions, $lastTransactionInSync = null)
     {
         try {
-            return $this->setTimeout(60)->post('entities/'.$entityId.'/transactions', [
+            return $this->setTimeout(60)->post('entities/' . $entityId . '/transactions', [
                 'origin' => Recorder::make()->getSystemId(),
                 'transactions' => Arr::except($transactions, 'user_token_id'),
                 'last_transaction_in_sync' => $lastTransactionInSync,
@@ -125,14 +125,14 @@ class Mothership
             'recording_uuid' => $recording->uuid,
         ];
 
-        $this->post('recordings/'.$recording->key.'/livestream-segments', $postData);
+        $this->post('recordings/' . $recording->key . '/livestream-segments', $postData);
     }
 
     public function sendRecordingFile(RecordingFile $file, $remainingFiles)
     {
         $this->client->timeout(600);
 
-        $this->post('videos/'.$file->video_id.'/formats/'.$file->video_format_id.'/video-segments', [
+        $this->post('videos/' . $file->video_id . '/formats/' . $file->video_format_id . '/video-segments', [
             'name' => $file->name,
             'segment' => base64_encode(Storage::disk('public')->get($file->videoPath())),
             'remainingFiles' => $remainingFiles,
@@ -158,7 +158,7 @@ class Mothership
             return cache()->get('connectedToMothership');
         }
 
-        return blink()->once('isOnline'.($disableCache ? Str::random() : ''), function () use ($timeout) {
+        return blink()->once('isOnline' . ($disableCache ? Str::random() : ''), function () use ($timeout) {
             try {
                 return $this->checkStatus($timeout)->status() == 200;
             } catch (\Throwable $exception) {
@@ -176,11 +176,11 @@ class Mothership
 
     public function checkForUpdateFile()
     {
-        $file = $this->get('recorders/'.Recorder::make()->getSystemId().'/update/'.Recorder::make()->currentSoftwareVersion(), 'body');
+        $file = $this->get('recorders/' . Recorder::make()->getSystemId() . '/update/' . Recorder::make()->currentSoftwareVersion(), 'body');
 
         if ($file) {
             $filename = trim(explode('=', $this->headers['content-disposition'])[1]);
-            Storage::put('releases/'.$filename, $file);
+            Storage::put('releases/' . $filename, $file);
 
             return [
                 'version' => Str::replaceLast('.zip', '', $filename),
@@ -191,12 +191,12 @@ class Mothership
 
     public function log($data)
     {
-        return $this->post('recorders/'.Recorder::make()->getSystemId().'/log?key='.config('taggy-recorder.mothership-logging-key'), $data, 'raw');
+        return $this->post('recorders/' . Recorder::make()->getSystemId() . '/log?key=' . config('taggy-recorder.mothership-logging-key'), $data, 'raw');
     }
 
     public function sendTemperatureLog($data)
     {
-        return $this->post('recorders/'.Recorder::make()->getSystemId().'/temperature?key='.config('taggy-recorder.mothership-logging-key'), ['measurements' => $data]);
+        return $this->post('recorders/' . Recorder::make()->getSystemId() . '/temperature?key=' . config('taggy-recorder.mothership-logging-key'), ['measurements' => $data]);
     }
 
     public function waitToComeOnline($tries = 5, $sleep = 5)
@@ -233,7 +233,7 @@ class Mothership
             return $userToken?->endpoint;
         }
 
-        $defaultEndpoint = config('services.mothership.'.config('app.env').'.endpoint');
+        $defaultEndpoint = config('services.mothership.' . config('app.env') . '.endpoint');
 
         return Arr::get(request()->environmentData(), 'urls.mothership', $defaultEndpoint);
     }
@@ -258,7 +258,7 @@ class Mothership
                     blink()->put(self::LAST_RESPONSE_STATUS_CACHE_KEY, $response->status());
                     break;
                 case 429:
-                    info('429 from Mothership; retrying in '.($response->header('Retry-After') + 1).' seconds...');
+                    info('429 from Mothership; retrying in ' . ($response->header('Retry-After') + 1) . ' seconds...');
                     sleep($response->header('Retry-After') + 1);
                     $this->request($method, $url, $data, $type);
                     break;

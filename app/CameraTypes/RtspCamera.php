@@ -35,23 +35,23 @@ abstract class RtspCamera extends CameraType
     public function startRecording(Camera $camera, Recording $recording)
     {
         $outputDirectory = Storage::disk('public')->path($recording->getPath('video'));
-        $outputFile = $outputDirectory.'/video.m3u8';
+        $outputFile = $outputDirectory . '/video.m3u8';
         $segmentDuration = config('taggy-recorder.video-conversion.segment-duration');
-        $segmentFilename = $outputDirectory.'/video-%05d.ts';
+        $segmentFilename = $outputDirectory . '/video-%05d.ts';
 
         $beforeInputOptions = [
             '-use_wallclock_as_timestamps 1',
             '-fflags +genpts+discardcorrupt+igndts',
             // '-rtsp_transport tcp',  // Don't add this ever! It will crash the recording
-            config('taggy-recorder.ffmpeg.logging') ? '-loglevel '.config('taggy-recorder.ffmpeg.logging-level') : '',
+            config('taggy-recorder.ffmpeg.logging') ? '-loglevel ' . config('taggy-recorder.ffmpeg.logging-level') : '',
         ];
 
         $options = [
             // '-tag:v hvc1',
             '-f hls',
-            '-hls_time '.$segmentDuration,
+            '-hls_time ' . $segmentDuration,
             '-hls_list_size 0',
-            '-hls_segment_filename '.$segmentFilename,
+            '-hls_segment_filename ' . $segmentFilename,
             '-c:v copy',
             '-avoid_negative_ts make_zero',
         ];
@@ -69,7 +69,7 @@ abstract class RtspCamera extends CameraType
 
     public function stopRecording(Camera $camera)
     {
-        shell_exec("pkill -f 'ffmpeg.*".$camera->recordings()->latest()->first()->key."'");
+        shell_exec("pkill -f 'ffmpeg.*" . $camera->recordings()->latest()->first()->key . "'");
 
         return true;
     }
@@ -91,6 +91,6 @@ abstract class RtspCamera extends CameraType
             return false;
         }
 
-        return str_contains(shell_exec('pgrep -fl '.$key), 'ffmpeg');
+        return str_contains(shell_exec('pgrep -fl ' . $key), 'ffmpeg');
     }
 }

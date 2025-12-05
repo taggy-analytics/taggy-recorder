@@ -50,7 +50,7 @@ class AnnkeFdc600 extends RtspCamera
     public function getRtspUrl(Camera $camera, StreamQuality $quality = StreamQuality::HIGH)
     {
         $password = $camera->credentials['password'];
-        $passwordPart = strlen($password) > 0 ? ':'.$password : '';
+        $passwordPart = strlen($password) > 0 ? ':' . $password : '';
 
         return "rtsp://{$camera->credentials['user']}{$passwordPart}@{$camera->ip_address}:554/Streaming/Channels/101";
     }

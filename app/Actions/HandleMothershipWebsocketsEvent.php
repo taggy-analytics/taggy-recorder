@@ -15,7 +15,7 @@ class HandleMothershipWebsocketsEvent
 {
     public function execute(WebsocketEventType $eventType, $entityId, $data)
     {
-        $method = 'run'.Str::studly(strtolower($eventType->name));
+        $method = 'run' . Str::studly(strtolower($eventType->name));
 
         if (method_exists($this, $method)) {
             $this->$method($entityId, $data);

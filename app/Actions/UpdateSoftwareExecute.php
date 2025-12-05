@@ -15,22 +15,22 @@ class UpdateSoftwareExecute
         return cache()->lock('lock-update-software-execute', 300)->block(300, function () use ($version, $filename) {
             app(CalculateLed::class)->execute();
 
-            $releasePath = base_path('../'.Str::replace([':', ' '], '-', now()->toDateTimeString()));
+            $releasePath = base_path('../' . Str::replace([':', ' '], '-', now()->toDateTimeString()));
 
             $zip = new \ZipArchive;
-            $zip->open(Storage::path('releases/'.$filename));
+            $zip->open(Storage::path('releases/' . $filename));
             $internalName = $zip->getNameIndex(0);
             $zip->extractTo(base_path('../'));
             $zip->close();
 
-            File::moveDirectory(base_path('../'.$internalName), $releasePath);
+            File::moveDirectory(base_path('../' . $internalName), $releasePath);
 
             $releasePath = realpath($releasePath);
 
-            Storage::delete('releases/'.$filename);
+            Storage::delete('releases/' . $filename);
 
-            symlink(realpath($releasePath.'/../../storage'), $releasePath.'/storage');
-            symlink(realpath($releasePath.'/../../.env'), $releasePath.'/.env');
+            symlink(realpath($releasePath . '/../../storage'), $releasePath . '/storage');
+            symlink(realpath($releasePath . '/../../.env'), $releasePath . '/.env');
 
             chdir($releasePath);
 
@@ -41,7 +41,7 @@ class UpdateSoftwareExecute
             Process::timeout(180)->run('npm run build');
             Process::run('sudo php artisan migrate --force');
 
-            if (! Process::run('php artisan taggy:check-software '.$releasePath)->successful()) {
+            if (! Process::run('php artisan taggy:check-software ' . $releasePath)->successful()) {
                 return [
                     'updated' => false,
                     'version' => Recorder::make()->currentSoftwareVersion(),
@@ -49,9 +49,9 @@ class UpdateSoftwareExecute
                 ];
             }
 
-            unlink($releasePath.'/../../current');
+            unlink($releasePath . '/../../current');
 
-            symlink($releasePath, $releasePath.'/../../current');
+            symlink($releasePath, $releasePath . '/../../current');
 
             Process::run('php artisan cache:clear');
             Process::run('php artisan schedule:clear-cache');
@@ -62,12 +62,12 @@ class UpdateSoftwareExecute
 
             Storage::put(Recorder::CURRENT_SOFTWARE_VERSION_FILENAME, $version);
 
-            info('Updated software to '.$version);
+            info('Updated software to ' . $version);
 
             return [
                 'updated' => true,
                 'version' => $version,
-                'message' => 'Recorder was updated to latest software ('.$version.').',
+                'message' => 'Recorder was updated to latest software (' . $version . ').',
             ];
         });
     }

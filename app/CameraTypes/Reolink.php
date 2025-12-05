@@ -25,8 +25,8 @@ abstract class Reolink extends RtspCamera
     {
         return self::discoverByVendorMac('ec:71:db')
             ->filter(function ($camera) {
-                config(['services.reolink.endpoint' => 'https://'.$camera['ipAddress'].'/cgi-bin']);
-                config(['services.reolink.token-cache-key' => 'reolink-token-'.$camera['identifier']]);
+                config(['services.reolink.endpoint' => 'https://' . $camera['ipAddress'] . '/cgi-bin']);
+                config(['services.reolink.token-cache-key' => 'reolink-token-' . $camera['identifier']]);
                 try {
                     return Arr::get(\Nanuc\LaravelReolink\Facades\Reolink::system()->getDevInfo(), 'DevInfo.model') == static::MODEL_NAME;
                 } catch (ConnectionException $e) {
@@ -67,12 +67,12 @@ abstract class Reolink extends RtspCamera
     public function getRtspUrl(Camera $camera, StreamQuality $quality = StreamQuality::HIGH)
     {
         $password = $camera->credentials['password'];
-        $passwordPart = strlen($password) > 0 ? ':'.$password : '';
+        $passwordPart = strlen($password) > 0 ? ':' . $password : '';
 
         $stream = $quality == StreamQuality::HIGH ? 'h265Preview_01_main' : 'h264Preview_01_sub';
 
         // Todo: use Reolink::network()->getRtspUrl()
-        return "rtsp://{$camera->credentials['user']}{$passwordPart}@{$camera->ip_address}:554/".$stream;
+        return "rtsp://{$camera->credentials['user']}{$passwordPart}@{$camera->ip_address}:554/" . $stream;
     }
 
     public function getStatus(Camera $camera)

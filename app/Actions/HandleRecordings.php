@@ -101,7 +101,7 @@ class HandleRecordings
                 MothershipReport::insertChunked($mothershipReports);
 
                 DB::table('livestream_segments')
-                    ->where('file', 'LIKE', '%'.$recording->key.'%')
+                    ->where('file', 'LIKE', '%' . $recording->key . '%')
                     ->delete();
 
                 $recording->setStatus(RecordingStatus::CREATED_RECORDING_FILES_IN_DB);

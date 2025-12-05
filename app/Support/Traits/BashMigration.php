@@ -10,7 +10,7 @@ trait BashMigration
 {
     protected function removeFile($path)
     {
-        Process::run('sudo rm '.$path);
+        Process::run('sudo rm ' . $path);
     }
 
     protected function writeFileIfNotExists($path, $content)

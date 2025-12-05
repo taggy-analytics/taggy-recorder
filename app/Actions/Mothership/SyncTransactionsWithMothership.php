@@ -107,7 +107,7 @@ class SyncTransactionsWithMothership
             } catch (MothershipException $exception) {
                 if ($exception->response->status() < 500) {
                     // ToDo: what to do in this case!?
-                    info('Transactions could not be synced for entity #'.$userToken->entity_id.' (HTTP status '.$exception->response->status().')');
+                    info('Transactions could not be synced for entity #' . $userToken->entity_id . ' (HTTP status ' . $exception->response->status() . ')');
                 }
                 cache()->forget('sync-transactions-running');
                 throw $exception;
@@ -123,7 +123,7 @@ class SyncTransactionsWithMothership
 
         $currentIndex = -1;
 
-        $debug = implode(PHP_EOL, $uuids).PHP_EOL.PHP_EOL;
+        $debug = implode(PHP_EOL, $uuids) . PHP_EOL . PHP_EOL;
 
         while (count($uuids) > 0) {
             $hashData = '';
@@ -136,13 +136,13 @@ class SyncTransactionsWithMothership
                 $currentIndex++;
             }
 
-            $debug .= crc32($hashData).' '.$hashData.PHP_EOL;
+            $debug .= crc32($hashData) . ' ' . $hashData . PHP_EOL;
 
             $segments[$currentIndex] = crc32($hashData);
         }
 
         if (config('app.debug')) {
-            File::put(storage_path('logs/transactions-'.$entityId.'.log'), $debug);
+            File::put(storage_path('logs/transactions-' . $entityId . '.log'), $debug);
         }
 
         return $segments;

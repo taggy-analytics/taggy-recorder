@@ -33,7 +33,7 @@ trait IsReportedToMothership
         }
 
         if (! $this->mothershipReport) {
-            info($this::class.'#'.$this->id.' has no associated mothership report.');
+            info($this::class . '#' . $this->id . ' has no associated mothership report.');
             $this->createMothershipReport();
             $this->load('mothershipReport');
         }

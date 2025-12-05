@@ -71,8 +71,8 @@ class UploadLivestreamSegments extends Command
 
             if ($recording->livestream_enabled && Arr::has($recording->data, ['endpoint'])) {
                 $userToken = UserToken::forEndpointAndEntity($recording->data['endpoint'], $recording->data['entity_id']);
-                $m3u8Content = explode(PHP_EOL, trim(Storage::get('segments-m3u8/segment-m3u8-'.$segment->id)));
-                Storage::delete('segments-m3u8/segment-m3u8-'.$segment->id);
+                $m3u8Content = explode(PHP_EOL, trim(Storage::get('segments-m3u8/segment-m3u8-' . $segment->id)));
+                Storage::delete('segments-m3u8/segment-m3u8-' . $segment->id);
                 Mothership::make($userToken)->sendLivestreamFile($recording, $segment->file, $segment->content, implode(PHP_EOL, array_slice($m3u8Content, 0, -2)));
                 $segment->update(['uploaded_at' => now()]);
             }

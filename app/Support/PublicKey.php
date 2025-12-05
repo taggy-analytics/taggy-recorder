@@ -15,7 +15,7 @@ class PublicKey extends \Spatie\Crypto\Rsa\PublicKey
             return null;
         }
 
-        $keyPath = 'keys/mothership-'.$environment['key'].'-public.key';
+        $keyPath = 'keys/mothership-' . $environment['key'] . '-public.key';
 
         if (! Storage::has($keyPath)) {
             Storage::put($keyPath, Http::baseUrl($environment['urls']['api'])

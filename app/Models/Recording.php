@@ -89,17 +89,17 @@ class Recording extends Model
 
     public function getPath($path = '')
     {
-        return 'recordings/'.$this->id.'/'.$this->key.'/'.$path;
+        return 'recordings/' . $this->id . '/' . $this->key . '/' . $path;
     }
 
     public function thumbnailsPath()
     {
-        return $this->getPath().'thumbnails';
+        return $this->getPath() . 'thumbnails';
     }
 
     public function thumbnailsMoviePath()
     {
-        return $this->thumbnailsPath().'/thumbnails.mp4';
+        return $this->thumbnailsPath() . '/thumbnails.mp4';
     }
 
     public function getThumbnail()
@@ -158,7 +158,7 @@ class Recording extends Model
             ->get($this->getM3u8Path());
 
         if (! Str::contains($m3u8, '#EXT-X-ENDLIST')) {
-            $m3u8 .= PHP_EOL.'#EXT-X-ENDLIST';
+            $m3u8 .= PHP_EOL . '#EXT-X-ENDLIST';
             Storage::disk('public')
                 ->put($this->getM3u8Path(), $m3u8);
         }
@@ -166,7 +166,7 @@ class Recording extends Model
 
     public function sceneFilename($startTime, $duration)
     {
-        return md5(json_encode([$this->key, $startTime, $duration])).'.mp4';
+        return md5(json_encode([$this->key, $startTime, $duration])) . '.mp4';
     }
 
     public function restart()
@@ -188,7 +188,7 @@ class Recording extends Model
 
     private function calculateStoppedAt()
     {
-        $duration = exec('ffprobe '.$this->getM3u8Path().' -show_entries format=duration -v quiet -of csv="p=0"');
+        $duration = exec('ffprobe ' . $this->getM3u8Path() . ' -show_entries format=duration -v quiet -of csv="p=0"');
 
         if (! is_numeric($duration)) {
             if (! Storage::disk('public')->exists($this->getM3u8Path())) {
@@ -223,7 +223,7 @@ class Recording extends Model
 
     public function isRecordingProcessRunning()
     {
-        $command = "pgrep -af 'ffmpeg.*".escapeshellarg($this->key)."'";
+        $command = "pgrep -af 'ffmpeg.*" . escapeshellarg($this->key) . "'";
 
         return Str::contains(Process::run($command)->output(), 'hls_time');
     }

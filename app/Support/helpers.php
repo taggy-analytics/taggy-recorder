@@ -19,7 +19,7 @@ if (! function_exists('checkMemory')) {
         }
 
         $backtrace = debug_backtrace()[0];
-        $key ??= basename($backtrace['file']).'-'.$backtrace['line'];
+        $key ??= basename($backtrace['file']) . '-' . $backtrace['line'];
         $memoryConsumers = cache()->get('memoryConsumers', []);
 
         $memoryUsage = memory_get_usage();
@@ -44,7 +44,7 @@ if (! function_exists('preventMemoryLeak')) {
     function preventMemoryLeak($message = null, $limit = 300000000)
     {
         if (memory_get_usage() > $limit) {
-            info(($message ?? 'Memory leak prevented').' (Memory: '.memory_get_usage().')');
+            info(($message ?? 'Memory leak prevented') . ' (Memory: ' . memory_get_usage() . ')');
             exit;
         }
     }

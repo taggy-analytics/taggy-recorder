@@ -60,7 +60,7 @@ class Camera extends Model
             if ($this->isDirty('status')) {
                 $this->save();
                 app(CalculateLed::class)->execute();
-                info('Camera #'.$this->id.' changed status: '.$oldStatus->value.' --> '.$this->status->value);
+                info('Camera #' . $this->id . ' changed status: ' . $oldStatus->value . ' --> ' . $this->status->value);
             }
         }
 
@@ -87,9 +87,9 @@ class Camera extends Model
             'video_format' => $this->getType()->getVideoFormat(),
         ]);
 
-        info('Starting recording # '.$recording->id.' for camera #'.$this->id);
+        info('Starting recording # ' . $recording->id . ' for camera #' . $this->id);
 
-        Process::start('php '.base_path('artisan').' taggy:watch-recording-segments '.$recording->id);
+        Process::start('php ' . base_path('artisan') . ' taggy:watch-recording-segments ' . $recording->id);
 
         $this->getType()->startRecording($this, $recording);
 

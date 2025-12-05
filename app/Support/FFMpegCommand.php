@@ -28,7 +28,7 @@ class FFMpegCommand
 
     public static function runRaw($command, $app = 'ffmpeg', $async = true)
     {
-        $command = $app.' '.trim($command);
+        $command = $app . ' ' . trim($command);
         info($command);
         $process = $async ? Process::start($command) : Process::run($command);
 
