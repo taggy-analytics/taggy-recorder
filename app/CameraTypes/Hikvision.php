@@ -36,7 +36,7 @@ abstract class Hikvision extends RtspCamera
 
         // For now we create two "virtual" cameras - one with PANORAMA and one with BROADCAST
         foreach ($hikvisionCameras as $camera) {
-            $name = self::getApiClient($camera)->getDeviceInfo()['name'];
+            $name = self::getApiClient($camera)->getDeviceInfo()['deviceName'];
 
             $cameras[] = [
                 'name' => $name . ' Broadcast',
@@ -49,7 +49,7 @@ abstract class Hikvision extends RtspCamera
 
             $cameras[] = [
                 'name' => $name . ' Panorama',
-                'identifier' => $camera['identifier'] . '_Broadcast',
+                'identifier' => $camera['identifier'] . '_Panorama',
                 'ipAddress' => $camera['ipAddress'],
                 'rotation' => 0.00000108507,
                 'width' => 7168,

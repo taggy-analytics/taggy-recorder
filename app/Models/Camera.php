@@ -4,12 +4,15 @@ namespace App\Models;
 
 use App\Actions\CalculateLed;
 use App\CameraTypes\CameraType;
+use App\CameraTypes\Hikvision;
 use App\Enums\CameraStatus;
 use App\Enums\RecordingMode;
+use App\Enums\StreamQuality;
 use App\Models\Traits\BroadcastsEvents;
 use Illuminate\Database\Eloquent\Casts\AsCollection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Process;
+use Illuminate\Support\Str;
 
 class Camera extends Model
 {
@@ -106,10 +109,19 @@ class Camera extends Model
 
     public function getStreams()
     {
+        if($this->getType() instanceof Hikvision::class) {
+            $streamQuality = Str::endsWith($this->name, 'Panorama') ?
+                StreamQuality::PANORAMA :
+                StreamQuality::BROADCAST;
+        }
+        else {
+            $streamQuality = StreamQuality::HIGH;
+        }
+
         return [
             [
                 'type' => 'rtsp',
-                'url' => $this->getType()->getRtspUrl($this), // ToDo: works only for RTSP cameras for now
+                'url' => $this->getType()->getRtspUrl($this, $streamQuality), // ToDo: works only for RTSP cameras for now
             ],
         ];
     }
