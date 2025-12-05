@@ -18,13 +18,12 @@ class ReportRecordingFile extends Report
 
             try {
                 $this->mothership->sendRecordingFile($recordingFile, $remainingFiles);
-            }
-            catch(MothershipException $exception) {
-                if($exception->response->status() == 404) {
+            } catch (MothershipException $exception) {
+                if ($exception->response->status() == 404) {
                     // Video was deleted already - let's quickly process all "siblings"
                     $siblings = $recordingFile->recording->files;
 
-                    foreach($siblings as $sibling) {
+                    foreach ($siblings as $sibling) {
                         $sibling->mothershipReport->update([
                             'status' => MothershipReportStatus::VideoNotAvailableAnymore,
                             'processed_at' => now(),
@@ -33,8 +32,7 @@ class ReportRecordingFile extends Report
                             'status' => RecordingFileStatus::VIDEO_NOT_AVAILABLE_ANYMORE,
                         ]);
                     }
-                }
-                else {
+                } else {
                     throw $exception;
                 }
 

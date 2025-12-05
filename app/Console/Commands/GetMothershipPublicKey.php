@@ -17,7 +17,7 @@ class GetMothershipPublicKey extends Command
             'key' => 'production',
             'urls' => [
                 'api' => 'https://api-v2.taggy.cam',
-            ]
+            ],
         ];
 
         PublicKey::get($environment);
