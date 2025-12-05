@@ -3,11 +3,12 @@
 namespace App\Services;
 
 use Illuminate\Http\Client\Factory;
+use Illuminate\Http\Client\PendingRequest;
 use Illuminate\Support\Facades\Http;
 
 class Hikvision
 {
-    private Factory $client;
+    private PendingRequest $client;
 
     public function __construct($baseUrl, $username, $password)
     {

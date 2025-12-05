@@ -27,7 +27,7 @@ abstract class Hikvision extends RtspCamera
                 try {
                     $credentials = self::getDefaultCredentials();
 
-                    return \App\Services\Hikvision::make('https://'.$camera['ipAddress'], $credentials['user'], $credentials['password'])->getDeviceInfo() == static::MODEL_NAME;
+                    return \App\Services\Hikvision::make('https://'.$camera['ipAddress'] . '/ISAPI', $credentials['user'], $credentials['password'])->getDeviceInfo() == static::MODEL_NAME;
                 } catch (ConnectionException $e) {
                     return false;
                 }
@@ -63,15 +63,17 @@ abstract class Hikvision extends RtspCamera
         ];
     }
 
-    public function getRtspUrl(Camera $camera, StreamQuality $quality = StreamQuality::HIGH)
+    public function getRtspUrl(Camera $camera, StreamQuality $quality = StreamQuality::PANORAMA)
     {
         $password = $camera->credentials['password'];
         $passwordPart = strlen($password) > 0 ? ':'.$password : '';
 
-        $stream = $quality == StreamQuality::HIGH ? 'h265Preview_01_main' : 'h264Preview_01_sub';
+        $channel = match($quality) {
+            StreamQuality::PANORAMA => 101,
+            StreamQuality::BROADCAST => 201,
+        };
 
-        // Todo: use Reolink::network()->getRtspUrl()
-        return "rtsp://{$camera->credentials['user']}{$passwordPart}@{$camera->ip_address}:554/".$stream;
+        return "rtsp://{$camera->credentials['user']}{$passwordPart}@{$camera->ip_address}:554/Streaming/Channels/" . $channel;
     }
 
     public function getStatus(Camera $camera)
