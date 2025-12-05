@@ -109,7 +109,7 @@ class Camera extends Model
 
     public function getStreams()
     {
-        if($this->getType() instanceof Hikvision::class) {
+        if($this->getType() instanceof Hikvision) {
             $streamQuality = Str::endsWith($this->name, 'Panorama') ?
                 StreamQuality::PANORAMA :
                 StreamQuality::BROADCAST;
