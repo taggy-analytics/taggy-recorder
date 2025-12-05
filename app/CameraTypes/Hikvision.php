@@ -8,6 +8,7 @@ use App\Enums\StreamingProtocol;
 use App\Enums\StreamQuality;
 use App\Models\Camera;
 use Illuminate\Http\Client\ConnectionException;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
 use Symfony\Component\Process\Exception\ProcessTimedOutException;
 use Symfony\Component\Process\Process;
@@ -22,16 +23,52 @@ abstract class Hikvision extends RtspCamera
 
     public static function discover()
     {
-        return self::discoverByVendorMac('0c:75:d2')
+        $hikvisionCameras = self::discoverByVendorMac('0c:75:d2')
             ->filter(function ($camera) {
                 try {
-                    $credentials = self::getDefaultCredentials();
-
-                    return \App\Services\Hikvision::make('https://'.$camera['ipAddress'] . '/ISAPI', $credentials['user'], $credentials['password'])->getDeviceInfo() == static::MODEL_NAME;
+                    return self::getApiClient($camera)->getDeviceInfo()['model'] == static::MODEL_NAME;
                 } catch (ConnectionException $e) {
                     return false;
                 }
             });
+
+        $cameras = new Collection;
+
+        // For now we create two "virtual" cameras - one with PANORAMA and one with BROADCAST
+        foreach($hikvisionCameras as $camera) {
+            $name = self::getApiClient($camera)->getDeviceInfo()['name'];
+
+            $cameras[] = [
+                'name' => $name . ' Broadcast',
+                'identifier' => $camera['identifier'] . '_Broadcast',
+                'ipAddress' => $camera['ipAddress'],
+                'rotation' => 0,
+                'width' => 1920,
+                'height' => 1080,
+            ];
+
+            $cameras[] = [
+                'name' => $name . ' Panorama',
+                'identifier' => $camera['identifier'] . '_Broadcast',
+                'ipAddress' => $camera['ipAddress'],
+                'rotation' => 0.00000108507,
+                'width' => 7168,
+                'height' => 2160,
+            ];
+        }
+
+        return $cameras;
+    }
+
+    private static function getApiClient($camera, $credentials = null)
+    {
+        $credentials ??= self::getDefaultCredentials();
+
+        return \App\Services\Hikvision::make(
+            $camera['ipAddress'],
+            $credentials['user'],
+            $credentials['password'],
+        );
     }
 
     public function getName()
@@ -79,7 +116,7 @@ abstract class Hikvision extends RtspCamera
     public function getStatus(Camera $camera)
     {
         $output = '';
-        $process = new Process(['ffprobe', '-hide_banner', $this->getRtspUrl($camera, StreamQuality::LOW)]);
+        $process = new Process(['ffprobe', '-hide_banner', $this->getRtspUrl($camera, StreamQuality::PANORAMA)]);
         $process->setTimeout(5);
 
         try {
@@ -106,5 +143,12 @@ abstract class Hikvision extends RtspCamera
         }
 
         return $status;
+    }
+
+    protected function getRecordingStreamQuality(Camera $camera)
+    {
+        return Str::endsWith($camera->name, 'Panorama') ?
+            StreamQuality::PANORAMA :
+            StreamQuality::BROADCAST;
     }
 }

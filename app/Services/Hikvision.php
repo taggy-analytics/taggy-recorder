@@ -10,15 +10,15 @@ class Hikvision
 {
     private PendingRequest $client;
 
-    public function __construct($baseUrl, $username, $password)
+    public function __construct($ipAddress, $username, $password)
     {
         $this->client = Http::withDigestAuth($username, $password)
-            ->baseUrl($baseUrl);
+            ->baseUrl('http://' . $ipAddress . '/ISAPI');
     }
 
-    public static function make($baseUrl, $username, $password)
+    public static function make($ipAddress, $username, $password)
     {
-        return new self($baseUrl, $username, $password);
+        return new self($ipAddress, $username, $password);
     }
 
     public function getDeviceInfo()

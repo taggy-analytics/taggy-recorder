@@ -64,9 +64,7 @@ abstract class RtspCamera extends CameraType
             $options[] = '-an';
         }
 
-        $streamQuality = StreamQuality::{config('taggy-recorder.recording.stream-quality')};
-
-        FFMpegCommand::run($this->getRtspUrl($camera, $streamQuality), $outputFile, $options, $beforeInputOptions);
+        FFMpegCommand::run($this->getRtspUrl($camera, $this->getRecordingStreamQuality($camera)), $outputFile, $options, $beforeInputOptions);
     }
 
     public function stopRecording(Camera $camera)
@@ -74,6 +72,11 @@ abstract class RtspCamera extends CameraType
         shell_exec("pkill -f 'ffmpeg.*".$camera->recordings()->latest()->first()->key."'");
 
         return true;
+    }
+
+    protected function getRecordingStreamQuality(Camera $camera)
+    {
+        return StreamQuality::{config('taggy-recorder.recording.stream-quality')};
     }
 
     public function isRecording(Camera $camera)

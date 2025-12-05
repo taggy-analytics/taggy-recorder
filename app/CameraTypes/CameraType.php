@@ -5,6 +5,7 @@ namespace App\CameraTypes;
 use App\Models\Camera;
 use App\Models\Recording;
 use App\Support\Network;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
 
@@ -50,9 +51,9 @@ abstract class CameraType
                 ], [
                     'name' => self::hydrateName($aCamera['name']),
                     'ip_address' => $aCamera['ipAddress'],
-                    'rotation' => $cameraClass::getRotation(),
-                    'video_width' => $cameraClass::VIDEO_WIDTH,
-                    'video_height' => $cameraClass::VIDEO_HEIGHT,
+                    'rotation' => Arr::get($aCamera, 'rotation', $cameraClass::getRotation()),
+                    'video_width' => Arr::get($aCamera, 'width', $cameraClass::VIDEO_WIDTH),
+                    'video_height' => Arr::get($aCamera, 'height', $cameraClass::VIDEO_HEIGHT),
                 ]);
             }
         }
